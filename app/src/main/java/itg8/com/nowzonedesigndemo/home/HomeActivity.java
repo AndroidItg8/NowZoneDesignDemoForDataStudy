@@ -50,6 +50,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import itg8.com.nowzonedesigndemo.DataStoreScheduleBroadcastReceiver;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.breath.BreathHistoryActivity;
 import itg8.com.nowzonedesigndemo.breath_history.BreathsHistoryActivity;
@@ -265,6 +266,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         initOtherView();
 
         bottomBarTabSelected();
+        DataStoreScheduleBroadcastReceiver.setAlarm(true, this);
 
     }
 

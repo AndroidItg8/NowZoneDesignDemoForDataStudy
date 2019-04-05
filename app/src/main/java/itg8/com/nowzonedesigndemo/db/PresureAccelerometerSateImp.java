@@ -63,7 +63,7 @@ public class PresureAccelerometerSateImp implements Crud {
     public List<?> findAll() {
         List<DataModelPressure> items=null;
         try{
-            items=helper.getDataPresureDao().queryForAll();
+            items=helper.getDataPresureDao().queryBuilder().where().eq(DataModelPressure.FIELD_IS_SENT,0).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,17 +71,12 @@ public class PresureAccelerometerSateImp implements Crud {
     }
 
 
+    public void deleteBetweenIDS(Long[] longs) {
 
-
-
-
-
-
-
-
-
-
-
-
-
+        try {
+            helper.getDataPresureDao().deleteBuilder().where().between(DataModelPressure.FIELD_SERIAL_NO,longs[0],longs[1]).query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -235,5 +235,8 @@ public class AppApplication extends Application {
         }
     }
 
-
+    public RetroController initNetworkCall() {
+        new NetworkCall.NetworkBuilder().setHeader().build();
+        return NetworkCall.getController();
+    }
 }

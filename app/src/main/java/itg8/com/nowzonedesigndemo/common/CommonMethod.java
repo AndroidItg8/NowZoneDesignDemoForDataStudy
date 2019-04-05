@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -262,6 +263,9 @@ public class CommonMethod {
                 // battery
                 model.setBattery(bytesToHex(new byte[]{valueBattery1}));
                 model.setTimestamp(System.currentTimeMillis());
+                model.setDatetime(new Date().toString());
+                model.setDate(getDateFromTMP(System.currentTimeMillis()));
+                model.setTime(CommonMethod.getTimeFromTMP(System.currentTimeMillis()));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -472,6 +476,18 @@ public class CommonMethod {
         }
         return ss;
     }
+    public static String getDateFromTMP(long timeStamp) {
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTimeInMillis(timeStamp);
+        String ss="";
+        try {
+            ss=dateFormat.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ss;
+    }
 
     public static Calendar ConvertTime(Context mContext, int hourOfDay, int minute) {
 
@@ -491,6 +507,12 @@ public class CommonMethod {
     public static void resetTmpstmp() {
         currentMillies=0;
     }
+
+    public static RetroController getController() {
+        return AppApplication.getInstance().initNetworkCall();
+    }
+
+
 
 
     public interface alarmListener{

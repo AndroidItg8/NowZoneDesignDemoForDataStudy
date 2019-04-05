@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -14,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
+import itg8.com.nowzonedesigndemo.common.DataModelPressure;
 import itg8.com.nowzonedesigndemo.common.Prefs;
 import itg8.com.nowzonedesigndemo.common.Retro;
 import itg8.com.nowzonedesigndemo.common.RetroController;
@@ -57,6 +59,63 @@ public  class NetworkUtility {
 
                     }
                 });
+    }
+
+    public void savePresureData(List<DataModelPressure> dataModelPressures, ResponseListener listener) {
+        if(listener==null)
+            return;
+        Observable<ResponseBody> b=controller.storePressure(dataModelPressures);
+        b.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        try {
+                            String response=responseBody.string();
+                            JSONObject jsonObject = null;
+                            if(response!=null){
+                                try {
+                                    jsonObject= new JSONObject(response);
+                                    if(jsonObject.has("flag")){
+                                        if(jsonObject.getInt("flag")==1){
+                                            if(jsonObject.has("msg"))
+                                            listener.onSuccess(jsonObject.getString("msg"));
+                                        }
+
+
+
+
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    listener.onFailure(e.getMessage());
+                                }
+
+                               }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onFailure(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
     }
 
     public interface ResponseListener{

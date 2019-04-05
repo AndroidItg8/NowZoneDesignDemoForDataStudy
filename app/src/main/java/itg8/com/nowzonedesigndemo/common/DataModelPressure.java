@@ -3,6 +3,8 @@ package itg8.com.nowzonedesigndemo.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -43,67 +45,159 @@ public class DataModelPressure implements Parcelable {
     public static final String FIELD_IS_SENT = "is_sent";
 
     @DatabaseField(columnName = FIELD_SERIAL_NO, generatedId = true)
+    @SerializedName("sr_no")
+    @Expose
     private long serialNo;
 
     @DatabaseField(columnName = FIELD_PRESSURE)
+    @SerializedName("pressure")
+    @Expose
     private double pressure;
 
     @DatabaseField(columnName = FIELD_ACC_X)
+    @SerializedName("acc_x")
+    @Expose
     private double x;
 
     @DatabaseField(columnName = FIELD_ACC_Y)
+    @SerializedName("acc_y")
+    @Expose
     private double y;
 
     @DatabaseField(columnName = FIELD_ACC_Z)
+    @SerializedName("acc_z")
+    @Expose
     private double z;
 
     @DatabaseField(columnName = FIELD_GYR_X)
+    @SerializedName("gyr_x")
+    @Expose
     private double gX;
 
     @DatabaseField(columnName = FIELD_GYR_Y)
+    @SerializedName("gyr_y")
+    @Expose
     private double gY;
 
     @DatabaseField(columnName = FIELD_GYR_Z)
+    @SerializedName("gyr_z")
+    @Expose
     private double gZ;
 
     @DatabaseField(columnName = FIELD_MAG_X)
+    @SerializedName("mag_x")
+    @Expose
     private double mX;
 
     @DatabaseField(columnName = FIELD_MAG_Y)
+    @SerializedName("mag_y")
+    @Expose
     private double mY;
 
     @DatabaseField(columnName = FIELD_MAG_Z)
+    @SerializedName("mag_z")
+    @Expose
     private double mZ;
 
     @DatabaseField(columnName = FIELD_TEMP)
+    @SerializedName("tempreture")
+    @Expose
     private int temprature;
 
     @DatabaseField(columnName = FIELD_BATTERY)
+    @SerializedName("battery")
+    @Expose
     private int battery;
 
     @DatabaseField(columnName = FIELD_TIMESTAMP)
+    @Expose
     private long timestamp;
 
     @DatabaseField(columnName = FIELD_PRESSURE_COUNT)
+    @SerializedName("pressure_processed")
+    @Expose
     private int pressureProcessed;
 
     @DatabaseField(columnName = FIELD_LOAD_CELL_ONE)
+    @SerializedName("load_cell_1")
+    @Expose
     private long loadCell1;
 
     @DatabaseField(columnName = FIELD_LOAD_CELL_TWO)
+    @SerializedName("load_cell_2")
+    @Expose
     private long loadCell2;
 
     @DatabaseField(columnName = FIELD_MIC)
+    @SerializedName("mic")
+    @Expose
     private long mic;
 
     @DatabaseField(columnName = FIELD_CHARGING)
+    @SerializedName("chargingbit")
+    @Expose
     private int charging;
 
     @DatabaseField(columnName = FIELD_OPTICAL)
+    @SerializedName("optical")
+    @Expose
     private long optical;
 
     @DatabaseField(columnName = FIELD_IS_SENT)
     private boolean isSent;
+
+    @DatabaseField()
+    @SerializedName("datetime")
+    @Expose
+    private String datetime;
+
+    @SerializedName("date")
+    @Expose
+    private String date;
+
+    @SerializedName("time")
+    @Expose
+    private String time;
+
+
+    @SerializedName("unused")
+    @Expose
+    private String unused;
+
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getUnused() {
+        return unused;
+    }
+
+    public void setUnused(String unused) {
+        this.unused = unused;
+    }
+
+
 
 
     public boolean isSent() {

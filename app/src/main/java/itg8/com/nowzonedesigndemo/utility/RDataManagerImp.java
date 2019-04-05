@@ -1270,7 +1270,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         /**
          * Save Data into database ;
          */
-        storeDataInDatabase(dataStorage, context);
+        storeDataInDatabase(dataStorage);
 
 
 //        FileAsync async = new FileAsync(Prefs.getString(CommonMethod.STORAGE_PATH, ""));
@@ -1279,38 +1279,17 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
     }
 
-    private void storeDataInDatabase(DataModelPressure[] dataStorage, Context context) {
+    private void storeDataInDatabase(DataModelPressure[] dataStorage) {
         Observable.fromArray(dataStorage).flatMap(new Function<DataModelPressure, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> apply(DataModelPressure t) throws Exception {
-                preAccSateImp = new PresureAccelerometerSateImp(context);
-                boolean isSave = storeDataInDatabase(t, context);
+//                preAccSateImp = new PresureAccelerometerSateImp(context);
+//                boolean isSave = storeDataInDatabase(t, context);
 
-                return Observable.just(isSave);
-
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+                return Observable.just(listener.onSensorDataAvailToStore(t));
 
             }
-
-            @Override
-            public void onNext(Boolean r) {
-                if (r)
-                    scheduleJob(context);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+        }).subscribeOn(Schedulers.newThread()).subscribe();
 
     }
 

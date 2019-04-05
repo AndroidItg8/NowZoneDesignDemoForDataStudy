@@ -1,5 +1,7 @@
 package itg8.com.nowzonedesigndemo.common;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import itg8.com.nowzonedesigndemo.utility.model.breath.BreathingModel;
 import itg8.com.nowzonedesigndemo.utility.model.step.StepsModel;
@@ -31,4 +33,6 @@ public interface RetroController {
     Observable<ResponseBody> checkLogin(@Url String url, @Query("username") String username, @Query("password") String password);
 
 
+    @POST
+    Observable<ResponseBody> storePressure(List<DataModelPressure> dataModelPressures);
 }

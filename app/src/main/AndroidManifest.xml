@@ -210,6 +210,9 @@
             android:name=".posture.PostureCalibrateSettingActivity"
             android:label="@string/title_activity_posture_calibrate_setting"
             android:theme="@style/AppTheme.NoActionBar" />
+        <receiver android:name=".DataStoreScheduleBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

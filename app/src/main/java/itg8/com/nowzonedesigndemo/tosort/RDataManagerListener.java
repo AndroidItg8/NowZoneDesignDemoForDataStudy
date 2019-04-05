@@ -4,6 +4,8 @@ import android.util.SparseArray;
 
 import java.util.List;
 
+import itg8.com.nowzonedesigndemo.common.DataModelPressure;
+
 /**
  * Created by itg_Android on 3/7/2017.
  */
@@ -48,4 +50,7 @@ public interface RDataManagerListener {
     void onBatteryAvail(int battery);
 
     void onResetInititalBreathingState();
+
+    boolean onSensorDataAvailToStore(DataModelPressure pressure);
+
 }
