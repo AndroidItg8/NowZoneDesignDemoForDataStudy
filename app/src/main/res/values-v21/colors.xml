@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="accent">#455A64</color>
+    <color name="colorGreen">#43A047</color>
+    <color name="colorOrange">#ed7a56</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="firstColor">#00BCD4</color>
+    <color name="secondColor">#E91E63</color>
+    <color name="thirdColor">#FF5722</color>
+
+
+    <!-- for navigation bar -->
+
+    <color name="bb_inActiveBottomBarItemColor">#747474</color>
+    <color name="bb_darkBackgroundColor">#212121</color>
+    <color name="bb_tabletRightBorderDark">#505050</color>
+</resources>

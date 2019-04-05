@@ -1,0 +1,345 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="itg8.com.nowzonedesigndemo.home.fragment.HomeFragment">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frameLayout_home" />
+
+    <RelativeLayout
+        android:id="@+id/rl_main_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+        <FrameLayout
+            android:id="@+id/main_FrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <FrameLayout
+                android:id="@+id/rl_wave"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/txtCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="24sp"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"
+                        app:font_value="robotoMedium"
+                        android:padding="10dp"/>
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/txtAverage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_below="@+id/txtCount"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorWhite"
+                        app:font_value="robotoMedium"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        />
+
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/txt_state_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:gravity="center"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"
+                        android:layout_alignParentEnd="true"
+                        app:font_value="robotoMedium"
+                        android:padding="10dp"
+                        />
+
+                    <ImageView
+                        android:id="@+id/imgState"
+                        android:layout_width="48dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_height="48dp"
+                        android:layout_margin="10dp"/>
+                </RelativeLayout>
+
+                <itg8.com.nowzonedesigndemo.widget.steps.CustomStepImage
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                    android:id="@+id/txt_device_not_attached"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="48dp"
+                    android:text="It Seems like you are not wearing device right now."
+                    android:visibility="gone"
+                    app:font_value="juraMedium"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+
+            <itg8.com.nowzonedesigndemo.widget.wave.BreathwaveView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    android:background="@color/transparent"
+                    android:id="@+id/breathview"/>
+
+
+                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                    android:id="@+id/txtConnectionstatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_gravity="bottom"
+                    android:textSize="24sp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="100dp"
+                    app:font_value="robotoMedium"
+                    android:padding="10dp"/>
+
+
+
+            </FrameLayout>
+            <!--this layout is for wave  which working in background.-->
+
+
+
+
+            <!--this layout for Show Status of Breath value-->
+            <RelativeLayout
+                android:id="@+id/rl_breath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingBottom="05dp"
+                android:layout_marginStart="@dimen/marginRightHomeImage"
+                android:layout_marginEnd="@dimen/marginRightHomeImage">
+
+
+                <ImageView
+                    android:id="@+id/img_breath"
+                    android:layout_width="30dp"
+                    android:visibility="gone"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_breaths"
+                    android:layout_marginStart="16dp"/>
+
+
+                <TextView
+                    android:id="@+id/txt_breathRate"
+                    style="@style/home_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/breath_rate"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="14dp"
+                    android:visibility="gone"
+                    android:layout_toEndOf="@+id/img_breath" />
+
+
+                <TextView
+                    android:id="@+id/txt_statusValue"
+                    style="@style/home_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Normal"
+                    android:layout_marginStart="5dp"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:textAllCaps="false"
+                    android:layout_toEndOf="@+id/img_breath" />
+                <TextView
+                    android:id="@+id/txt_status"
+                    style="@style/home_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:visibility="gone"
+                    android:layout_toEndOf="@+id/img_breath"
+                    android:layout_marginStart="5dp"
+                    android:layout_below="@+id/txt_statusValue" />
+
+
+                <TextView
+                    android:id="@+id/breathValue"
+                    style="@style/home_textView"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_marginEnd="16dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/txt_breath_value" />
+
+                <TextView
+                    android:id="@+id/txt_minute"
+                    style="@style/home_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minute"
+                    android:visibility="gone"
+                    android:layout_marginEnd="16dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/breathValue"
+                    android:textSize="@dimen/txt_value"
+                    android:layout_marginBottom="05dp"
+                    android:layout_marginTop="05dp">
+
+                </TextView>
+
+            </RelativeLayout>
+            <!--this layout for the show daily  breath counting-->
+            <LinearLayout
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:visibility="gone"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/txt_calm"
+                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/txt_lbl_dash_top"
+                        android:textAllCaps="true"
+                        android:text="@string/calm"
+                        android:textColor="@color/colorWhite"
+                        android:layout_centerHorizontal="true"/>
+
+
+
+                    <TextView
+                        android:id="@+id/txt_calm_value"
+                        android:layout_below="@+id/txt_calm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="@dimen/txt_value"
+                        android:textColor="@color/colorWhite"
+                        android:text="2:30 HR"/>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        app:font_value="robotoMedium"
+                        android:id="@+id/txt_focus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/focus"
+                        android:textAllCaps="true"
+                        android:textStyle="bold"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/txt_lbl_dash_top" />
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/txt_focus_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_focus"
+                        android:layout_centerHorizontal="true"
+                        android:text="1:30 HR"
+                        app:font_value="juraMedium"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/txt_value" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/txt_stress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/txt_lbl_dash_top"
+                        android:textAllCaps="true"
+                        android:text="@string/stress"
+                        android:textStyle="bold"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/colorWhite" />
+
+
+
+                    <TextView
+                        android:id="@+id/txt_stress_value"
+                        android:layout_below="@+id/txt_stress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/txt_value"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/colorWhite"
+                        android:text="1:30 HR"/>
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+

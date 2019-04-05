@@ -1,0 +1,565 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="15dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_breath"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_stress"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/color_stress_half"
+                        app:cardCornerRadius="8dp"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/img_stress"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="20dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/stress_streak_icon"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true" />
+                            <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                android:id="@+id/name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:text="@string/stress_state"
+                                android:textColor="#fff"
+                                android:layout_below="@+id/img_stress"
+                                android:textSize="@dimen/lbl_time_front"
+                                app:font_value="robotoLight" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_below="@+id/name"
+                                android:layout_marginBottom="8dp">
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/txt_stress_value"
+                                    style="@style/breath_textView_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:gravity="center_vertical"
+                                    android:text="0"
+                                    android:layout_marginEnd="10dp"
+                                    app:font_value="juraMedium" />
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/lbl_breath_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBaseline="@+id/txt_stress_value"
+                                    android:layout_gravity="center"
+                                    android:layout_toEndOf="@+id/txt_stress_value"
+                                    android:gravity="center"
+                                    android:text="Min"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/txt_home"
+                                    android:textStyle="normal"
+                                    app:font_value="robotoLight" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_compose"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        app:cardBackgroundColor="@color/color_composed_half"
+                        app:cardCornerRadius="8dp"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/img_composed"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_centerHorizontal="true"
+                                android:src="@drawable/calm_streak_icon" />
+                            <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                android:id="@+id/lbl_compose"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10dp"
+                                android:layout_below="@+id/img_composed"
+                                android:text="@string/compose_state"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/lbl_time_front"
+                                app:font_value="robotoLight" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_below="@+id/lbl_compose"
+                                android:layout_height="wrap_content">
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/txt_compose_value"
+                                    style="@style/breath_textView_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:gravity="center_vertical"
+                                    android:text="0"
+                                    android:layout_marginEnd="10dp"
+                                    app:font_value="juraMedium" />
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/lbl_compose_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBaseline="@+id/txt_compose_value"
+                                    android:layout_gravity="center"
+                                    android:layout_toEndOf="@+id/txt_compose_value"
+                                    android:gravity="center"
+                                    android:text="Min"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/txt_home"
+                                    android:textStyle="normal"
+                                    app:font_value="robotoLight" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="2">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_attentive"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        app:cardBackgroundColor="@color/color_attentive_half"
+                        app:cardCornerRadius="8dp"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/img_attentive"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="20dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/focus_streak_icon"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true" />
+                            <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                android:id="@+id/lbl_attentive"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="10dp"
+                                android:layout_below="@+id/img_attentive"
+                                android:gravity="top"
+                                android:text="@string/focus_state"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/lbl_time_front"
+                                app:font_value="robotoLight" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/lbl_attentive"
+                                android:gravity="center">
+
+
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/txt_attentive_value"
+                                    style="@style/breath_textView_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:gravity="center_vertical"
+                                    android:text="0"
+                                    android:layout_marginEnd="10dp"
+                                    app:font_value="juraMedium" />
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/lbl_attentive_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBaseline="@+id/txt_attentive_value"
+                                    android:layout_gravity="center"
+                                    android:layout_toEndOf="@+id/txt_attentive_value"
+                                    android:gravity="center"
+                                    android:text="Min"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/txt_home"
+                                    android:textStyle="normal"
+                                    app:font_value="robotoLight" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_sedentary"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        app:cardBackgroundColor="@color/color_normal_half"
+                        app:cardCornerRadius="8dp"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/img_sedentary"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginTop="22dp"
+                                android:src="@drawable/sedentory_icon"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true" />
+                            <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                android:id="@+id/lbl_silent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/img_sedentary"
+                                android:gravity="top"
+                                android:layout_marginTop="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:text="@string/silent_state"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/lbl_time_front"
+                                app:font_value="robotoLight" />
+
+                            <RelativeLayout
+                                android:layout_below="@+id/lbl_silent"
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="wrap_content">
+
+
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/txt_sedentary_value"
+                                    style="@style/breath_textView_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:layout_marginEnd="10dp"
+                                    app:font_value="juraMedium" />
+
+                                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                                    android:id="@+id/lbl_sedentary_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBaseline="@+id/txt_sedentary_value"
+                                    android:layout_gravity="center"
+                                    android:layout_toEndOf="@+id/txt_sedentary_value"
+                                    android:gravity="center"
+                                    android:text="Min"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/txt_home"
+                                    android:textStyle="normal"
+                                    app:font_value="robotoLight" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_last"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/card_activity"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
+            android:weightSum="2">
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_sleep"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                app:cardCornerRadius="8dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardBackgroundColor="@color/color_sleep_half"
+                app:cardUseCompatPadding="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_sleep"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/sleep" />
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/lbl_sleep"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_sleep"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/smart_alarm"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/lbl_time_front"
+                        app:font_value="robotoLight" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lbl_sleep"
+                        android:gravity="center">
+
+                        <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                            android:id="@+id/txt_sleep_value"
+                            style="@style/breath_textView_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center_vertical"
+                            android:text="4"
+                            app:font_value="juraMedium" />
+
+                        <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                            android:id="@+id/lbl_sleep_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/txt_sleep_value"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:layout_toEndOf="@+id/txt_sleep_value"
+                            android:gravity="center"
+                            android:text="Hr"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/txt_home"
+                            android:textStyle="normal"
+
+                            app:font_value="robotoLight" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_posture"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                app:cardBackgroundColor="@color/color_posture_half"
+                app:cardCornerRadius="8dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/img_posture"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/posture_icon" />
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/lbl_posture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@+id/img_posture"
+                        android:text="@string/posture_state"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/lbl_time_front"
+                        app:font_value="robotoLight" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/lbl_posture"
+                        android:gravity="center">
+
+                        <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                            android:id="@+id/txt_posture_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center_vertical"
+                            android:text="30"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/txt_home"
+                            android:textStyle="normal"
+                            app:font_value="robotoLight" />
+
+                        <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                            android:id="@+id/lbl_posture_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/txt_posture_value"
+                            android:layout_alignBaseline="@+id/txt_posture_value"
+                            android:text="Min"
+                            android:textColor="@color/colorWhite"
+                            android:layout_marginBottom="10dp"
+                            android:textSize="@dimen/txt_home"
+                            android:textStyle="normal"
+                            app:font_value="robotoLight" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_activity"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/color_steps_half"
+            app:cardCornerRadius="8dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            android:layout_below="@+id/ll_breath"
+            android:layout_alignParentStart="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img_activity"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/activity_icon" />
+                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                    android:id="@+id/lbl_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/img_activity"
+                    android:text="@string/activity_state"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/lbl_time_front"
+                    app:font_value="robotoLight" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_below="@+id/lbl_active">
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/txt_active_value"
+                        style="@style/breath_textView_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="9dp"
+                        android:gravity="center_vertical"
+                        android:text="0"
+                        android:layout_marginEnd="10dp"
+                        app:font_value="juraMedium" />
+
+                    <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                        android:id="@+id/lbl_active_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_toEndOf="@+id/txt_active_value"
+                        android:layout_alignBaseline="@+id/txt_active_value"
+                        android:gravity="center"
+                        android:text=" Steps"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/txt_home"
+                        android:textStyle="normal"
+                        app:font_value="robotoLight" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+</ScrollView>

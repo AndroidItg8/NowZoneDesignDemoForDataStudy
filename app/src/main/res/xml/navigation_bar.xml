@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs xmlns:android="http://schemas.android.com/apk/res/android">
+    <tab
+        android:id="@+id/nav_breath"
+        android:icon="@drawable/ic_home_black_24dp"
+        inActiveColor="#747474"
+        android:title="@string/home" />
+
+
+    <tab
+        android:id="@+id/nav_sleep"
+        android:icon="@drawable/ic_programs"
+        inActiveColor="#747474"
+
+        android:title="@string/program" />
+    <tab
+        android:id="@+id/nav_statics"
+        android:icon="@drawable/ic_bars"
+        inActiveColor="#747474"
+        android:title="@string/statistics" />
+</tabs>
