@@ -41,6 +41,7 @@ public class NetworkCallScheduler extends JobIntentService {
 
 
 
+
     public static void enqueueWork(Context context){
         Log.d(TAG, "enqueueWork: ");
         Intent intent=new Intent(context,NetworkCallScheduler.class);
@@ -70,9 +71,13 @@ public class NetworkCallScheduler extends JobIntentService {
         }).flatMap(new Function<List<DataModelPressure>, Observable<Long[]>>() {
             @Override
             public Observable<Long[]> apply(List<DataModelPressure> dataModelPressures) throws Exception {
+                bitID[0]=0L;
+                bitID[1]=0L;
+
                 if (dataModelPressures.size() > 0) {
                     bitID[0] = dataModelPressures.get(0).getSerialNo();
                     bitID[1] = dataModelPressures.get(dataModelPressures.size()-1).getSerialNo();
+//                    sendToServer(dataModelPressures);
                 }
 //                sendToServer
                 if(dataModelPressures.size()>0)
