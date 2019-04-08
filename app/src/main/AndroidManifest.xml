@@ -198,7 +198,6 @@
             android:exported="true"
             android:enabled="true"/>
         <service android:name=".common.NetworkCallScheduler"
-            android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
@@ -212,7 +211,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <receiver android:name=".DataStoreScheduleBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" />
+            >
+            <intent-filter>
+                <action android:name="itg8.com.nowzonedesigndemo.intent.action.MY_ALARM"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

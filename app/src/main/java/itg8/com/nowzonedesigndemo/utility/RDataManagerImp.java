@@ -693,6 +693,21 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         modelTemp.setX(model.getX());
         modelTemp.setY(model.getY());
         modelTemp.setZ(model.getZ());
+        modelTemp.setCharging(model.getCharging());
+        modelTemp.setDate(model.getDate());
+        modelTemp.setTime(model.getTime());
+        modelTemp.setmX(model.getmX());
+        modelTemp.setmY(model.getmY());
+        modelTemp.setmZ(model.getmZ());
+        modelTemp.setgX(model.getgX());
+        modelTemp.setgY(model.getgY());
+        modelTemp.setgZ(model.getgZ());
+        modelTemp.setLoadCell1(model.getLoadCell1());
+        modelTemp.setLoadCell2(model.getLoadCell2());
+        modelTemp.setDatetime(model.getDatetime());
+        modelTemp.setMic(model.getMic());
+        modelTemp.setOptical(model.getOptical());
+        modelTemp.setSerialNo(model.getSerialNo());
         return modelTemp;
     }
 
@@ -1289,7 +1304,28 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 return Observable.just(listener.onSensorDataAvailToStore(t));
 
             }
-        }).subscribeOn(Schedulers.newThread()).subscribe();
+        }).subscribeOn(Schedulers.newThread()).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                    e.printStackTrace();
+                    throw new IllegalStateException("Kuch to bhi error: "+e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
     }
 

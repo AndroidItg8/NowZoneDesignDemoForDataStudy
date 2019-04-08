@@ -3,6 +3,7 @@ package itg8.com.nowzonedesigndemo.common;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.leakcanary.LeakCanary;
@@ -48,6 +49,7 @@ public class AppApplication extends Application {
         super.onCreate();
         mInstance = this;
 //        ACRA.init(this);
+        Stetho.initializeWithDefaults(this);
         mInstance.initPreference();
         mBreathModel = new BreathingModel();
         Prefs.putString(CommonMethod.STATE, null);

@@ -83,7 +83,8 @@ public class CommonMethod {
     public static final String SOCKET_STOP_CLICKED = "stopClicked";
     public static final String DEVICE_STATE = "device state";
     public static final String TOKEN = "MYTOKEN";
-    static final String BASE_URL = "http://192.168.1.13/";
+    static final String BASE_URL = "http://nowzone.steponetechnologies.in/";
+//    static final String BASE_URL = "http://192.168.1.13/";
 //    public static final String BASE_URL = "http://192.168.1.58:8090";
     public static final String ACTION_MOVEMENT = "ACTION_MOVEMENT";
     public static final String ACTION_MOVEMENT_STOPPED = "ACTION_MOVEMENT_STOPPED";
@@ -259,12 +260,12 @@ public class CommonMethod {
                 //optical sensor
                 model.setOptical(bytesToHex(new byte[]{optCenValue1,optCenValue2}));
                 //temprature
-                model.setTemprature(bytesToHex(new byte[]{tempValue1,tempValue2}));
+                model.setTemprature((bytesToHex(new byte[]{tempValue1,tempValue2})/16)+24);
                 // battery
                 model.setBattery(bytesToHex(new byte[]{valueBattery1}));
                 model.setTimestamp(System.currentTimeMillis());
-                model.setDatetime(new Date().toString());
-                model.setDate(getDateFromTMP(System.currentTimeMillis()));
+                model.setDatetime(CommonMethod.getDateTimeFromTMP(System.currentTimeMillis()));
+                model.setDate(CommonMethod.getDateFromTMP(System.currentTimeMillis()));
                 model.setTime(CommonMethod.getTimeFromTMP(System.currentTimeMillis()));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -314,7 +315,7 @@ public class CommonMethod {
 
     private static int convertHexToInt(String s) {
         try {
-            return (short) Integer.parseInt(s,16);
+            return  Integer.parseInt(s,16);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -466,6 +467,18 @@ public class CommonMethod {
 
     public static String getTimeFromTMP(long timeStamp) {
         SimpleDateFormat dateFormat=new SimpleDateFormat("hh:mm:ss",Locale.getDefault());
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTimeInMillis(timeStamp);
+        String ss="";
+        try {
+            ss=dateFormat.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ss;
+    }
+    public static String getDateTimeFromTMP(long timeStamp) {
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeInMillis(timeStamp);
         String ss="";

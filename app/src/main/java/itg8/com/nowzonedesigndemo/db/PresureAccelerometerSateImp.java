@@ -2,6 +2,8 @@ package itg8.com.nowzonedesigndemo.db;
 
 import android.content.Context;
 
+import com.j256.ormlite.stmt.UpdateBuilder;
+
 import java.sql.SQLException;
 
 import java.util.List;
@@ -17,14 +19,15 @@ public class PresureAccelerometerSateImp implements Crud {
 
     public PresureAccelerometerSateImp(Context context) {
         DBManager.init(context);
-        helper=DBManager.getInstance().getHelper();
+        helper = DBManager.getInstance().getHelper();
     }
+
     @Override
     public int create(Object item) {
-        int index=-1;
-        DataModelPressure state=(DataModelPressure)item;
+        int index = -1;
+        DataModelPressure state = (DataModelPressure) item;
         try {
-            index=helper.getDataPresureDao().create(state);
+            index = helper.getDataPresureDao().create(state);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,10 +36,10 @@ public class PresureAccelerometerSateImp implements Crud {
 
     @Override
     public int update(Object item) {
-        int index=-1;
-        DataModelPressure state=(DataModelPressure)item;
+        int index = -1;
+        DataModelPressure state = (DataModelPressure) item;
         try {
-            index= helper.getDataPresureDao().update(state);
+            index = helper.getDataPresureDao().update(state);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -50,9 +53,9 @@ public class PresureAccelerometerSateImp implements Crud {
 
     @Override
     public Object findById(long id) {
-        DataModelPressure state=null;
+        DataModelPressure state = null;
         try {
-            state=helper.getDataPresureDao().queryForId((int) id);
+            state = helper.getDataPresureDao().queryForId((int) id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,9 +64,9 @@ public class PresureAccelerometerSateImp implements Crud {
 
     @Override
     public List<?> findAll() {
-        List<DataModelPressure> items=null;
-        try{
-            items=helper.getDataPresureDao().queryBuilder().where().eq(DataModelPressure.FIELD_IS_SENT,0).query();
+        List<DataModelPressure> items = null;
+        try {
+            items = helper.getDataPresureDao().queryBuilder().where().eq(DataModelPressure.FIELD_IS_SENT, false).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,11 +75,15 @@ public class PresureAccelerometerSateImp implements Crud {
 
 
     public void deleteBetweenIDS(Long[] longs) {
-
-        try {
-            helper.getDataPresureDao().deleteBuilder().where().between(DataModelPressure.FIELD_SERIAL_NO,longs[0],longs[1]).query();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (longs !=null && longs.length > 1 && longs[0] > 0 && longs[1] > 0) {
+            try {
+                UpdateBuilder<DataModelPressure, Integer> builder = helper.getDataPresureDao().updateBuilder();
+                builder.updateColumnValue(DataModelPressure.FIELD_IS_SENT, true);
+                builder.where().between(DataModelPressure.FIELD_SERIAL_NO, longs[0], longs[1]);
+                builder.update();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

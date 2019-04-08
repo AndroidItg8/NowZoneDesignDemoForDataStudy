@@ -44,6 +44,11 @@ public class DataModelPressure implements Parcelable {
     public static final String FIELD_OPTICAL = "optical";
     public static final String FIELD_IS_SENT = "is_sent";
 
+    public static final String FIELD_DATETIME = "datetime";
+    public static final String FIELD_DATE = "date";
+    public static final String FIELD_TIME = "time";
+    public static final String FIELD_UNUSED = "unused";
+
     @DatabaseField(columnName = FIELD_SERIAL_NO, generatedId = true)
     @SerializedName("sr_no")
     @Expose
@@ -146,20 +151,22 @@ public class DataModelPressure implements Parcelable {
     @DatabaseField(columnName = FIELD_IS_SENT)
     private boolean isSent;
 
-    @DatabaseField()
+    @DatabaseField(columnName = FIELD_DATETIME)
     @SerializedName("datetime")
     @Expose
     private String datetime;
 
+    @DatabaseField(columnName = FIELD_DATE)
     @SerializedName("date")
     @Expose
     private String date;
 
+    @DatabaseField(columnName = FIELD_TIME)
     @SerializedName("time")
     @Expose
     private String time;
 
-
+    @DatabaseField(columnName = FIELD_UNUSED)
     @SerializedName("unused")
     @Expose
     private String unused;

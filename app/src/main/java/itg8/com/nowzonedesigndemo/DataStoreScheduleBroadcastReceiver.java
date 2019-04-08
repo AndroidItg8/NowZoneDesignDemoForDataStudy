@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,27 +13,15 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import itg8.com.nowzonedesigndemo.common.NetworkCallScheduler;
 
-public class DataStoreScheduleBroadcastReceiver extends WakefulBroadcastReceiver {
-    public static final int MY_JOB_ID = 1022;
+public class DataStoreScheduleBroadcastReceiver extends BroadcastReceiver {
+    public static final int MY_JOB_ID = 102255;
     private static final String CUSTOM_INTENT = "itg8.com.nowzonedesigndemo.intent.action.MY_ALARM";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            JobScheduler scheduler=context.getSystemService(JobScheduler.class);
-            if (scheduler != null) {
-                scheduler.schedule(getJobInfo(context));
-            }
-        }
+        NetworkCallScheduler.enqueueWork(context);
     }
 
-    private JobInfo getJobInfo(Context context) {
-        ComponentName serviceComponent = new ComponentName(context, NetworkCallScheduler.class);
-        JobInfo.Builder builder = new JobInfo.Builder(MY_JOB_ID, serviceComponent);
-        builder.setMinimumLatency(1000); // wait at least
-        builder.setOverrideDeadline(60 * 1000);
-        return builder.build();
-    }
 
     public static void cancelAlarm(Context ctx) {
         AlarmManager alarm = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
@@ -67,5 +56,7 @@ public class DataStoreScheduleBroadcastReceiver extends WakefulBroadcastReceiver
         Intent alarmIntent = new Intent(ctx, DataStoreScheduleBroadcastReceiver.class);
         alarmIntent.setAction(CUSTOM_INTENT);
         return PendingIntent.getBroadcast(ctx, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+
     }
 }

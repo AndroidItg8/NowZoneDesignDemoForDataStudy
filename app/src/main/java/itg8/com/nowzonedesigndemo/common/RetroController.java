@@ -33,6 +33,6 @@ public interface RetroController {
     Observable<ResponseBody> checkLogin(@Url String url, @Query("username") String username, @Query("password") String password);
 
 
-    @POST
-    Observable<ResponseBody> storePressure(List<DataModelPressure> dataModelPressures);
+    @POST("Bleonemasters/add")
+    Observable<ResponseBody> storePressure(@Body List<DataModelPressure> dataModelPressures);
 }

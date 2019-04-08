@@ -302,9 +302,9 @@ public class BleConnectionManager implements ConnectionManager {
             Log.d(TAG,characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
             Log.d(TAG,characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
 //                mHandler.sendMessage(Message.obtain(null,MSG_PRESSURE_ACCEL,characteristic));
-                if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE.toString()))
-                    pressure=characteristic.getValue();
                 if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE_A4.toString()))
+                    pressure=characteristic.getValue();
+                if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE.toString()))
                     acc=characteristic.getValue();
                 if(pressure!=null && acc!=null) {
                     listener.onDataAvail(pressure,acc);
