@@ -535,6 +535,11 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             sb.setLength(0);
             if (!isSleepStarted) {
                 listener.onBatteryAvail(model.getBattery());
+                /**
+                 * Add now for Raw Process Data line chart
+                 */
+                listener.onRawData(model.getPressure());
+
                 processModelData(model, mContext);
             }
 //            if(countActualData>100)
@@ -705,6 +710,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         modelTemp.setLoadCell1(model.getLoadCell1());
         modelTemp.setLoadCell2(model.getLoadCell2());
         modelTemp.setDatetime(model.getDatetime());
+        modelTemp.setUserId(model.getUserId());
         modelTemp.setMic(model.getMic());
         modelTemp.setOptical(model.getOptical());
         modelTemp.setSerialNo(model.getSerialNo());

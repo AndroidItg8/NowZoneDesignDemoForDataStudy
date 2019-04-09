@@ -48,6 +48,7 @@ public class DataModelPressure implements Parcelable {
     public static final String FIELD_DATE = "date";
     public static final String FIELD_TIME = "time";
     public static final String FIELD_UNUSED = "unused";
+    public static final String FIELD_USERID = "user_id";
 
     @DatabaseField(columnName = FIELD_SERIAL_NO, generatedId = true)
     @SerializedName("sr_no")
@@ -166,10 +167,24 @@ public class DataModelPressure implements Parcelable {
     @Expose
     private String time;
 
+
     @DatabaseField(columnName = FIELD_UNUSED)
     @SerializedName("unused")
     @Expose
     private String unused;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @DatabaseField(columnName = FIELD_USERID)
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
 
 
     public String getDatetime() {

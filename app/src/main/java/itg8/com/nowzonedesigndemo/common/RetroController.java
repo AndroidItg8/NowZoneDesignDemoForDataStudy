@@ -35,4 +35,24 @@ public interface RetroController {
 
     @POST("Bleonemasters/add")
     Observable<ResponseBody> storePressure(@Body List<DataModelPressure> dataModelPressures);
+
+//    User[username]:8087890075
+//    User[first_name]:User name full
+//    User[age]:43
+//    User[gender]:M
+//    User[weight]:78
+//    User[password]:123456
+//    User[user_group_id]:4
+//    User[height]:173
+
+    @POST("appregister")
+    @FormUrlEncoded
+    Observable<ResponseBody> storeProfile(@Field("User[username]") String mobile,
+                                          @Field("User[first_name]") String username,
+                                          @Field("User[age]") String age,
+                                          @Field("User[gender]") String gender,
+                                          @Field("User[weight]") String weight,
+                                          @Field("User[password]") String password,
+                                          @Field("User[user_group_id]") String userGroupId,
+                                          @Field("User[height]") String height);
 }

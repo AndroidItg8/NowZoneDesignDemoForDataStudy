@@ -62,6 +62,32 @@
         android:orderInCategory="100"
         android:title="@string/action_logout"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pressure_raw"
+        android:orderInCategory="100"
+        android:title="@string/action_pressure_raw"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_pressure_processed"
+        android:orderInCategory="100"
+        android:title="@string/action_presssure_processed"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_accelerometer"
+        android:orderInCategory="100"
+        android:title="@string/action_accelerometer"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_gynometer"
+        android:orderInCategory="100"
+        android:title="@string/action_gynometer"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_magnetometer"
+        android:orderInCategory="100"
+        android:title="@string/action_magnetometer"
+        app:showAsAction="always" />
+
 
 
 </menu>

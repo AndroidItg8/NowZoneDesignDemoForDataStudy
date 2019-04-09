@@ -109,7 +109,7 @@
                     android:id="@+id/breathview"/>
 
 
-                <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
+                <TextView
                     android:id="@+id/txtConnectionstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -119,7 +119,6 @@
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"
                     android:layout_marginBottom="100dp"
-                    app:font_value="robotoMedium"
                     android:padding="10dp"/>
 
 

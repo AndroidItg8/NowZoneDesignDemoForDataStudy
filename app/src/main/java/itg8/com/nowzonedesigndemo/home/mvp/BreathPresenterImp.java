@@ -41,6 +41,7 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
                     long timestamp = intent.getLongExtra(CommonMethod.ACTION_DATA_LONG, 0);
 //                    Log.d("BreathPresenterImp","data to presenter:"+model+"  "+timestamp);
                     BreathPresenterImp.this.model.dataStarted(true);
+
                     onPressureReceived(model, timestamp);
                 }
                 if (intent.hasExtra(CommonMethod.BPM_COUNT)) {
@@ -138,6 +139,7 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
     public void onCreate() {
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter(context.getResources().getString(R.string.action_data_avail)));
         model.onInitStateTime();
+
 
 
     }

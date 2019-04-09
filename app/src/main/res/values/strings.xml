@@ -199,6 +199,8 @@
         <item>Contact Us</item>
         <item>FAQ\'s</item>
         <item>Logout</item>
+        <item>Pressure Raw</item>
+        <item>Pressure Process</item>
 
 
     </string-array>
@@ -253,6 +255,12 @@
     <string name="line3">Pull your belly button  toward your back to feel the support from your core.Breath deeply and stay relaxed.  </string>
     <string name="title_activity_posture_calibration" />
     <string name="title_activity_posture_calibrate_setting">Posture Calibrate</string>
+    <string name="action_pressure_raw">Pressure Raw</string>
+    <string name="action_presssure_processed">Pressure processed</string>
+    <string name="action_accelerometer">accelerometer</string>
+    <string name="action_gynometer">gynometer</string>
+    <string name="action_magnetometer">magnetometer</string>
+    <string name="title_activity_registration_new">""</string>
 
 
 </resources>

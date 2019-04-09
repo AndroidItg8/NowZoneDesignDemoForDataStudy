@@ -11,10 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!--// Add for JobSchuduler..-->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- // Add for JobSchuduler.. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -32,6 +30,10 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:allowBackup">
         <activity
+            android:name=".registration.RegistrationNewActivity"
+            android:label="@string/title_activity_registration_new"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".home.HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -44,8 +46,7 @@
         <activity
             android:name=".steps.StepsActivity"
             android:label="@string/title_activity_steps"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <!--<activity android:name=".common.BaseActivity" />-->
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- <activity android:name=".common.BaseActivity" /> -->
         <activity
             android:name=".sleep.SleepActivity"
             android:label="@string/title_activity_sleep"
@@ -79,8 +80,7 @@
         <activity
             android:name=".setting.AlarmSettingActivity"
             android:label="@string/title_activity_alarm_setting"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <!-- android:name=".setting.SettingActivity" -->
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- android:name=".setting.SettingActivity" -->
         <!-- android:label="@string/title_activity_setting" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
@@ -147,9 +147,7 @@
         <activity
             android:name=".login.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
             android:name=".connection.DateChangeReceiver"
@@ -159,17 +157,15 @@
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".connection.NetworkChangeReceiver" >
+        <receiver android:name=".connection.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
-        </receiver>
-        <!--<activity-->
-            <!--android:name=".test.MainActivity"-->
-            <!--android:label="@string/title_activity_main"-->
-            <!--android:theme="@style/AppTheme.NoActionBar" />-->
+        </receiver> <!-- <activity -->
+        <!-- android:name=".test.MainActivity" -->
+        <!-- android:label="@string/title_activity_main" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity
             android:name=".breath_history.BreathsHistoryActivity"
             android:label="@string/title_activity_breaths_history"
@@ -182,24 +178,27 @@
         <activity
             android:name=".breath_history.SingleDetailActivity"
             android:label="@string/title_activity_single_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service android:name=".audio.MediaPlaybackService"
+        <service
+            android:name=".audio.MediaPlaybackService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
-        <service android:name=".utility.FetchAddressIntentService"
-            android:exported="true"
-            android:enabled="true"/>
-        <service android:name=".common.NetworkCallScheduler"
+        <service
+            android:name=".utility.FetchAddressIntentService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".common.NetworkCallScheduler"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".posture.PostureCalibrationActivity"
@@ -209,11 +208,12 @@
             android:name=".posture.PostureCalibrateSettingActivity"
             android:label="@string/title_activity_posture_calibrate_setting"
             android:theme="@style/AppTheme.NoActionBar" />
-        <receiver android:name=".DataStoreScheduleBroadcastReceiver"
-            android:enabled="true"
-            >
+
+        <receiver
+            android:name=".DataStoreScheduleBroadcastReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="itg8.com.nowzonedesigndemo.intent.action.MY_ALARM"/>
+                <action android:name="itg8.com.nowzonedesigndemo.intent.action.MY_ALARM" />
             </intent-filter>
         </receiver>
     </application>

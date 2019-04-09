@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     @BindView(R.id.imgState)
     ImageView imgState;
     @BindView(R.id.txtConnectionstatus)
-    CustomFontTextView txtConnectionstatus;
+    TextView txtConnectionstatus;
 
 
     // TODO: Rename and change types of parameters
@@ -100,6 +101,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     private FragmentManager fm;
     private Unbinder unbinder;
     private String countString;
+    private boolean isViewEnable=false;
 
 
     public HomeFragment() {
@@ -140,6 +142,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
+        isViewEnable=true;
         breathview.setOnClickListener(this);
         return view;
     }
@@ -148,6 +151,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        isViewEnable=false;
         unbinder.unbind();
     }
 
@@ -169,35 +173,44 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onBreathingWaveValueAvail(double value) {
-        breathview.addSample(SystemClock.elapsedRealtime(), value);
+        if(breathview!=null && !TextUtils.isEmpty(String.valueOf(value)))
+            breathview.addSample(SystemClock.elapsedRealtime(), value);
 
     }
 
 
     @Override
     public void onMovementStarted() {
-        mStepImage.startSteps();
-        breathview.setVisibility(View.GONE);
-        mStepImage.setVisibility(View.VISIBLE);
+        if(isViewEnable) {
+            mStepImage.startSteps();
+            breathview.setVisibility(View.GONE);
+            mStepImage.setVisibility(View.VISIBLE);
+        }
     }
 
 
     @Override
     public void onMovementStopped() {
-        mStepImage.stopSteps();
-        breathview.setVisibility(View.VISIBLE);
-        mStepImage.setVisibility(View.GONE);
+        if(isViewEnable) {
+            mStepImage.stopSteps();
+            breathview.setVisibility(View.VISIBLE);
+            mStepImage.setVisibility(View.GONE);
+        }
     }
 
 
     @Override
     public void onDeviceNotAttachedToBody() {
-        txtDeviceNotAttached.setVisibility(View.VISIBLE);
+        if(isViewEnable) {
+            txtDeviceNotAttached.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void ondeviceAttached() {
-        txtDeviceNotAttached.setVisibility(View.GONE);
+        if(isViewEnable) {
+            txtDeviceNotAttached.setVisibility(View.GONE);
+        }
 
     }
 
@@ -209,7 +222,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onConnectionStateAvail(String name) {
-        txtConnectionstatus.setText(name);
+        if(isViewEnable) {
+            if (txtConnectionstatus != null && !TextUtils.isEmpty(name))
+                txtConnectionstatus.setText(name);
+        }
     }
 
     @Override
@@ -219,27 +235,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onBreathingStateAvail(String state, int icon) {
-        if (icon != 0) {
-            imgState.setImageResource(icon);
-            imgState.setVisibility(View.VISIBLE);
-        } else {
-            imgState.setVisibility(View.GONE);
-        }
-        if (state != null) {
-            txtStateValue.setText(state);
-            txtStateValue.setVisibility(View.VISIBLE);
-        } else {
-            txtStateValue.setVisibility(View.GONE);
+        if(isViewEnable) {
+            if (icon != 0) {
+                imgState.setImageResource(icon);
+                imgState.setVisibility(View.VISIBLE);
+            } else {
+                imgState.setVisibility(View.GONE);
+            }
+            if (state != null) {
+                txtStateValue.setText(state);
+                txtStateValue.setVisibility(View.VISIBLE);
+            } else {
+                txtStateValue.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public void onBreathingCountAvail(int count) {
-        countString = count + " BPM";
-        txtCount.setText(countString);
-        if(Prefs.getInt(CommonMethod.USER_CURRENT_AVG)!=0) {
-            String average = "Average " + Prefs.getInt(CommonMethod.USER_CURRENT_AVG) + " bpm";
-            txtAverage.setText(average);
+        if(isViewEnable) {
+            countString = count + " BPM";
+            txtCount.setText(countString);
+            if (Prefs.getInt(CommonMethod.USER_CURRENT_AVG) != 0) {
+                String average = "Average " + Prefs.getInt(CommonMethod.USER_CURRENT_AVG) + " bpm";
+                txtAverage.setText(average);
+            }
         }
     }
 
@@ -251,8 +271,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onPause() {
-        if (breathview != null)
-            breathview.reset();
+
+            if (breathview != null)
+                breathview.reset();
+
         super.onPause();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 }

@@ -13,8 +13,53 @@ public class ProfileModel implements Parcelable {
     private float height;
     //In kg
     private float weight;
+    private String gender;
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    private String age;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    private String password;
+
+    public String getUserGroupId() {
+        return userGroupId;
+    }
+
+    public void setUserGroupId(String userGroupId) {
+        this.userGroupId = userGroupId;
+    }
+
+    private String userGroupId;
 
     private String profilePic;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public static Creator<ProfileModel> getCREATOR() {
+        return CREATOR;
+    }
+
+    private String mobile;
 
 
     public String getName() {
@@ -63,11 +108,13 @@ public class ProfileModel implements Parcelable {
         dest.writeString(this.name);
         dest.writeFloat(this.height);
         dest.writeFloat(this.weight);
+        dest.writeString(this.mobile);
         dest.writeString(this.profilePic);
     }
 
     private ProfileModel(Parcel in) {
         this.name = in.readString();
+        this.mobile = in.readString();
         this.height = in.readFloat();
         this.weight = in.readFloat();
         this.profilePic = in.readString();
@@ -84,4 +131,12 @@ public class ProfileModel implements Parcelable {
             return new ProfileModel[size];
         }
     };
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getGender() {
+        return gender;
+    }
 }

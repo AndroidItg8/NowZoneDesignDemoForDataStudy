@@ -41,6 +41,8 @@ public class CommonMethod {
     public static final long MINUTE=SEC*60;
 
     public static final String SAVEDAYS = "SAVEDAYS";
+    public static final String USER_ID = "USER_ID";
+
 
     public static final long CONST_30_MIN=1800000;
 
@@ -155,6 +157,9 @@ public class CommonMethod {
     private static long currentMillies=0;
     private static DataModelPressure model;
 
+    public static final String RAW_DATA_PRESSURE = "RAW_DATA_PRESSURE";
+
+
 
     public static Typeface setFontOpenSansSemiBold(Context context) {
         typeface = Typeface.createFromAsset(context.getAssets(), "fonts/OpenSans-Semibold.ttf");
@@ -263,6 +268,7 @@ public class CommonMethod {
                 model.setTemprature((bytesToHex(new byte[]{tempValue1,tempValue2})/16)+24);
                 // battery
                 model.setBattery(bytesToHex(new byte[]{valueBattery1}));
+                model.setUserId(Prefs.getString(CommonMethod.USER_ID));
                 model.setTimestamp(System.currentTimeMillis());
                 model.setDatetime(CommonMethod.getDateTimeFromTMP(System.currentTimeMillis()));
                 model.setDate(CommonMethod.getDateFromTMP(System.currentTimeMillis()));

@@ -105,4 +105,13 @@
 <item name="android:textSize">@dimen/txt_hr</item>
 </style>
 
+    <style name="TextLabel" parent="Widget.Design.TextInputLayout">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/color_composed_half</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorBlack</item>
+        <item name="colorControlActivated">@color/color_composed_half</item>
+    </style>
+
 </resources>

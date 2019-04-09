@@ -9,7 +9,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.content.WakefulBroadcastReceiver;
 
 import itg8.com.nowzonedesigndemo.common.NetworkCallScheduler;
 

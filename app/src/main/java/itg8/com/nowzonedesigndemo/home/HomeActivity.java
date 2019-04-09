@@ -21,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -64,6 +65,8 @@ import itg8.com.nowzonedesigndemo.home.mvp.BreathView;
 import itg8.com.nowzonedesigndemo.home.mvp.StateTimeModel;
 import itg8.com.nowzonedesigndemo.login.LoginActivity;
 import itg8.com.nowzonedesigndemo.posture.PostureCalibrateSettingActivity;
+import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
+import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
 import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
 import itg8.com.nowzonedesigndemo.setting.SettingMainActivity;
 import itg8.com.nowzonedesigndemo.sleep.SleepActivity;
@@ -95,15 +98,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
      * for drawer
      */
 
-    private static final int MENU_USER_PROFILE=0;
-    private static final int MENU_DEVICE=1;
-    private static final int MENU_NOTIFICATION=2;
-    private static final int MENU_POSTURE=5;
-    private static final int MENU_CONTACT_US=6;
-    private static final int MENU_ALARM=4;
-    private static final int MENU_FAQS=7;
-    private static final int MENU_PROGRAMS=3;
-    private static final int MENU_LOGOUT=8;
+    private static final int MENU_USER_PROFILE = 0;
+    private static final int MENU_DEVICE = 1;
+    private static final int MENU_NOTIFICATION = 2;
+    private static final int MENU_POSTURE = 5;
+    private static final int MENU_CONTACT_US = 6;
+    private static final int MENU_ALARM = 4;
+    private static final int MENU_FAQS = 7;
+    private static final int MENU_PROGRAMS = 3;
+    private static final int MENU_LOGOUT = 8;
 
 
     //    public static final String COLOR_CALM_M = "#240CB700";
@@ -118,7 +121,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final String COLOR_STRESS_S = "#FFF92E27";
     private static final String COLOR_FOCUSED_S = "#FF4027FB";
     private static final int LAST_333 = 333;
-//    public static final double PI_MIN = -7.02d;
+    //    public static final double PI_MIN = -7.02d;
 //    public static final double PI_MAX = 7.02d;
     public static final double PI_MIN = -4.02d;
     public static final double PI_MAX = 4.02d;
@@ -206,7 +209,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private long lastUpdate = 0;
     private double smoothed = 0;
     private double dLast;
-        private float a = 0.96f;
+    private float a = 0.96f;
     private boolean socketStarted = false;
     private Double lastPressure;
     private Fragment fragment;
@@ -228,7 +231,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private NavDrawerListAdapter adapter;
     private boolean mSlideNavigation = false;
     private HomeFragmentInteractor homeListener;
-    private int lastBatteryLevel=0;
+    private int lastBatteryLevel = 0;
     private int calcBattery;
 
 //
@@ -249,14 +252,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         presenter.passContext(HomeActivity.this);
         presenter.onCreate();
         navigationViewBasic();
-        Log.d(TAG,"HEADERTOKEN: "+Prefs.getString(CommonMethod.TOKEN));
+        Log.d(TAG, "HEADERTOKEN: " + Prefs.getString(CommonMethod.TOKEN));
         // setIds();
         setFragment();
 
         Timber.tag(TAG);
 
         rolling = new Rolling(10);
-
+        if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID)))
+            callRegistritrationActivity();
 
 
         checkStoragePermission();
@@ -268,6 +272,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         bottomBarTabSelected();
         DataStoreScheduleBroadcastReceiver.setAlarm(true, this);
 
+    }
+
+    private void callRegistritrationActivity() {
+        startActivity(new Intent(this, RegistrationNewActivity.class));
     }
 
     private void bottomBarTabSelected() {
@@ -339,7 +347,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         listSlidermenu.setAdapter(adapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ) {
@@ -378,19 +385,30 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         listSlidermenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(navDrawerItemList.size()-1==position)
-                        onDeviceDisconnected();
-                    else if(position==MENU_PROGRAMS){
-                        startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
-                    }else if(position==MENU_POSTURE){
-                        startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
-                    }else if(position==MENU_ALARM){
+                if (navDrawerItemList.size() - 1 == position)
+                    onDeviceDisconnected();
+                else if (position == MENU_PROGRAMS) {
+                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
+                } else if (position == MENU_POSTURE) {
+                    startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
+                } else if (position == MENU_ALARM) {
 //                        String export= Helper.exportDB();
 //                        Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
-                      callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
-                    }else if(position==MENU_FAQS){
-                        logoutFromUser();
-                    }
+                    /**
+                     * Comment Now for test
+                     */
+                    setFragment(PressureRawFragment.newInstance("",""));
+
+//                    callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
+
+                } else if (position == MENU_FAQS) {
+
+                    logoutFromUser();
+                }
+                else if (position == MENU_LOGOUT) {
+
+
+                }
 
                 openDrawer();
             }
@@ -408,7 +426,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private void logoutFromUser() {
         Prefs.remove(CommonMethod.ISLOGIN);
         Prefs.remove(CommonMethod.TOKEN);
-        Intent intent=new Intent(this,LoginActivity.class);
+        Prefs.remove(CommonMethod.USER_ID);
+        Intent intent = new Intent(this, RegistrationNewActivity.class);
         startActivity(intent);
         onDeviceDisconnected();
         finish();
@@ -433,6 +452,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     private void setFragment() {
         fragment = new HomeFragment();
+        fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).commit();
+    }
+
+    private void setFragment(Fragment fragment) {
         fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).commit();
     }
@@ -575,6 +599,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.action_device_history:
                 callSettingActvity(CommonMethod.FROM_DEVICE_HISTORY);
                 break;
+            case R.id.action_pressure_raw:
+                setFragment(PressureRawFragment.newInstance("",""));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -651,8 +678,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private <T> double calculateForBreathing(double pressure) {
-                secondPref(pressure);
-                return (calculateProportion(pressure));
+        secondPref(pressure);
+        return (calculateProportion(pressure));
     }
 //        breathview.addSample(SystemClock.elapsedRealtime(), calculateProportion(pressure));
 
@@ -665,7 +692,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void secondPref(double pressure) {
-        Log.d(TAG,"Pressure : "+pressure);
+        Log.d(TAG, "Pressure : " + pressure);
         rolling.add(pressure);
 //
 
@@ -676,12 +703,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //            lastMax=pressure;
 //        }
 
-        if(pressure>lastMax){
-            lastMax=pressure+100;
-            lastMin=lastMax-400;
-        }else if(pressure<lastMin){
-            lastMin=pressure-100;
-            lastMax=lastMin+400;
+        if (pressure > lastMax) {
+            lastMax = pressure + 100;
+            lastMin = lastMax - 400;
+        } else if (pressure < lastMin) {
+            lastMin = pressure - 100;
+            lastMax = lastMin + 400;
         }
 
     }
@@ -820,14 +847,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBatteryCountAvail(int intExtra) {
-        Log.d(TAG,"Battery Level: "+intExtra);
+        Log.d(TAG, "Battery Level: " + intExtra);
 //        calcBattery=(intExtra/MAX_BATTERY_VALUE)*100;
-        calcBattery= (((100) * (intExtra - (4000)) / (8191 - 4000)));;
-        if(lastBatteryLevel!=calcBattery){
+        calcBattery = (((100) * (intExtra - (4000)) / (8191 - 4000)));
+        ;
+        if (lastBatteryLevel != calcBattery) {
 //            battery.setmLevel((intExtra/MAX_BATTERY_VALUE)*100);
             battery.setmLevel(calcBattery);
         }
-        lastBatteryLevel=calcBattery;
+        lastBatteryLevel = calcBattery;
 //        homeListener.onBatteryCountAvail(intExtra);
     }
 
@@ -848,8 +876,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             } else if (deviceState == DeviceState.DISCONNECTED) {
                 checkDeviceConnection(coordinator);
             }
-            if(deviceState==DeviceState.CHARACTERISTICS_WRITE
-                    || deviceState==DeviceState.WRITE){
+            if (deviceState == DeviceState.CHARACTERISTICS_WRITE
+                    || deviceState == DeviceState.WRITE) {
                 homeListener.onConnectionStateAvail("");
             }
         }
@@ -863,7 +891,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStepCountReceived(int intExtra) {
-        if(txtConnectionStatus.getVisibility()!=View.VISIBLE)
+        if (txtConnectionStatus.getVisibility() != View.VISIBLE)
             txtConnectionStatus.setVisibility(View.VISIBLE);
         txtConnectionStatus.setText(String.valueOf(intExtra));
 
@@ -919,7 +947,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void reactUnkownState() {
-        homeListener.onBreathingStateAvail(null,0);
+        homeListener.onBreathingStateAvail(null, 0);
     }
 
 
@@ -943,19 +971,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //            }
 //        },90);
     }
+
     private void reactStressState() {
-        homeListener.onBreathingStateAvail("Stress\nState",R.drawable.stress_streak_icon);
+        homeListener.onBreathingStateAvail("Stress\nState", R.drawable.stress_streak_icon);
 
 //        setState(BreathState.STRESS.name(), Color.parseColor(COLOR_STRESS_M), Color.parseColor(COLOR_STRESS_S));
     }
 
     private void reactFocusedState() {
-        homeListener.onBreathingStateAvail("Attentive\nState",R.drawable.focus_streak_icon);
+        homeListener.onBreathingStateAvail("Attentive\nState", R.drawable.focus_streak_icon);
 //        setState(BreathState.FOCUSED.name(), Color.parseColor(COLOR_FOCUSED_M), Color.parseColor(COLOR_FOCUSED_S));
     }
 
     private void reactCalmState() {
-        homeListener.onBreathingStateAvail("Composed\nState",R.drawable.calm_streak_icon);
+        homeListener.onBreathingStateAvail("Composed\nState", R.drawable.calm_streak_icon);
 //        setState(BreathState.CALM.name(), Color.parseColor(COLOR_CALM_M), Color.parseColor(COLOR_CALM_S));
     }
 
@@ -1032,7 +1061,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void setAvgValue(int mAvgCount) {
-        if(homeListener!=null)
+        if (homeListener != null)
             homeListener.onAvgValueAvailable(mAvgCount);
     }
 
