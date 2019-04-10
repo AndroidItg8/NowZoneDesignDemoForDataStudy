@@ -53,6 +53,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.DataStoreScheduleBroadcastReceiver;
 import itg8.com.nowzonedesigndemo.R;
+import itg8.com.nowzonedesigndemo.accelerometer.AccelerometerFragment;
 import itg8.com.nowzonedesigndemo.breath.BreathHistoryActivity;
 import itg8.com.nowzonedesigndemo.breath_history.BreathsHistoryActivity;
 import itg8.com.nowzonedesigndemo.common.BaseActivity;
@@ -65,6 +66,7 @@ import itg8.com.nowzonedesigndemo.home.mvp.BreathView;
 import itg8.com.nowzonedesigndemo.home.mvp.StateTimeModel;
 import itg8.com.nowzonedesigndemo.login.LoginActivity;
 import itg8.com.nowzonedesigndemo.posture.PostureCalibrateSettingActivity;
+import itg8.com.nowzonedesigndemo.pressure.PressureProcessFragment;
 import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
 import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
 import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
@@ -107,6 +109,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MENU_FAQS = 7;
     private static final int MENU_PROGRAMS = 3;
     private static final int MENU_LOGOUT = 8;
+    private static final int MENU_PROCESS_RAW = 9;
+    private static final int MENU_PROCESS_PRESSURE = 9;
 
 
     //    public static final String COLOR_CALM_M = "#240CB700";
@@ -388,26 +392,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 if (navDrawerItemList.size() - 1 == position)
                     onDeviceDisconnected();
                 else if (position == MENU_PROGRAMS) {
-                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
+                    /**
+                     * Comment Now  For Test Accelerometer
+                     */
+//                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
+
+                    setFragment(AccelerometerFragment.newInstance("",""));
+
                 } else if (position == MENU_POSTURE) {
                     startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
                 } else if (position == MENU_ALARM) {
-//                        String export= Helper.exportDB();
-//                        Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
-                    /**
-                     * Comment Now for test
-                     */
-                    setFragment(PressureRawFragment.newInstance("",""));
+                    String export= Helper.exportDB();
+                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
+
 
 //                    callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
 
                 } else if (position == MENU_FAQS) {
-
                     logoutFromUser();
                 }
                 else if (position == MENU_LOGOUT) {
-
-
+                    setFragment(PressureRawFragment.newInstance("",""));
+                }else if (position == MENU_PROCESS_RAW) {
+                    setFragment(PressureProcessFragment.newInstance("",""));
                 }
 
                 openDrawer();
@@ -458,7 +465,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     private void setFragment(Fragment fragment) {
         fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).commit();
+        fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).addToBackStack(fragment.getTag()).commitAllowingStateLoss();
     }
 
     private void onPermissionGrantedForStorage() {

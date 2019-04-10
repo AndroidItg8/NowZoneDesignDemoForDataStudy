@@ -54,4 +54,6 @@ public interface RDataManagerListener {
     boolean onSensorDataAvailToStore(DataModelPressure pressure);
 
     void onRawData(double pressure);
+
+    void onAccelerometer(double x, double y, double z);
 }

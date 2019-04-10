@@ -123,6 +123,7 @@ public class SleepMainFragment extends Fragment implements View.OnClickListener 
         //   initBarChart();
         //  initPositiveNegativeChart();
         cubicLineChart();
+
         return view;
     }
 

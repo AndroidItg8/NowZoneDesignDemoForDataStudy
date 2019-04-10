@@ -1,4 +1,4 @@
-package itg8.com.nowzonedesigndemo.pressure;
+package itg8.com.nowzonedesigndemo.accelerometer;
 
 
 import android.content.BroadcastReceiver;
@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,54 +19,52 @@ import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.Legend.LegendForm;
-
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
+
 import com.github.mikephil.charting.data.Entry;
+
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
+import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
 import io.reactivex.Observable;
-
 import io.reactivex.Observer;
-
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PressureRawFragment#newInstance} factory method to
+ * Use the {@link AccelerometerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PressureRawFragment extends Fragment implements OnChartValueSelectedListener {
+public class AccelerometerFragment extends Fragment implements OnChartValueSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "AccelerometerFragment";
+    private static final int MAXIMUM_VALUE_ALL = 65535;
+    private static final float MAX_ENTRIES = 5000;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private LineChart chart;
-    private static final String TAG = "PressureRawFragment";
-
-    private static final int MAX_ENTRIES = 5000;
     private boolean moveToLastEntry=true;
     private LineDataSet set;
+
 
 
 
@@ -78,26 +74,25 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
             if (intent != null) {
                 String action = intent.getAction();
                 if (action.equalsIgnoreCase(getString(R.string.action_data_avail))) {
-                    double PressureRaw = intent.getDoubleExtra(CommonMethod.RAW_DATA_PRESSURE, 0);
-                    double processPressure = intent.getLongExtra(CommonMethod.ACTION_DATA_LONG, 0);
-//                    Log.d("BreathPresenterImp","data to presenter:"+model+"  "+timestamp);
+                    double acc_X = intent.getDoubleExtra(CommonMethod.ACC_X, 0);
+                    double acc_Y = intent.getDoubleExtra(CommonMethod.ACC_Y, 0);
+                    double acc_Z = intent.getDoubleExtra(CommonMethod.ACC_Z, 0);
+                    Log.d(TAG, "data to presenter:" + " acc_X :" + acc_X + " acc_Y :" + acc_Y + " acc_Z " + acc_Z);
                     //    BreathPresenterImp.this.model.dataStarted(true);
-                    onPressureReceived( PressureRaw);
 
+                    onAccelerometer(new TempAccelerpmeter(acc_X, acc_Y, acc_Z));
                 }
             }
         }
     };
 
 
-
-    private void onPressureReceived(double pressureRaw) {
-        Log.d(TAG, "onPressureReceived: Pressure"+pressureRaw);
-        Observable<Double> observable = Observable.just(pressureRaw);
-        observable.flatMap(new Function<Double, Observable<Boolean>>() {
+    private void onAccelerometer(TempAccelerpmeter tempAccelerpmeter) {
+        Observable<TempAccelerpmeter> observable = Observable.just(tempAccelerpmeter);
+        observable.flatMap(new Function<TempAccelerpmeter, Observable<Boolean>>() {
             @Override
-            public Observable<Boolean> apply(Double aFloat) throws Exception {
-                Log.d(TAG, "onPressureReceived: Pressure Float"+aFloat);
+            public Observable<Boolean> apply(TempAccelerpmeter aFloat) throws Exception {
+                Log.d(TAG, "onPressureReceived: Pressure Float" + new Gson().toJson(aFloat));
                 addEntry(aFloat);
                 return Observable.just(true);
             }
@@ -126,30 +121,16 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
 
         updateChartAnimate();
 
-
-
-    }
-    public void updateChartAnimate(){
-        Handler handler = new Handler();
-        int delay = 30000; //milliseconds
-
-        handler.postDelayed(new Runnable(){
-            public void run(){
-                chart.animateX(50000);
-                NotifyAll();
-
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
     }
 
-    @Override
-    public void onDestroyView() {
 
-        super.onDestroyView();
-    }
 
-    public PressureRawFragment() {
+
+
+
+
+
+    public AccelerometerFragment() {
         // Required empty public constructor
     }
 
@@ -159,11 +140,11 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PressureRawFragment.
+     * @return A new instance of fragment AccelerometerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PressureRawFragment newInstance(String param1, String param2) {
-        PressureRawFragment fragment = new PressureRawFragment();
+    public static AccelerometerFragment newInstance(String param1, String param2) {
+        AccelerometerFragment fragment = new AccelerometerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -178,25 +159,19 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_pressure_raw, container, false);
-        chart = view.findViewById(R.id.line_chart);
+        View view = inflater.inflate(R.layout.fragment_accelerometer, container, false);
+        chart = view.findViewById(R.id.barChat);
         registerReceiver();
         setLineChart();
         return view;
     }
 
-    private void registerReceiver() {
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(getActivity().getResources().getString(R.string.action_data_avail)));
-//        model.onInitStateTime();
-    }
 
     private void setLineChart() {
         chart.setOnChartValueSelectedListener(this);
@@ -228,7 +203,7 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         Legend l = chart.getLegend();
 
         // modify the legend ...
-        l.setForm(LegendForm.LINE);
+        l.setForm(Legend.LegendForm.LINE);
         l.setTextColor(Color.BLACK);
 
         XAxis xl = chart.getXAxis();
@@ -290,71 +265,152 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
     }
 
 
+    public void updateChartAnimate(){
+        Handler handler = new Handler();
+        int delay = 30000; //milliseconds
 
-//    private void setData() {
-//        if (chart.getData() != null &&
-//                chart.getData().getDataSetCount() > 0) {
-//            if(set1!=null && values.size()>0) { ;
-//
-//                set1 = (LineDataSet) chart.getData().getDataSetByIndex(lastIndex);
-//                set1.setValues(values);
-//                NotifyAll();
-//            }
-//        } else {
-//            set1 = new LineDataSet(values, "DataSet 1");
-//            set1.setDrawIcons(false);
-//            set1.setColor(Color.BLACK);
-//            set1.setCircleColor(Color.GREEN);
-//            set1.setLineWidth(1f);
-//            set1.setCircleRadius(3f);
-//            set1.setDrawCircleHole(false);
-//            set1.setFormLineWidth(1f);
-//            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-//            set1.setFormSize(15.f);
-//            set1.setValueTextSize(9f);
-//            set1.enableDashedHighlightLine(10f, 5f, 0f);
-//            set1.setDrawFilled(true);
-//            set1.setFillFormatter(new IFillFormatter() {
-//                @Override
-//                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-//                    return chart.getAxisLeft().getAxisMinimum();
-//                }
-//            });
-//
-//            if (Utils.getSDKInt() >= 18) {
-//                // drawables only supported on api level 18 and above
-//                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.stress);
-//                set1.setFillDrawable(drawable);
-//            } else {
-//                set1.setFillColor(Color.BLACK);
-//            }
-//            lastIndex =set1.getEntryCount();
-//            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-//            dataSets.add(set1); // add the data sets
-//
-//            LineData data = new LineData(dataSets);
-//            chart.setData(data);
-//        }
-//    }
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                chart.animateX(50000);
+                NotifyAll();
 
-    private void NotifyAll() {
-        if(set!=null && chart !=null )
-        set.notifyDataSetChanged();
-        chart.getData().notifyDataChanged();
-        chart.notifyDataSetChanged();
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
+    private void NotifyAll() {
+        if( chart !=null)
+
+
+        chart.getData().notifyDataChanged();
+        chart.notifyDataSetChanged();
+        chart.invalidate();
+    }
+
+
+    private void addEntry(TempAccelerpmeter temp) {
+        Log.d(TAG, "addEntry: "+"AccX :" +temp.getAccY() +"AccY" +temp.getAccY() +"AccZ" +temp.getAccZ());
+
+        LineData data = chart.getData();
+
+        if (data != null && chart.getData().getDataSetCount() > 0) {
+
+//            ILineDataSet set = data.getDataSetByIndex(0);
+//         LineDataSet   set = (LineDataSet) data.getDataSetByIndex(0);
+
+
+                LineDataSet dataSetGraphA = (LineDataSet) data.getDataSetByIndex(0);
+                LineDataSet dataSetGraphB = (LineDataSet) data.getDataSetByIndex(1);
+                LineDataSet dataSetGraphC = (LineDataSet) data.getDataSetByIndex(2);
+                // LineDataSet set1= data.getDataSetByIndex(1);
+                // set.addEntry(...); // can be called as well
+                if (dataSetGraphA == null) {
+                    dataSetGraphA = createSet(0);
+                    data.addDataSet(dataSetGraphA);
+                }
+                if (dataSetGraphB == null) {
+                    dataSetGraphB = createSet(1);
+                    data.addDataSet(dataSetGraphB);
+                }
+                if (dataSetGraphC == null) {
+                    dataSetGraphC = createSet(2);
+                    data.addDataSet(dataSetGraphC);
+                }
+
+
+
+//             set.addEntry(new Entry(set.getEntryCount(),aFloat)); // can be called as well
+
+//            if (set == null) {
+//                set = createSet(temp);
+//                data.addDataSet(set);
+//            }
+            Log.d(TAG, "addEntry: set.getEntryCount +"+ set.getEntryCount());
+            data.addEntry(new Entry(dataSetGraphA.getEntryCount(),new BigDecimal(temp.getAccX()).floatValue(),dataSetGraphA), 0);
+            data.addEntry(new Entry(dataSetGraphB.getEntryCount(), new BigDecimal(temp.getAccY()).floatValue(), dataSetGraphB), 1);
+            data.addEntry(new Entry(dataSetGraphC.getEntryCount(), new BigDecimal(temp.getAccZ()).floatValue(), dataSetGraphC), 2);
+
+            data.notifyDataChanged();
+            dataSetGraphA.notifyDataSetChanged();
+            dataSetGraphB.notifyDataSetChanged();
+            dataSetGraphC.notifyDataSetChanged();
+//            removeOutdatedEntries(set);
+
+            // let the chart know it's data has changed
+            chart.notifyDataSetChanged();
+
+
+            // limit the number of visible entries
+
+            chart.invalidate();
+
+            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
+//            chart.setVisibleYRangeMaximum(15, YAxis.AxisDependency.LEFT);
+
+//             chart.setVisibleYRange(30, YAxis.AxisDependency.LEFT);
+
+
+
+
+//
+//            if (moveToLastEntry) {
+//                // move to the latest entry
+//
+//                chart.moveViewToX(data.getEntryCount());
+//            }
+
+
+
+
+//             this automatically refreshes the chart (calls invalidate())
+//             chart.moveViewTo(data.getXValCount()-7, 55f,
+//             YAxis.AxisDependency.LEFT);
+        }
+    }
+
+    private LineDataSet createSet(int temp) {
+      String c = null, s = null;
+      if(temp ==0) {
+          c = "#ed1f24";
+          s = "X Value";
+      }
+        else if(temp ==1){
+          c = "#004bf6";
+          s = "Y Value";
+      }
+      else if(temp == 2){
+          c = "#ffba00";
+          s = "Z Value";
+      }
+
+        LineDataSet set = new LineDataSet(null, s);
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(Color.BLUE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(4f);
+        set.setFillAlpha(65);
+        set.setFillColor(Color.parseColor(c));
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.BLUE);
+        set.setValueTextSize(9f);
+        set.setDrawValues(false);
+        return set;
+    }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.d(TAG, "onValueSelected: ");
-
     }
 
     @Override
     public void onNothingSelected() {
         Log.d(TAG, "onNothingSelected: ");
-
+    }
+    private void registerReceiver() {
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(getActivity().getResources().getString(R.string.action_data_avail)));
+//        model.onInitStateTime();
     }
 
     @Override
@@ -367,85 +423,5 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         }
     }
 
-    private void addEntry(Double aFloat) {
-        BigDecimal bigDecimal = new BigDecimal(aFloat);
-        Log.d(TAG, "addEntry: bigDecimal"+bigDecimal.floatValue());
-        LineData data = chart.getData();
 
-        if (data != null  && chart.getData().getDataSetCount() > 0) {
-
-//            ILineDataSet set = data.getDataSetByIndex(0);
-//         LineDataSet   set = (LineDataSet) data.getDataSetByIndex(0);
-
-            set = (LineDataSet) data.getDataSetByIndex(0);
-//             set.addEntry(new Entry(set.getEntryCount(),aFloat)); // can be called as well
-
-            if (set == null) {
-                set = createSet();
-                data.addDataSet(set);
-            }
-            Log.d(TAG, "addEntry: set.getEntryCount +"+ set.getEntryCount());
-            data.addEntry(new Entry(set.getEntryCount(),bigDecimal.floatValue()), 0);
-
-            data.notifyDataChanged();
-//            removeOutdatedEntries(set);
-
-            // let the chart know it's data has changed
-            chart.notifyDataSetChanged();
-
-            // limit the number of visible entries
-
-            chart.invalidate();
-            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
-
-//             chart.setVisibleYRange(30, YAxis.AxisDependency.LEFT);
-
-
-
-
-
-//            if (moveToLastEntry) {
-//                // move to the latest entry
-//
-//                chart.moveViewToX(data.getEntryCount());
-//            }
-
-
-
-
-            // this automatically refreshes the chart (calls invalidate())
-            // chart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
-        }
-    }
-
-    private LineDataSet createSet() {
-
-        LineDataSet set = new LineDataSet(null, "Pressure Raw Data ");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.BLUE);
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
-        set.setFillAlpha(65);
-        set.setFillColor(ColorTemplate.getHoloBlue());
-        set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.BLUE);
-        set.setValueTextSize(9f);
-        set.setDrawValues(false);
-        return set;
-    }
-
-
-        // (more code, irrelevant for the issue...)
-        public  void removeOutdatedEntries(LineDataSet... dataSets) {
-            for (DataSet ds : dataSets) {
-                while (ds.getEntryCount() > 5000) {
-                    ds.removeFirst();
-                }
-            }
-
-    }
 }
-
-

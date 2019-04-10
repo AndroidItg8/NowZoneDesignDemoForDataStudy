@@ -5,12 +5,9 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.util.SparseArray;
 
-
-import com.google.gson.Gson;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -30,9 +27,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -538,7 +533,12 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 /**
                  * Add now for Raw Process Data line chart
                  */
+
+                listener.onAccelerometer(model.getX(), model.getY(), model.getZ());
                 listener.onRawData(model.getPressure());
+
+
+
 
                 processModelData(model, mContext);
             }
