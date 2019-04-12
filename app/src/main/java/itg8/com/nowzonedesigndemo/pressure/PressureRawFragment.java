@@ -30,6 +30,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -66,9 +67,8 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
     private LineChart chart;
     private static final String TAG = "PressureRawFragment";
 
-    private static final int MAX_ENTRIES = 5000;
+    private static final int MAX_ENTRIES = 100;
     private boolean moveToLastEntry=true;
-    private LineDataSet set;
 
 
 
@@ -82,7 +82,7 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
                     double processPressure = intent.getLongExtra(CommonMethod.ACTION_DATA_LONG, 0);
 //                    Log.d("BreathPresenterImp","data to presenter:"+model+"  "+timestamp);
                     //    BreathPresenterImp.this.model.dataStarted(true);
-                    onPressureReceived( PressureRaw);
+                    onPressureReceived((float) PressureRaw);
 
                 }
             }
@@ -91,40 +91,41 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
 
 
 
-    private void onPressureReceived(double pressureRaw) {
+    private void onPressureReceived(float pressureRaw) {
         Log.d(TAG, "onPressureReceived: Pressure"+pressureRaw);
-        Observable<Double> observable = Observable.just(pressureRaw);
-        observable.flatMap(new Function<Double, Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> apply(Double aFloat) throws Exception {
-                Log.d(TAG, "onPressureReceived: Pressure Float"+aFloat);
-                addEntry(aFloat);
-                return Observable.just(true);
-            }
-        }).subscribeOn(Schedulers.newThread()).subscribe(new Observer<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        addEntry(pressureRaw);
 
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-        updateChartAnimate();
+//        Observable<Float> observable = Observable.just(pressureRaw);
+//        observable.flatMap(new Function<Float, Observable<Boolean>>() {
+//            @Override
+//            public Observable<Boolean> apply(Float aFloat) throws Exception {
+//                Log.d(TAG, "onPressureReceived: Pressure Float"+aFloat);
+//                return Observable.just(true);
+//            }
+//        }).subscribeOn(Schedulers.newThread()).subscribe(new Observer<Boolean>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Boolean aBoolean) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                e.printStackTrace();
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+//
+//        updateChartAnimate();
 
 
 
@@ -137,7 +138,6 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
             public void run(){
                 chart.animateX(50000);
                 NotifyAll();
-
                 handler.postDelayed(this, delay);
             }
         }, delay);
@@ -240,7 +240,7 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setAxisMaximum(8000f);
-        leftAxis.setAxisMinimum(0f);
+        leftAxis.setAxisMinimum(-2000f);
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = chart.getAxisRight();
@@ -338,8 +338,8 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
 //    }
 
     private void NotifyAll() {
-        if(set!=null && chart !=null )
-        set.notifyDataSetChanged();
+        if( chart !=null )
+
         chart.getData().notifyDataChanged();
         chart.notifyDataSetChanged();
     }
@@ -367,17 +367,17 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         }
     }
 
-    private void addEntry(Double aFloat) {
-        BigDecimal bigDecimal = new BigDecimal(aFloat);
-        Log.d(TAG, "addEntry: bigDecimal"+bigDecimal.floatValue());
+    private void addEntry(Float aFloat) {
+//        BigDecimal bigDecimal = new BigDecimal(aFloat);
+//        Log.d(TAG, "addEntry: bigDecimal"+bigDecimal.floatValue());
         LineData data = chart.getData();
 
-        if (data != null  && chart.getData().getDataSetCount() > 0) {
+        if (data != null ) {
 
 //            ILineDataSet set = data.getDataSetByIndex(0);
 //         LineDataSet   set = (LineDataSet) data.getDataSetByIndex(0);
 
-            set = (LineDataSet) data.getDataSetByIndex(0);
+            ILineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
 //             set.addEntry(new Entry(set.getEntryCount(),aFloat)); // can be called as well
 
             if (set == null) {
@@ -385,9 +385,12 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
                 data.addDataSet(set);
             }
             Log.d(TAG, "addEntry: set.getEntryCount +"+ set.getEntryCount());
-            data.addEntry(new Entry(set.getEntryCount(),bigDecimal.floatValue()), 0);
+            data.addEntry(new Entry(set.getEntryCount(),aFloat), 0);
+//            data.addEntry(new Entry(data.getXMax()+1,bigDecimal.floatValue()), 0);
 
             data.notifyDataChanged();
+//            set.notifyDataSetChanged();
+
 //            removeOutdatedEntries(set);
 
             // let the chart know it's data has changed
@@ -404,18 +407,18 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
 
 
 
-//            if (moveToLastEntry) {
-//                // move to the latest entry
-//
-//                chart.moveViewToX(data.getEntryCount());
-//            }
+            if (moveToLastEntry) {
+                // move to the latest entry
+
+                chart.moveViewToX(data.getEntryCount());
+            }
 
 
 
 
             // this automatically refreshes the chart (calls invalidate())
-            // chart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
+//             chart.moveViewTo(data.getXValCount()-7, 55f,
+//             AxisDependency.LEFT);
         }
     }
 

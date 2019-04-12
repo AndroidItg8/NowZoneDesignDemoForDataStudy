@@ -56,4 +56,17 @@ public interface RDataManagerListener {
     void onRawData(double pressure);
 
     void onAccelerometer(double x, double y, double z);
+
+    void onGynometer(double getgX, double getgY, double getgZ);
+
+    void onMagnometer(double getmX, double getmY, double getmZ);
+
+
+    void onLoadCell(long loadCell1, long loadCell2);
+
+    void onMIC(long mic);
+
+    void onOptical(long optical);
+
+    void onTemp(int temprature);
 }

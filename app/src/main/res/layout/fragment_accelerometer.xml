@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".accelerometer.AccelerometerFragment">
+
+    <CheckBox
+        android:id="@+id/chk_XValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:checked="true"
+        android:text="X Value" />
+
+    <CheckBox
+        android:id="@+id/chk_YValue"
+        android:layout_toEndOf="@+id/chk_XValue"
+        android:layout_width="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
+        android:text="Y Value"
+        />
+
+    <CheckBox
+        android:id="@+id/chk_ZValue"
+        android:layout_toEndOf="@+id/chk_YValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Z Value" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/barChat"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/chk_ZValue"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</FrameLayout>
+</RelativeLayout>

@@ -11,6 +11,8 @@ public class TempAccelerpmeter {
         this.accZ = accZ;
     }
 
+
+
     public double getAccX() {
         return accX;
     }

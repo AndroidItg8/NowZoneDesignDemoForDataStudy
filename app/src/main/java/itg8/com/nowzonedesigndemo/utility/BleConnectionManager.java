@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +24,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 import itg8.com.nowzonedesigndemo.connection.ConnectionStateListener;
 import itg8.com.nowzonedesigndemo.exception.StringEmptyException;
@@ -298,16 +303,16 @@ public class BleConnectionManager implements ConnectionManager {
 
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-
-            Log.d(TAG,characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
-            Log.d(TAG,characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
+            Log.d(TAG,"UUIDHEX "+characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
+            Log.d(TAG,"UUIDBYTES "+characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
 //                mHandler.sendMessage(Message.obtain(null,MSG_PRESSURE_ACCEL,characteristic));
                 if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE_A4.toString()))
                     pressure=characteristic.getValue();
                 if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE.toString()))
                     acc=characteristic.getValue();
+
                 if(pressure!=null && acc!=null) {
-                    listener.onDataAvail(pressure,acc);
+                    manipulateData(pressure,acc);
                     pressure=null;acc=null;
                 }
 //                dataReceived(characteristic.getValue());
@@ -331,6 +336,35 @@ public class BleConnectionManager implements ConnectionManager {
         };
     }
 
+    private void manipulateData(byte[] pressure, byte[] acc) {
+        Observable.just(passForDifferentiate(pressure,acc)).subscribeOn(Schedulers.single()).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                d.dispose();
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+
+    private boolean passForDifferentiate(byte[] pressure, byte[] acc) {
+        listener.onDataAvail(pressure,acc);
+        return true;
+    }
 
 
     private boolean discoverServices() {

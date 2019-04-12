@@ -261,7 +261,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         setFragment();
 
         Timber.tag(TAG);
-
         rolling = new Rolling(10);
         if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID)))
             callRegistritrationActivity();
@@ -391,30 +390,43 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (navDrawerItemList.size() - 1 == position)
                     onDeviceDisconnected();
-                else if (position == MENU_PROGRAMS) {
-                    /**
-                     * Comment Now  For Test Accelerometer
-                     */
-//                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
 
-                    setFragment(AccelerometerFragment.newInstance("",""));
+
+                else if (position == MENU_PROGRAMS) {
+//                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
+                    setFragment(AccelerometerFragment.newInstance(1));
 
                 } else if (position == MENU_POSTURE) {
-                    startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
+                    /**
+                     * Comment Now
+                     */
+                    setFragment(AccelerometerFragment.newInstance(3));
+
+                    //    startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
                 } else if (position == MENU_ALARM) {
-                    String export= Helper.exportDB();
-                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
+                    /**
+                     * Comment Now
+                     */
+//                    String export = Helper.exportDB();
+//                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
+//// callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
 
-
-//                    callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
+                    setFragment(AccelerometerFragment.newInstance(2));
 
                 } else if (position == MENU_FAQS) {
-                    logoutFromUser();
-                }
-                else if (position == MENU_LOGOUT) {
-                    setFragment(PressureRawFragment.newInstance("",""));
-                }else if (position == MENU_PROCESS_RAW) {
-                    setFragment(PressureProcessFragment.newInstance("",""));
+                    setFragment(AccelerometerFragment.newInstance(5));
+
+//                    logoutFromUser();
+                } else if (position == MENU_USER_PROFILE) {
+                    setFragment(PressureRawFragment.newInstance("", ""));
+                } else if (position == MENU_DEVICE) {
+                    setFragment(PressureProcessFragment.newInstance("", ""));
+                } else if (position == MENU_NOTIFICATION) {
+                    setFragment(AccelerometerFragment.newInstance(1));
+                }  else if (position == MENU_CONTACT_US) {
+                    setFragment(AccelerometerFragment.newInstance(4));
+                } else if (position == MENU_LOGOUT) {
+                    setFragment(AccelerometerFragment.newInstance(6));
                 }
 
                 openDrawer();
@@ -607,7 +619,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 callSettingActvity(CommonMethod.FROM_DEVICE_HISTORY);
                 break;
             case R.id.action_pressure_raw:
-                setFragment(PressureRawFragment.newInstance("",""));
+                setFragment(PressureRawFragment.newInstance("", ""));
                 break;
         }
 
