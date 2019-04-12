@@ -164,7 +164,6 @@ public class AccelerometerFragment extends BaseFragment implements OnChartValueS
         View view = inflater.inflate(R.layout.fragment_accelerometer, container, false);
 
         chart = view.findViewById(R.id.barChat);
-        setLineData();
 
         xValue = view.findViewById(R.id.chk_XValue);
         yValue = view.findViewById(R.id.chk_YValue);
