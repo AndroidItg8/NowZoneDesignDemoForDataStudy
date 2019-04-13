@@ -9,99 +9,99 @@
     android:background="@color/colorAccent"
     tools:context="itg8.com.nowzonedesigndemo.home.HomeActivity">
 
-<include layout="@layout/content_home_main" />
+  <include layout="@layout/content_home_main" />
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:background="@color/colorAccent"-->
-        <!--android:layout_height="match_parent">-->
+  <!--<RelativeLayout-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_gravity="start"-->
+  <!--android:background="@color/colorAccent"-->
+  <!--android:layout_height="match_parent">-->
 
-    <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+  <!--<FrameLayout-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent">-->
 
-        <!--<ImageView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/wallpaper_3"-->
-            <!--android:scaleType="fitXY"-->
-            <!--android:alpha="0.5"/>-->
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="@color/colorWhite"-->
-        <!--android:orientation="vertical">-->
+  <!--<ImageView-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:background="@drawable/wallpaper_3"-->
+  <!--android:scaleType="fitXY"-->
+  <!--android:alpha="0.5"/>-->
+  <!--<LinearLayout-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:background="@color/colorWhite"-->
+  <!--android:orientation="vertical">-->
 
-    <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="60dp"-->
-        <!--android:id="@+id/img_icon"-->
-        <!--android:layout_margin="20dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:src="@mipmap/ic_launcher"/>-->
+  <!--<ImageView-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="60dp"-->
+  <!--android:id="@+id/img_icon"-->
+  <!--android:layout_margin="20dp"-->
+  <!--android:layout_gravity="center_horizontal"-->
+  <!--android:src="@mipmap/ic_launcher"/>-->
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:textColor="@color/colorWhite"-->
-            <!--android:text="@string/name"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="@dimen/txt_value_sleep"/>-->
+  <!--<TextView-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_gravity="center_horizontal"-->
+  <!--android:textColor="@color/colorWhite"-->
+  <!--android:text="@string/name"-->
+  <!--android:textStyle="bold"-->
+  <!--android:textSize="@dimen/txt_value_sleep"/>-->
 
-        <!--<ListView-->
-        <!--android:id="@+id/list_slidermenu"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:background="@color/colorWhite"-->
-        <!--android:choiceMode="singleChoice"-->
-        <!--android:divider="@android:color/darker_gray"-->
-        <!--android:dividerHeight="1dp"-->
-        <!--android:listSelector="@drawable/list_selector" />-->
-    <!--</LinearLayout>-->
-    <!--</FrameLayout>-->
-    <!--</RelativeLayout>-->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+  <!--<ListView-->
+  <!--android:id="@+id/list_slidermenu"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:layout_marginTop="20dp"-->
+  <!--android:background="@color/colorWhite"-->
+  <!--android:choiceMode="singleChoice"-->
+  <!--android:divider="@android:color/darker_gray"-->
+  <!--android:dividerHeight="1dp"-->
+  <!--android:listSelector="@drawable/list_selector" />-->
+  <!--</LinearLayout>-->
+  <!--</FrameLayout>-->
+  <!--</RelativeLayout>-->
+  <android.support.design.widget.NavigationView
+      android:id="@+id/nav_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      android:fitsSystemWindows="false">
+
+    <!--<android.support.v4.widget.NestedScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!---->
+    <!--android:layout_height="match_parent">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="false">
+        android:background="@color/color_stress_half"
+        android:orientation="vertical">
 
-        <!--<android.support.v4.widget.NestedScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!---->
-            <!--android:layout_height="match_parent">-->
+      <include layout="@layout/nav_header_main" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/color_stress_half"
-                android:orientation="vertical">
-
-                <include layout="@layout/nav_header_main" />
-
-                <!--<android.support.v7.widget.RecyclerView-->
-                    <!--android:id="@+id/nav_drawer_recycler_view"-->
-                    <!--android:layout_width="280dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@android:color/white"-->
-                    <!--android:nestedScrollingEnabled="false"-->
-                    <!--tools:targetApi="lollipop" />-->
-                <ListView
-                android:id="@+id/list_slidermenu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:choiceMode="singleChoice"
-                android:divider="@android:color/darker_gray"
-                android:dividerHeight="1dp"
-                android:listSelector="@drawable/list_selector" />
-            </LinearLayout>
-        <!--</android.support.v4.widget.NestedScrollView>-->
-    </android.support.design.widget.NavigationView>
+      <!--<android.support.v7.widget.RecyclerView-->
+      <!--android:id="@+id/nav_drawer_recycler_view"-->
+      <!--android:layout_width="280dp"-->
+      <!--android:layout_height="wrap_content"-->
+      <!--android:background="@android:color/white"-->
+      <!--android:nestedScrollingEnabled="false"-->
+      <!--tools:targetApi="lollipop" />-->
+      <ListView
+          android:id="@+id/list_slidermenu"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="20dp"
+          android:choiceMode="singleChoice"
+          android:divider="@android:color/darker_gray"
+          android:dividerHeight="1dp"
+          android:listSelector="@drawable/list_selector" />
+    </LinearLayout>
+    <!--</android.support.v4.widget.NestedScrollView>-->
+  </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
 
 

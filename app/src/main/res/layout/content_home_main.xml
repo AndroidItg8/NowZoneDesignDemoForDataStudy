@@ -28,15 +28,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-        <itg8.com.nowzonedesigndemo.widget.BatteryView
-            android:layout_width="24dp"
-            android:layout_height="16dp"
-             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp"
-            android:layout_centerVertical="true"
-            android:id="@+id/battery" />
+                <itg8.com.nowzonedesigndemo.widget.BatteryView
+                    android:layout_width="24dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/battery" />
             </RelativeLayout>
-</android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
         <!--android:paddingStart="16dp"-->
 
 

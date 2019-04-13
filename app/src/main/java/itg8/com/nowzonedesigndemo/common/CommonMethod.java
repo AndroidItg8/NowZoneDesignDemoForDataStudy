@@ -2,10 +2,14 @@ package itg8.com.nowzonedesigndemo.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,7 +17,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,20 +36,7 @@ import static java.lang.Long.parseLong;
 public class CommonMethod {
 
 
-    public static final String ACC_X = "ACC_X";
-    public static final String ACC_Y = "ACC_Y";
-    public static final String ACC_Z = "ACC_Z";
-    public static final String GYNO_X = "GYNO_X";
-    public static final String GYNO_Y = "GYNO_Y";
-    public static final String GYNO_Z = "GYNO_Z";
-    public static final String MAGNO_X = "MAGNO_X";
-    public static final String MAGNO_Y = "MAGNO_Y";
-    public static final String MAGNO_Z = "MAGNO_Z";
-    public static final String LOAD_CELL_1 = "LOAD_CELL_1";
-    public static final String LOAD_CELL_2 = "LOAD_CELL_2";
-    public static final String MIC = "MIC";
-    public static final String OPTICAL = "OPTICAL";
-    public static final String TEMP = "TEMP";
+
     static final String TEMPTOKEN="HcENDQvJAk3UG2qIWyXKTS6UYbxg4SxBE98He6Cr29hAA4GaI7ZZ1sf_FPCqfRL3Yvjie8J6Q6370IQm0z628xmcI7Gm_HjdAFinQktoLpDSl_ANma3kA_KNUZT5WJJD-2AQB-wltgbgHVXlOBQRIPVpHZr8ejdRq7QNlDTIY0iwnz10a9Gjkqpu5l0SMWbspcWl1p3w39kZ_6heDMP_0y5rMZ-fI6hd-VrbSiDI_8bMl3JDm7sA2wn9JyMksGkCGrMfzMfqdnIjN_E-I0SFyydsn1_8FBeHXEy87LQnsBFayuytZUNZmjSg_w7N5Xxkn3cp_x_5j2bV0WFGkj23T1nEZHmqaY2Amj7W9OaXeD_0Le3_uCsgR3-L20Lm5WbpjSW9ZEMTOhCFcy3awwEDWrGZWjMw-Doy2WS7mzz-R0pQOxmWYd7wmV9k-I--QRi9liJ3Dd5J3mSrM7As4y0AC2BfmyPUp0EkYQuEKuhpCcI";
 
     public static final String USER_CURRENT_AVG = "USER_CURRENT_AVG";
@@ -56,6 +46,8 @@ public class CommonMethod {
 
     public static final String SAVEDAYS = "SAVEDAYS";
     public static final String USER_ID = "USER_ID";
+    public static final String MODEL = "MODEL";
+
 
 
     public static final long CONST_30_MIN=1800000;
@@ -172,7 +164,6 @@ public class CommonMethod {
     private static DataModelPressure model;
 
     public static final String RAW_DATA_PRESSURE = "RAW_DATA_PRESSURE";
-
 
 
     public static Typeface setFontOpenSansSemiBold(Context context) {
@@ -545,7 +536,24 @@ public class CommonMethod {
         return AppApplication.getInstance().initNetworkCall();
     }
 
+    public static LineDataSet getDataSetGraph(String s, String colorCode) {
 
+        LineDataSet set = new LineDataSet(null, s);
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set.setColor(Color.parseColor(colorCode));
+//        set.setCircleColor(Color.BLUE);
+            set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+            set.setFillAlpha(65);
+            set.setFillColor(Color.parseColor(colorCode));
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
+            set.setValueTextSize(9f);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setDrawValues(false);
+            return set;
+    }
 
 
     public interface alarmListener{

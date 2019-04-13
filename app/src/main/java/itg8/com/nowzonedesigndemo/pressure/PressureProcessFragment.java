@@ -226,39 +226,40 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
     }
 
     private void onPressureReceived(double pressureRaw) {
-        Log.d(TAG, "onPressureReceived: Pressure"+pressureRaw);
-        Observable<Double> observable = Observable.just(pressureRaw);
-        observable.flatMap(new Function<Double, Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> apply(Double aFloat) throws Exception {
-                Log.d(TAG, "onPressureReceived: Pressure Float"+aFloat);
-                addEntry(aFloat);
-                return Observable.just(true);
-            }
-        }).subscribeOn(Schedulers.newThread()).subscribe(new Observer<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-        updateChartAnimate();
+        addEntry(pressureRaw);
+//        Log.d(TAG, "onPressureReceived: Pressure"+pressureRaw);
+//        Observable<Double> observable = Observable.just(pressureRaw);
+//        observable.flatMap(new Function<Double, Observable<Boolean>>() {
+//            @Override
+//            public Observable<Boolean> apply(Double aFloat) throws Exception {
+//                Log.d(TAG, "onPressureReceived: Pressure Float"+aFloat);
+//
+//                return Observable.just(true);
+//            }
+//        }).subscribeOn(Schedulers.newThread()).subscribe(new Observer<Boolean>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Boolean aBoolean) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                e.printStackTrace();
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+//
+//        updateChartAnimate();
 
 
 
@@ -303,7 +304,7 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
             }
             Log.d(TAG, "addEntry: set.getEntryCount :"+bigDecimal.floatValue());
 //            data.addEntry(new Entry(set.getEntryCount(), bigDecimal.floatValue()), 0);
-            data.addEntry(new Entry(data.getXMax()+1, bigDecimal.floatValue()), 0);
+            data.addEntry(new Entry(set.getEntryCount(), bigDecimal.floatValue()), 0);
 
             data.notifyDataChanged();
 //            removeOutdatedEntries(set);

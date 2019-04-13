@@ -36,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,13 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+
 import itg8.com.nowzonedesigndemo.DataStoreScheduleBroadcastReceiver;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.accelerometer.AccelerometerFragment;
@@ -65,7 +58,6 @@ import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenterImp;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathView;
 import itg8.com.nowzonedesigndemo.home.mvp.StateTimeModel;
 import itg8.com.nowzonedesigndemo.login.LoginActivity;
-import itg8.com.nowzonedesigndemo.posture.PostureCalibrateSettingActivity;
 import itg8.com.nowzonedesigndemo.pressure.PressureProcessFragment;
 import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
 import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
@@ -73,11 +65,9 @@ import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
 import itg8.com.nowzonedesigndemo.setting.SettingMainActivity;
 import itg8.com.nowzonedesigndemo.sleep.SleepActivity;
 import itg8.com.nowzonedesigndemo.steps.StepsActivity;
-import itg8.com.nowzonedesigndemo.steps.stickyHeader.DoubleHeaderAdapter;
 import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
 import itg8.com.nowzonedesigndemo.utility.BreathState;
 import itg8.com.nowzonedesigndemo.utility.DeviceState;
-import itg8.com.nowzonedesigndemo.utility.Helper;
 import itg8.com.nowzonedesigndemo.utility.Rolling;
 import itg8.com.nowzonedesigndemo.widget.BatteryView;
 import itg8.com.nowzonedesigndemo.widget.navigation.BottomBar;
@@ -237,6 +227,70 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private HomeFragmentInteractor homeListener;
     private int lastBatteryLevel = 0;
     private int calcBattery;
+    private String title;
+    private AdapterView.OnItemClickListener sliderClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+/**
+ * Comment Now
+ */
+
+// if (navDrawerItemList.size() - 1 == position)
+//                    onDeviceDisconnected();
+
+
+            if (position == MENU_PROGRAMS) {
+//                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
+                setFragment(AccelerometerFragment.newInstance(2));
+                title = "Gynometer Graph";
+
+
+            } else if (position == MENU_POSTURE) {
+                /**
+                 * Comment Now
+                 */
+                setFragment(AccelerometerFragment.newInstance(4));
+                title = "Load cell Graph ";
+
+
+                //    startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
+            } else if (position == MENU_ALARM) {
+                /**
+                 * Comment Now
+                 */
+//                    String export = Helper.exportDB();
+//                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
+//// callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
+
+                setFragment(AccelerometerFragment.newInstance(3));
+
+            } else if (position == MENU_FAQS) {
+                title = "Optical Graph";
+                setFragment(AccelerometerFragment.newInstance(6));
+
+//                    logoutFromUser();
+            } else if (position == MENU_USER_PROFILE) {
+                title = "Pressure Raw Graph";
+                setFragment(PressureRawFragment.newInstance("", ""));
+            } else if (position == MENU_DEVICE) {
+                title = "Pressure Process Graph";
+                setFragment(PressureProcessFragment.newInstance("", ""));
+            } else if (position == MENU_NOTIFICATION) {
+                title = "Accelerometer Graph";
+
+                setFragment(AccelerometerFragment.newInstance(1));
+            } else if (position == MENU_CONTACT_US) {
+                title = " MIC Graph";
+                setFragment(AccelerometerFragment.newInstance(5));
+            } else if (position == MENU_LOGOUT) {
+                title = " Temperature Graph";
+                setFragment(AccelerometerFragment.newInstance(7));
+            }
+
+
+            openDrawer();
+        }
+    };
 
 //
 
@@ -373,7 +427,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
             }
         };
-        toolbar.setTitle("");
+
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
@@ -385,59 +439,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         drawerLayout.addDrawerListener(mDrawerToggle);
         // toolbar.setNavigationIcon(R.drawable.ic_settings_black_24dp);
-        listSlidermenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (navDrawerItemList.size() - 1 == position)
-                    onDeviceDisconnected();
 
 
-                else if (position == MENU_PROGRAMS) {
-//                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
-                    setFragment(AccelerometerFragment.newInstance(1));
-
-                } else if (position == MENU_POSTURE) {
-                    /**
-                     * Comment Now
-                     */
-                    setFragment(AccelerometerFragment.newInstance(3));
-
-                    //    startActivity(new Intent(HomeActivity.this, PostureCalibrateSettingActivity.class));
-                } else if (position == MENU_ALARM) {
-                    /**
-                     * Comment Now
-                     */
-//                    String export = Helper.exportDB();
-//                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
-//// callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
-
-                    setFragment(AccelerometerFragment.newInstance(2));
-
-                } else if (position == MENU_FAQS) {
-                    setFragment(AccelerometerFragment.newInstance(5));
-
-//                    logoutFromUser();
-                } else if (position == MENU_USER_PROFILE) {
-                    setFragment(PressureRawFragment.newInstance("", ""));
-                } else if (position == MENU_DEVICE) {
-                    setFragment(PressureProcessFragment.newInstance("", ""));
-                } else if (position == MENU_NOTIFICATION) {
-                    setFragment(AccelerometerFragment.newInstance(1));
-                }  else if (position == MENU_CONTACT_US) {
-                    setFragment(AccelerometerFragment.newInstance(4));
-                } else if (position == MENU_LOGOUT) {
-                    setFragment(AccelerometerFragment.newInstance(6));
-                }
-
-                openDrawer();
-            }
-        });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDrawer();
             }
         });
+
+        toolbar.setTitle(title);
 
 
     }
@@ -819,10 +830,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onDeviceDisconnected() {
+
         Log.d(TAG, "Device disconnected");
         Intent intent = new Intent("ACTION_NW_DEVICE_DISCONNECT");
         intent.putExtra(CommonMethod.ENABLE_TO_CONNECT, true);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
 //        Prefs.remove(CommonMethod.ISLOGIN);
 //        Prefs.remove(CommonMethod.TOKEN);
     }
@@ -830,6 +843,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onDeviceDisconnectedInTime() {
         Log.d(TAG, "Device disconnected");
+
         Intent intent = new Intent("ACTION_NW_DEVICE_DISCONNECT");
         intent.putExtra(CommonMethod.ENABLE_TO_CONNECT_IN_TIME, true);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -891,13 +905,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             homeListener.onConnectionStateAvail(deviceState.name());
             if (deviceState == DeviceState.CONNECTED) {
                 hideSnackbar();
+                if(listSlidermenu!=null)
+                    listSlidermenu.setOnItemClickListener(sliderClickListener);
                 homeListener.onConnectionStateAvail("");
             } else if (deviceState == DeviceState.DISCONNECTED) {
                 checkDeviceConnection(coordinator);
+                homeListener.onConnectionStateAvail("Please Device is disconnect...");
+
+
             }
             if (deviceState == DeviceState.CHARACTERISTICS_WRITE
                     || deviceState == DeviceState.WRITE) {
-                homeListener.onConnectionStateAvail("");
+                homeListener.onConnectionStateAvail("Please Wait Device is discovering data!!!");
             }
         }
     }
@@ -923,6 +942,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //        startActivity(new Intent(this, ScanDeviceActivity.class));
 //        finish();
         checkDeviceConnection(coordinator);
+        if(homeListener!=null)
+            homeListener.ondeviceAttached();
+
     }
 
 

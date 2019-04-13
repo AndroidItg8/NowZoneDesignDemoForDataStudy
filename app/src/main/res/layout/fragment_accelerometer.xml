@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/colorWhite"
+
     tools:context=".accelerometer.AccelerometerFragment">
+
 
     <CheckBox
         android:id="@+id/chk_XValue"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:checked="true"
+        android:visibility="invisible"
         android:text="X Value" />
 
     <CheckBox
@@ -21,8 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_margin="8dp"
         android:layout_height="wrap_content"
-        android:text="Y Value"
-        />
+        android:visibility="invisible"
+        android:text="Y Value" />
 
     <CheckBox
         android:id="@+id/chk_ZValue"
@@ -30,13 +32,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:visibility="invisible"
         android:text="Z Value" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:layout_below="@+id/chk_ZValue"
+        android:id="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"/>
+
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/barChat"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/chk_ZValue"
+        android:layout_below="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
 
 </RelativeLayout>

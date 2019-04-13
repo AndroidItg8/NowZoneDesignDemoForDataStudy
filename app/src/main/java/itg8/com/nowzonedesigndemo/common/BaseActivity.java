@@ -119,7 +119,6 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
     }
 
     private void showSnackbar(View v) {
-
         snackbar = Snackbar.make(v, R.string.dialog_disconnected_device, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override

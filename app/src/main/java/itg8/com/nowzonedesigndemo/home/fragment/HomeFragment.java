@@ -144,6 +144,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
         unbinder = ButterKnife.bind(this, view);
         isViewEnable=true;
         breathview.setOnClickListener(this);
+
+
         return view;
     }
 
@@ -203,6 +205,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     public void onDeviceNotAttachedToBody() {
         if(isViewEnable) {
             txtDeviceNotAttached.setVisibility(View.VISIBLE);
+            txtConnectionstatus.setText("");
         }
     }
 
@@ -210,6 +213,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     public void ondeviceAttached() {
         if(isViewEnable) {
             txtDeviceNotAttached.setVisibility(View.GONE);
+            txtConnectionstatus.setText("");
         }
 
     }

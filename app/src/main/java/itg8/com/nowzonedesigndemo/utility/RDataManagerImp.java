@@ -9,6 +9,8 @@ import android.util.Log;
 import android.util.SparseArray;
 
 
+import com.google.gson.Gson;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.io.BufferedWriter;
@@ -534,18 +536,8 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                  * Add now for Raw Process Data line chart
                  */
 
-                listener.onAccelerometer(model.getX(), model.getY(), model.getZ());
-                listener.onGynometer(model.getgX(), model.getgY(), model.getgZ());
-                listener.onMagnometer(model.getmX(), model.getmY(), model.getmZ());
-                listener.onLoadCell(model.getLoadCell1(), model.getLoadCell2());
-                listener.onMIC(model.getMic());
-                listener.onOptical(model.getOptical());
-                listener.onTemp(model.getTemprature());
-                listener.onRawData(model.getPressure());
-
-
-
-
+                listener.onAccelerometer(model);
+                Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
                 processModelData(model, mContext);
             }
 //            if(countActualData>100)
