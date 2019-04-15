@@ -27,6 +27,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -59,9 +61,8 @@ import okhttp3.ResponseBody;
 public class RegistrationNewActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
 
-
-
-//
+    private static int age;
+    //
 //    @BindView(R.id.basic_detail)
 //    CustomFontTextView basicDetail;
     @BindView(R.id.edt_name)
@@ -158,6 +159,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     private static double poundsToKilos(double pounds) {
         return pounds * 0.454;
+
     }
 
     @Override
@@ -274,7 +276,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     public static int getAge(Date date) {
 
-        int age = 0;
+       age = 0;
 
         Calendar now = Calendar.getInstance();
         Calendar dob = Calendar.getInstance();
@@ -313,6 +315,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 //                    model.setGender(edtGender.getText().toString());
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
+
+                    Log.d(TAG, "onClick: "+new Gson().toJson(model));
 
                     sendDataToServer(model);
                 }
@@ -585,7 +589,7 @@ showProgress();
             edtHeightFeet.setFocusable(true);
             edtHeightFeet.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-        isFromCm = !isFromCm;
+//        isFromCm = !isFromCm;
     }
 
     private void setDataFromBottomSheet(String gender) {
@@ -653,16 +657,32 @@ showProgress();
 
     private float calculateWeightInKg() {
         if (isFromKG)
-            return (float) poundsToKilos(Double.parseDouble(edtWeight.getText().toString()));
+            return Float.parseFloat(edtWeight.getText().toString()+".0");
+
         else
-            return Float.parseFloat(edtWeight.getText().toString());
+            return (float) poundsToKilos(Double.parseDouble(edtWeight.getText().toString()));
+
     }
 
     private float calculateHeightInFeet() {
         if (isFromCm)
             return Helper.centimeterToFeet(edtHeight.getText().toString());
-        else
-            return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
+        else {
+            double dCentimeter = 0d;
+            if (!TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
+
+
+                dCentimeter += ((Double.valueOf(edtHeightFeet.getText().toString())) * 30.48);
+
+
+                if (!TextUtils.isEmpty(edtHeightInch.getText().toString())) {
+                    dCentimeter += ((Double.valueOf(edtHeightInch.getText().toString())) * 2.54);
+                }
+
+            }
+            return (float) dCentimeter;
+        }
+          //  return (float) (Float.parseFloat(edtHeightInch.getText().toString()) + (0.1 * Float.parseFloat(edtHeightFeet.getText().toString())));
     }
 
     private boolean validate() {
@@ -677,25 +697,43 @@ showProgress();
             setFocus(edtMobile);
             valid = false;
         }
-//        if(isFromCm == true){
-//        if (TextUtils.isEmpty(edtHeight.getText().toString())) {
-//            inputHeight.setError("Please provide your height...");
-//            setFocus(edtHeight);
-//            valid = false;
-//        }
-//        }else{
-//            if (TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
-//                inputHeightFeet.setError("Please provide your height...");
-//                setFocus(edtHeightFeet);
-//                valid = false;
-//            }
-//            if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
-//                inputHeightInch.setError("Please provide your height...");
-//                setFocus(edtHeightInch);
-//                valid = false;
-//            }
-//
-//        }
+        if(isFromCm){
+        if (TextUtils.isEmpty(edtHeight.getText().toString())) {
+            inputHeight.setError("Please provide your height...");
+            inputHeightFeet.setError("");
+            inputHeightInch.setError("");
+            setFocus(edtHeight);
+            valid = false;
+        } }else{
+            if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
+                inputHeightInch.setError("Please provide your height...");
+                inputHeight.setError("");
+                setFocus(edtHeightInch);
+                valid = false;
+            }if (TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
+                inputHeightFeet.setError("Please provide your height...");
+                inputHeight.setError("");
+                setFocus(edtHeightFeet);
+                valid = false;
+            }
+
+
+        }
+        if(isFromKG){
+        if (TextUtils.isEmpty(edtWeight.getText().toString())) {
+            inputWeight.setError("Please provide your Weight...");
+            setFocus(edtHeight);
+            valid = false;
+        }
+        }else{
+            if (TextUtils.isEmpty(edtWeight.getText().toString())) {
+                inputWeight.setError("Please provide your Weight...");
+                setFocus(edtHeightFeet);
+                valid = false;
+            }
+
+
+        }
         if (TextUtils.isEmpty(edtPassword.getText().toString()) || edtPassword.getText().length() < 6) {
             inputPassword.setError("Please enter valid password (minimum 6 character)");
             setFocus(edtPassword);
@@ -706,6 +744,11 @@ showProgress();
             setFocus(edtWeight);
             valid = false;
         }
+         if(TextUtils.isEmpty(edtDay.getText().toString())){
+             lblBirth.setText("Please Select Valid Date of Birth..");
+             valid = false;
+
+         }
 
         return valid;
     }

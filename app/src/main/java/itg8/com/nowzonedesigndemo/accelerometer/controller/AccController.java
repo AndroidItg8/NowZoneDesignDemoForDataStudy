@@ -16,6 +16,8 @@ import itg8.com.nowzonedesigndemo.accelerometer.AccelListener;
 import itg8.com.nowzonedesigndemo.accelerometer.ColorController;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 
+import static itg8.com.nowzonedesigndemo.common.CommonMethod.getDataSetGraph;
+
 public class AccController extends BaseController {
 
     private static final int X_AXIS = 0;
@@ -49,7 +51,7 @@ public class AccController extends BaseController {
         lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), Y_AXIS);
         lineData.addEntry(new Entry(dataSetGraphC.getEntryCount(), z, dataSetGraphC), Z_AXIS);
 
-//        lineData.notifyDataChanged();
+        //lineData.notifyDataChanged();
         listener.invalidateChart();
 
 

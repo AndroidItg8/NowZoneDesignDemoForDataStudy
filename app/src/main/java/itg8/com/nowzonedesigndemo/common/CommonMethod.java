@@ -539,20 +539,20 @@ public class CommonMethod {
 
     public static LineDataSet getDataSetGraph(String s, String colorCode) {
 
-//        LineDataSet set = new LineDataSet(null, s);
-//            set.setAxisDependency(YAxis.AxisDependency.LEFT);
-//            set.setColor(Color.parseColor(colorCode));
-////        set.setCircleColor(Color.BLUE);
-//            set.setLineWidth(20f);
-////        set.setCircleRadius(4f);
-//            set.setFillAlpha(65);
-//            set.setFillColor(Color.parseColor(colorCode));
-////        set.setHighLightColor(Color.rgb(244, 117, 117));
-////        set.setValueTextColor(Color.BLUE);
-//            set.setValueTextSize(9f);
-//            set.setDrawCircleHole(false);
-//            set.setDrawCircles(false);
-//            set.setDrawValues(false);
+        LineDataSet set = new LineDataSet(null, s);
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set.setColor(Color.parseColor(colorCode));
+//        set.setCircleColor(Color.BLUE);
+            set.setLineWidth(20f);
+//        set.setCircleRadius(4f);
+            set.setFillAlpha(65);
+            set.setFillColor(Color.parseColor(colorCode));
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
+            set.setValueTextSize(9f);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setDrawValues(false);
 
 
 //        LineDataSet set = new LineDataSet(null, s);
@@ -568,18 +568,18 @@ public class CommonMethod {
 //        set.setValueTextSize(9f);
 //        set.setDrawValues(false);
 
-        LineDataSet set = new LineDataSet(null, s);
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.BLUE);
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
-        set.setFillAlpha(65);
-        set.setFillColor(ColorTemplate.getHoloBlue());
-        set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.BLUE);
-        set.setValueTextSize(9f);
-        set.setDrawValues(false);
+//        LineDataSet set = new LineDataSet(null, s);
+//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        set.setColor(ColorTemplate.getHoloBlue());
+//        set.setCircleColor(Color.BLUE);
+//        set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+//        set.setFillAlpha(65);
+//        set.setFillColor(ColorTemplate.getHoloBlue());
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
+//        set.setValueTextSize(9f);
+//        set.setDrawValues(false);
             return set;
     }
 

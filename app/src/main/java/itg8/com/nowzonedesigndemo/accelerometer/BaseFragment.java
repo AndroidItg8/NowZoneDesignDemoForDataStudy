@@ -46,7 +46,6 @@ public abstract class BaseFragment<T> extends Fragment {
     private static final String TAG = "BaseFragment";
     private BigDecimal AXIS_Z, AXIS_Y, AXIS_X;
     private DataModelPressure model;
-    private ColorController controller;
     public String title;
 
 
@@ -305,7 +304,6 @@ public abstract class BaseFragment<T> extends Fragment {
         if (getArguments() != null) {
 
         }
-        controller = new ColorController();
     }
 
     @Override
@@ -335,6 +333,7 @@ public abstract class BaseFragment<T> extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(getActivity().getResources().getString(R.string.action_data_avail)));
 //        model.onInitStateTime();
     }
+
 
 
     public abstract int whereFrom();

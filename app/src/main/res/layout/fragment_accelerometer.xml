@@ -41,7 +41,7 @@
         android:textColor="@color/colorBlack"
         android:textSize="14sp"
         android:textAllCaps="true"
-        android:layout_below="@+id/chk_ZValue"
+        android:layout_below="@+id/chk_YValue"
         android:id="@+id/title"
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"

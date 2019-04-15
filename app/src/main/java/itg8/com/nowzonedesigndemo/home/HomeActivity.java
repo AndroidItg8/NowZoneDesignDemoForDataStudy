@@ -340,7 +340,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private void checkUserId() {
         if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID))) {
             callRegistritrationActivity();
-//            this.finish();
+            this.finish();
         }
     }
 
@@ -922,13 +922,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 homeListener.onConnectionStateAvail("");
             } else if (deviceState == DeviceState.DISCONNECTED) {
                 checkDeviceConnection(coordinator);
-                homeListener.onConnectionStateAvail("Please Device is disconnect...");
+                homeListener.onConnectionStateAvail(" Device is disconnected...");
 
 
             }
             if (deviceState == DeviceState.CHARACTERISTICS_WRITE
                     || deviceState == DeviceState.WRITE) {
-                homeListener.onConnectionStateAvail("Please Wait Device is discovering data!!!");
+                homeListener.onConnectionStateAvail(" Wait Device is discovering data!!!");
             }
         }
     }
