@@ -148,8 +148,7 @@ public class NetworkCallScheduler extends JobIntentService {
                     e.printStackTrace();
 
                 }
-                return Observable.just(s);
-
+                return Observable.just(s  );
             }
 
         });
@@ -163,6 +162,9 @@ public class NetworkCallScheduler extends JobIntentService {
         DataStoreScheduleBroadcastReceiver.setAlarm(false,NetworkCallScheduler.this);
         stopSelf();
     }
+
+
+
 
 
 

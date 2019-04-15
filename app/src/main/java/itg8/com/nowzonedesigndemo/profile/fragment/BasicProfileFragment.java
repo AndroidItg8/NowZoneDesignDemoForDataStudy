@@ -2,22 +2,18 @@ package itg8.com.nowzonedesigndemo.profile.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class BasicProfileFragment extends BottomSheetDialogFragment implements View.OnClickListener {
 
 
@@ -37,7 +33,7 @@ public class BasicProfileFragment extends BottomSheetDialogFragment implements V
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_basic_profile, container, false);
@@ -48,11 +44,7 @@ public class BasicProfileFragment extends BottomSheetDialogFragment implements V
     }
 
     private void init() {
-//        lblFemale.setOnClickListener(this);
-//        lblMale.setOnClickListener(this);
         btnOk.setOnClickListener(this);
-
-
     }
 
 

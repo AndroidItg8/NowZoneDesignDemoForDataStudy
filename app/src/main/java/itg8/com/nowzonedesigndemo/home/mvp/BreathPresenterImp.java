@@ -10,7 +10,6 @@ import java.util.Random;
 
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
-import itg8.com.nowzonedesigndemo.common.Prefs;
 import itg8.com.nowzonedesigndemo.utility.BreathState;
 import itg8.com.nowzonedesigndemo.utility.DeviceState;
 

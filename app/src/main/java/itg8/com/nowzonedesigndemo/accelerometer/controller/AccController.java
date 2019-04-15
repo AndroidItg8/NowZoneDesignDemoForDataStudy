@@ -49,7 +49,7 @@ public class AccController extends BaseController {
         lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), Y_AXIS);
         lineData.addEntry(new Entry(dataSetGraphC.getEntryCount(), z, dataSetGraphC), Z_AXIS);
 
-        lineData.notifyDataChanged();
+//        lineData.notifyDataChanged();
         listener.invalidateChart();
 
 
@@ -93,36 +93,36 @@ public class AccController extends BaseController {
 
     public LineDataSet getDataSetGraph(String s, String colorCode) {
 
-//        LineDataSet set = new LineDataSet(null, s);
-//            set.setAxisDependency(YAxis.AxisDependency.LEFT);
-//            set.setColor(Color.parseColor(colorCode));
-////        set.setCircleColor(Color.BLUE);
-//            set.setLineWidth(20f);
-////        set.setCircleRadius(4f);
-//            set.setFillAlpha(65);
-//            set.setFillColor(Color.parseColor(colorCode));
-////        set.setHighLightColor(Color.rgb(244, 117, 117));
-////        set.setValueTextColor(Color.BLUE);
-//            set.setValueTextSize(9f);
-//            set.setDrawCircleHole(false);
-//            set.setDrawCircles(false);
-//            set.setDrawValues(false);
-
-
-
-
         LineDataSet set = new LineDataSet(null, s);
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(Color.parseColor(colorCode));
-        set.setCircleColor(Color.parseColor(colorCode));
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
-        set.setFillAlpha(65);
-        set.setFillColor(Color.parseColor(colorCode));
-        set.setHighLightColor(Color.parseColor(colorCode));
-        set.setValueTextColor(Color.parseColor(colorCode));
-        set.setValueTextSize(9f);
-        set.setDrawValues(false);
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set.setColor(Color.parseColor(colorCode));
+//        set.setCircleColor(Color.BLUE);
+            set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+            set.setFillAlpha(65);
+            set.setFillColor(Color.parseColor(colorCode));
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
+            set.setValueTextSize(9f);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setDrawValues(false);
+
+
+
+
+//        LineDataSet set = new LineDataSet(null, s);
+//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        set.setColor(Color.parseColor(colorCode));
+//        set.setCircleColor(Color.parseColor(colorCode));
+//        set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+//        set.setFillAlpha(65);
+//        set.setFillColor(Color.parseColor(colorCode));
+//        set.setHighLightColor(Color.parseColor(colorCode));
+//        set.setValueTextColor(Color.parseColor(colorCode));
+//        set.setValueTextSize(9f);
+//        set.setDrawValues(false);
         return set;
     }
 

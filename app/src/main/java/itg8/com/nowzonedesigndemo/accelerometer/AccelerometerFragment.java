@@ -18,18 +18,23 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 
 
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.accelerometer.controller.AccController;
@@ -269,16 +274,86 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
 
 
     }
+
+    private void setLineChart2() {
+        chart.setOnChartValueSelectedListener(this);
+
+        // enable description text
+        chart.getDescription().setEnabled(true);
+
+        // enable touch gestures
+        chart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+        // set an alternative background color
+        chart.setBackgroundColor(Color.WHITE);
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
+
+        // add empty data
+        chart.setData(data);
+
+        // get the legend (only possible after setting data)
+        Legend l = chart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
+
+        XAxis xl = chart.getXAxis();
+        xl.setTextColor(Color.BLACK);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+        xl.setEnabled(true);
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setAxisMaximum(8000f);
+        leftAxis.setAxisMinimum(-2000f);
+        leftAxis.setDrawGridLines(true);
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+
+
+
+
+
+
+    }
+
+
     private void NotifyAll() {
         if (chart != null) {
-            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
-//            chart.getData().notifyDataChanged();
+            removeOutdatedEntries(lineData().getDataSets());
+            lineData().notifyDataChanged();
             chart.notifyDataSetChanged();
-//            chart.invalidate();
-//            chart.moveViewToX(lineData().getEntryCount());
             chart.invalidate();
-
+            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
+            chart.moveViewToX(lineData().getEntryCount());
+//            if(chart.getXChartMax()>MAX_ENTRIES){
+//                chart.getLineData().getDataSetByIndex(0).removeEntry()
+//            }
         }
+
+    }
+
+    public  void removeOutdatedEntries(List<ILineDataSet> dataSets) {
+        for (IDataSet ds : dataSets) {
+            while (ds.getEntryCount() > MAX_ENTRIES*3) {
+                ds.removeFirst();
+            }
+        }
+
     }
 
 
