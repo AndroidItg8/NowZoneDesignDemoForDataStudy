@@ -49,6 +49,8 @@ import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 
+import static itg8.com.nowzonedesigndemo.common.CommonMethod.RAW_DATA_PRESSURE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,18 +73,19 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
     private boolean moveToLastEntry=true;
 
 
-
+    double PressureRaw;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
                 String action = intent.getAction();
                 if (action.equalsIgnoreCase(getString(R.string.action_data_avail))) {
-                    double PressureRaw = intent.getDoubleExtra(CommonMethod.RAW_DATA_PRESSURE, 0);
-                    double processPressure = intent.getLongExtra(CommonMethod.ACTION_DATA_LONG, 0);
+                    if(intent.hasExtra(RAW_DATA_PRESSURE)) {
+                         PressureRaw = intent.getDoubleExtra(RAW_DATA_PRESSURE, 0);
 //                    Log.d("BreathPresenterImp","data to presenter:"+model+"  "+timestamp);
-                    //    BreathPresenterImp.this.model.dataStarted(true);
-                    onPressureReceived((float) PressureRaw);
+                        //    BreathPresenterImp.this.model.dataStarted(true);
+                        onPressureReceived((float) PressureRaw);
+                    }
 
                 }
             }
@@ -246,41 +249,6 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        chart.setOnChartGestureListener(new OnChartGestureListener() {
-            @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                moveToLastEntry = false;
-            }
-
-
-            @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-            }
-
-            @Override
-            public void onChartLongPressed(MotionEvent me) {
-            }
-
-            @Override
-            public void onChartDoubleTapped(MotionEvent me) {
-            }
-
-            @Override
-            public void onChartSingleTapped(MotionEvent me) {
-            }
-
-            @Override
-            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-            }
-
-            @Override
-            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-            }
-
-            @Override
-            public void onChartTranslate(MotionEvent me, float dX, float dY) {
-            }
-        });
 
 
 

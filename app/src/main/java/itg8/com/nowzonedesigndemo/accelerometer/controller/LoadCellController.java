@@ -1,5 +1,6 @@
 package itg8.com.nowzonedesigndemo.accelerometer.controller;
 
+
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -30,7 +31,7 @@ public class LoadCellController extends BaseController {
 
     private void createEntries(float x, float y) {
         lineData.addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA),X_AXIS);
-        lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphA),Y_AXIS);
+        lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB),Y_AXIS);
         lineData.notifyDataChanged();
         listener.invalidateChart();
     }

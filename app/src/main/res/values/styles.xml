@@ -11,14 +11,14 @@
         <item name="actionMenuTextColor">@color/colorWhite</item>
         <item name="android:textColorSecondary">@color/colorWhite</item>
     </style>
-
     <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">true</item>
+        <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:editTextStyle">@style/App_EditTextStyle</item>
         <item name="android:actionMenuTextColor">@color/colorBlack</item>
     </style>
+    <!--<item name="windowActionBar">true</item>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

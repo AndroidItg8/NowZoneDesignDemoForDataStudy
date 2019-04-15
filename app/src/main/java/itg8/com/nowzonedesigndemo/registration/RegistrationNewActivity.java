@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -58,14 +59,15 @@ import okhttp3.ResponseBody;
 public class RegistrationNewActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+
 
 //
 //    @BindView(R.id.basic_detail)
 //    CustomFontTextView basicDetail;
     @BindView(R.id.edt_name)
     EditText edtName;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.edt_mobile)
     EditText edtMobile;
     @BindView(R.id.input_name)
@@ -162,7 +164,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_new);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
+//        getWindow().setStatusBarColor(Color.TRANSPARENT);
         ButterKnife.bind(this);
 
         init();
@@ -174,8 +176,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Registration");
+
+
         model = new ProfileModel();
         button.setOnClickListener(this);
         lblBirth.setOnClickListener(this);
@@ -278,7 +280,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
         Calendar dob = Calendar.getInstance();
         dob.setTime(date);
         if (dob.after(now)) {
-            throw new IllegalArgumentException("Can't be born in the future");
+            return 0;
         }
         int year1 = now.get(Calendar.YEAR);
         int year2 = dob.get(Calendar.YEAR);
@@ -311,6 +313,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 //                    model.setGender(edtGender.getText().toString());
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
+
                     sendDataToServer(model);
                 }
                 break;
@@ -382,7 +385,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     }
 
     private void sendDataToServer(ProfileModel model) {
-
+showProgress();
         CommonMethod.getController().storeProfile(model.getMobile(), model.getName(), model.getAge(), model.getGender(), String.valueOf(model.getWeight()), model.getPassword(), model.getUserGroupId(), String.valueOf(model.getHeight())).flatMap(new Function<ResponseBody, Observable<String>>() {
             @Override
             public Observable<String> apply(ResponseBody responseBody) throws Exception {
@@ -393,12 +396,23 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                     String response = responseBody.string();
                     JSONObject jsonObject = null;
                     if (response != null) {
+
                         jsonObject = new JSONObject(response);
                         if (jsonObject.has("flag") && jsonObject.getInt("flag") == 1) {
                             if (jsonObject.has("userid")) {
                                 userID = jsonObject.getString("userid");
                                 Prefs.putString(CommonMethod.USER_ID, jsonObject.getString("userid"));
                             }
+
+                        }else if(jsonObject.has("msg") && jsonObject.getString("msg").equalsIgnoreCase("User Already exists")){
+                            if (jsonObject.has("userid")) {
+                                userID = jsonObject.getString("userid");
+                                Prefs.putString(CommonMethod.USER_ID, jsonObject.getString("userid"));
+                            }
+                            else
+                                return Observable.error(new IllegalStateException("User Already exists"));
+
+
 
                         }
                     }
@@ -409,7 +423,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                 }
                 return Observable.just(userID);
             }
-        }).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -417,7 +431,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onNext(String s) {
-                ((AppApplication) getApplication()).setProfileModel(model);
+                hideProgress();
+//                ((AppApplication) getApplication()).setProfileModel(model);
                 callHomeActivity();
                 // Snackbar.make(button,"User Profile created successfully, user id is"+s,Snackbar.LENGTH_LONG);
 
@@ -426,6 +441,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             @Override
             public void onError(Throwable e) {
                 Log.d(TAG, "onError: " + e.getMessage());
+                hideProgress();
+                showSnackbar(e);
                 e.printStackTrace();
 
 
@@ -439,9 +456,23 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     }
 
+    private void showSnackbar(Throwable e) {
+        Snackbar.make(button,e.getMessage(),Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        button.setVisibility(View.GONE);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+        button.setVisibility(View.VISIBLE);
+    }
+
     private void callHomeActivity() {
-        this.finish();
         startActivity(new Intent(this, HomeActivity.class));
+        this.finish();
     }
 
     private void OpenBottomSheetDialogueForWeight() {
@@ -514,7 +545,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
         txtCm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isFromCm = true;
+              //  isFromCm = true;
                 setDataFromBottomSheetForHeight();
                 mBottomSheetDialog.dismiss();
 
@@ -535,7 +566,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     }
 
     private void setDataFromBottomSheetForHeight() {
-        if (isFromCm == true) {
+        if (isFromCm) {
             edtHeight.setVisibility(View.VISIBLE);
             llHeightFeet.setVisibility(View.GONE);
             edtHeight.setFocusable(true);

@@ -207,12 +207,13 @@
         <item>Pressure Raw</item>
         <item>Pressure Process</item>
         <item>Accelerometer</item>
-        <item>Gynometer</item>
+        <item>Gyrometer</item>
         <item>Magnetometer</item>
         <item>Load cell </item>
         <item>MIC</item>
         <item>Optical</item>
         <item>Temperature</item>
+        <item>Logout</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -226,6 +227,7 @@
         <item>@drawable/ic_posture</item>
         <item>@drawable/ic_contact</item>
         <item>@drawable/ic_help_outline_black_24dp</item>
+        <item>@drawable/ic_logout</item>
         <item>@drawable/ic_logout</item>
 
 
@@ -270,7 +272,7 @@
     <string name="action_accelerometer">accelerometer</string>
     <string name="action_gynometer">gynometer</string>
     <string name="action_magnetometer">magnetometer</string>
-    <string name="title_activity_registration_new">""</string>
+    <string name="title_activity_registration_new">Registration</string>
 
 
 </resources>

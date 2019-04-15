@@ -29,16 +29,8 @@
     </style>
     <style name="AppTheme.NoActionBar2">
         <item name="windowActionBar">false</item>
-        <!--<item name="windowActionBar">false</item>-->
-        <item name="android:fitsSystemWindows">true</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-
     </style>
-
-
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

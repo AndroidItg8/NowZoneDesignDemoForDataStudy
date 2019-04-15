@@ -93,7 +93,7 @@ public class BleConnectionManager implements ConnectionManager {
                     }
                     characteristic = (BluetoothGattCharacteristic) msg.obj;
                     if (characteristic.getValue() == null) {
-                        Log.w(TAG, "Error obtaining prssure data");
+                        //Log.w(TAG, "Error obtaining prssure data");
                         return;
                     }
 
@@ -103,7 +103,7 @@ public class BleConnectionManager implements ConnectionManager {
                         startTime = System.currentTimeMillis();
                     if (bleCount == 1200) {
                         bleCount = 0;
-                        //Log.d(TAG,"StartTime "+startTime+" EndTime "+ System.currentTimeMillis() +" diff: "+(System.currentTimeMillis()-startTime));
+                        ////Log.d(TAG,"StartTime "+startTime+" EndTime "+ System.currentTimeMillis() +" diff: "+(System.currentTimeMillis()-startTime));
                         startTime = System.currentTimeMillis();
                     }
                     bleCount++;
@@ -147,7 +147,7 @@ public class BleConnectionManager implements ConnectionManager {
                 BluetoothGattCharacteristic characteristic = null;
                 switch (mState) {
                     case 0:
-                        Log.d(TAG, "Enabling pressure accel");
+                        //Log.d(TAG, "Enabling pressure accel");
                         characteristic = gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(SENSOR_ON_OFF);
                         characteristic.setValue(new byte[]{0x02});
                         break;
@@ -155,7 +155,7 @@ public class BleConnectionManager implements ConnectionManager {
                 if (characteristic != null)
                     gatt.writeCharacteristic(characteristic);
                 else
-                    Log.w(TAG, "Characteristics null. Please check mState=0");
+                    //Log.w(TAG, "Characteristics null. Please check mState=0");
 
                 onStartVibrationLow();
 
@@ -169,12 +169,12 @@ public class BleConnectionManager implements ConnectionManager {
                 BluetoothGattCharacteristic characteristic = null;
                 switch (mState) {
                     case 0:
-                        Log.d(TAG, "Discriptor value");
+                        //Log.d(TAG, "Discriptor value");
                         characteristic = gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE);
                         break;
 
                         case 1:
-                        Log.d(TAG, "Discriptor value");
+                        //Log.d(TAG, "Discriptor value");
                         characteristic = gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE_A4);
                         break;
                     default:
@@ -213,12 +213,12 @@ public class BleConnectionManager implements ConnectionManager {
 
 //                    if (uuid.toString().equalsIgnoreCase(DATA_ENABLE.toString())) {
 //
-//                        Log.d(TAG, "setNotifyNextSensor DATA_ENABLE: "+ gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE).toString());
+//                        //Log.d(TAG, "setNotifyNextSensor DATA_ENABLE: "+ gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE).toString());
 //
 //
 //
 //                    } else if (uuid.toString().equalsIgnoreCase(DATA_ENABLE_A4.toString())) {
-//                        Log.d(TAG, "setNotifyNextSensor DATA_ENABLE_A4: "+ gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE_A4).toString());
+//                        //Log.d(TAG, "setNotifyNextSensor DATA_ENABLE_A4: "+ gatt.getService(TEMP_SERVICE_UUID).getCharacteristic(DATA_ENABLE_A4).toString());
 //                        notifycharacteristic(gatt, characteristic);
 //
 //                    }
@@ -234,18 +234,18 @@ public class BleConnectionManager implements ConnectionManager {
                     listener.onDeviceConnected(address);
                     listener.currentState(DeviceState.CONNECTED);
                     connecting = false;
-                    Log.d(TAG, "Connected to GATT Server");
+                    //Log.d(TAG, "Connected to GATT Server");
 
                     if (discoverServices()) {
                         listener.currentState(DeviceState.DISCOVERING);
-                        Log.i(TAG, "Attempting to start service discovery:");
+                        //Log.i(TAG, "Attempting to start service discovery:");
                         mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.DISCOVERING));
                     } else {
-                        Log.d(TAG, "Fail to descover service: Error " + status);
+                        //Log.d(TAG, "Fail to descover service: Error " + status);
                     }
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.DISCONNECTED));
-                    Log.i(TAG, "Disconnected from GATT server.");
+                    //Log.i(TAG, "Disconnected from GATT server.");
                     connecting = false;
                 } else if (status != BluetoothGatt.GATT_SUCCESS) {
                     gatt.disconnect();
@@ -255,17 +255,17 @@ public class BleConnectionManager implements ConnectionManager {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    Log.w(TAG, "onServicesDiscovered");
+                    //Log.w(TAG, "onServicesDiscovered");
                     listener.currentState(DeviceState.DISCOVERING);
                     mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.DISCOVERED));
 //                    if (configureServices()) {
-//                        Log.d(TAG, "write successful");
+//                        //Log.d(TAG, "write successful");
 //                    }
                     reset();
                     enableNextSensor(gatt);
                 } else {
                     failWithReason(DeviceState.DISCOVER_FAIL, status);
-                    Log.w(TAG, "onServicesDiscovered fail received: " + status);
+                    //Log.w(TAG, "onServicesDiscovered fail received: " + status);
                 }
             }
 
@@ -288,7 +288,7 @@ public class BleConnectionManager implements ConnectionManager {
 
             @Override
             public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-                Log.d(TAG, "DescriptorWrite Called");
+                //Log.d(TAG, "DescriptorWrite Called");
                 advance();
                 mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.WRITE));
                 enableNextSensor(gatt);
@@ -303,8 +303,8 @@ public class BleConnectionManager implements ConnectionManager {
 
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.d(TAG,"UUIDHEX "+characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
-            Log.d(TAG,"UUIDBYTES "+characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
+            //Log.d(TAG,"UUIDHEX "+characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
+            //Log.d(TAG,"UUIDBYTES "+characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
 //                mHandler.sendMessage(Message.obtain(null,MSG_PRESSURE_ACCEL,characteristic));
                 if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE_A4.toString()))
                     pressure=characteristic.getValue();
@@ -330,7 +330,7 @@ public class BleConnectionManager implements ConnectionManager {
 
             @Override
             public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-                Log.d(TAG, "Remote RSSI: " + rssi);
+                //Log.d(TAG, "Remote RSSI: " + rssi);
                 super.onReadRemoteRssi(gatt, rssi, status);
             }
         };
@@ -381,7 +381,7 @@ public class BleConnectionManager implements ConnectionManager {
      * @param value =data;
      */
     private void dataReceived(byte[] value) {
-//            Log.d(TAG, "data received:" + Helper.bytesToHex(value));
+//            //Log.d(TAG, "data received:" + Helper.bytesToHex(value));
 //        createFile(value.toString());
         listener.onDataAvail(value, acc);
     }
@@ -439,7 +439,7 @@ public class BleConnectionManager implements ConnectionManager {
 
     @Override
     public void selectedDevice(String address, String name) {
-        Log.d(TAG, "Selected device Name: " + name);
+        //Log.d(TAG, "Selected device Name: " + name);
         try {
             connectToDevice(address);
         } catch (StringEmptyException e) {
@@ -499,7 +499,7 @@ public class BleConnectionManager implements ConnectionManager {
      */
     private boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
+            //Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
         /*
@@ -514,7 +514,7 @@ public class BleConnectionManager implements ConnectionManager {
 //            mBluetoothGatt.close();
 
             if (mBluetoothGatt.connect()) {
-                Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
+                //Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
                 return true;
             } else {
                 return false;
@@ -524,25 +524,25 @@ public class BleConnectionManager implements ConnectionManager {
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 
         if (device == null) {
-            Log.w(TAG, "Device not found.  Unable to connect.");
+            //Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        Log.d(TAG, "Trying to create a new connection.");
+        //Log.d(TAG, "Trying to create a new connection.");
 
         mBluetoothDeviceAddress = address;
         if (callback == null) {
-            Log.d(TAG, "Callback is null");
+            //Log.d(TAG, "Callback is null");
             initCallback();
         }
         if (!connecting) {
             mBluetoothAdapter.cancelDiscovery();
-            Log.d(TAG, "now in connecting,....");
+            //Log.d(TAG, "now in connecting,....");
             listener.connectGatt(device, callback);
             connecting = true;
         } else {
-            Log.d(TAG, "not connecting.. connecting is true");
+            //Log.d(TAG, "not connecting.. connecting is true");
         }
 
         return true;
@@ -572,7 +572,7 @@ public class BleConnectionManager implements ConnectionManager {
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 
-                //   Log.d(TAG, "Service " + gattService.getUuid().toString() + " , Characteristics " + gattCharacteristic.getUuid().toString());
+                //   //Log.d(TAG, "Service " + gattService.getUuid().toString() + " , Characteristics " + gattCharacteristic.getUuid().toString());
                 // One more characteristic UUID to check
                 if (DATA_ENABLE.toString().contentEquals(gattCharacteristic.getUuid().toString())) {
                     // Characteristic found requires notification
@@ -597,7 +597,7 @@ public class BleConnectionManager implements ConnectionManager {
      */
     public List<BluetoothGattService> getSupportedGattServices() {
         if (mBluetoothGatt == null) {
-            Log.d(TAG, "BluetoothGatt is null");
+            //Log.d(TAG, "BluetoothGatt is null");
             return null;
         }
 
@@ -615,7 +615,7 @@ public class BleConnectionManager implements ConnectionManager {
     public boolean setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                                  boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
+            //Log.w(TAG, "BluetoothAdapter not initialized");
             return false;
         }
         if (mBluetoothGatt.setCharacteristicNotification(characteristic, enabled)) {

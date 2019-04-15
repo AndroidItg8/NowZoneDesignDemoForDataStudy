@@ -98,7 +98,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MENU_ALARM = 4;
     private static final int MENU_FAQS = 7;
     private static final int MENU_PROGRAMS = 3;
-    private static final int MENU_LOGOUT = 8;
+    private static final int MENU_TEMP = 8;
+    private static final int MENU_LOGOUT = 9;
     private static final int MENU_PROCESS_RAW = 9;
     private static final int MENU_PROCESS_PRESSURE = 9;
 
@@ -235,8 +236,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
  * Comment Now
  */
 
-// if (navDrawerItemList.size() - 1 == position)
-//                    onDeviceDisconnected();
+ if (navDrawerItemList.size() - 1 == position)
+                    onDeviceDisconnected();
 
 
             if (position == MENU_PROGRAMS) {
@@ -282,9 +283,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             } else if (position == MENU_CONTACT_US) {
                 title = " MIC Graph";
                 setFragment(AccelerometerFragment.newInstance(5));
-            } else if (position == MENU_LOGOUT) {
+            } else if (position == MENU_TEMP) {
                 title = " Temperature Graph";
                 setFragment(AccelerometerFragment.newInstance(7));
+            }else if (position == MENU_LOGOUT) {
+                logoutFromUser();
             }
 
 
@@ -316,8 +319,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
         Timber.tag(TAG);
         rolling = new Rolling(10);
-        if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID)))
-            callRegistritrationActivity();
+        checkUserId();
 
 
         checkStoragePermission();
@@ -329,6 +331,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         bottomBarTabSelected();
         DataStoreScheduleBroadcastReceiver.setAlarm(true, this);
 
+
+        if (listSlidermenu != null)
+            listSlidermenu.setOnItemClickListener(sliderClickListener);
+
+    }
+
+    private void checkUserId() {
+        if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID))) {
+            callRegistritrationActivity();
+//            this.finish();
+        }
     }
 
     private void callRegistritrationActivity() {
@@ -905,8 +918,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             homeListener.onConnectionStateAvail(deviceState.name());
             if (deviceState == DeviceState.CONNECTED) {
                 hideSnackbar();
-                if(listSlidermenu!=null)
-                    listSlidermenu.setOnItemClickListener(sliderClickListener);
+
                 homeListener.onConnectionStateAvail("");
             } else if (deviceState == DeviceState.DISCONNECTED) {
                 checkDeviceConnection(coordinator);
@@ -942,7 +954,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //        startActivity(new Intent(this, ScanDeviceActivity.class));
 //        finish();
         checkDeviceConnection(coordinator);
-        if(homeListener!=null)
+        if (homeListener != null)
             homeListener.ondeviceAttached();
 
     }
