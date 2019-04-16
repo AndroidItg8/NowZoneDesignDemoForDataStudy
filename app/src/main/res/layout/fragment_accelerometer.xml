@@ -14,6 +14,7 @@
         android:layout_margin="8dp"
         android:checked="true"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="X Value" />
 
     <CheckBox
@@ -21,9 +22,9 @@
         android:layout_toEndOf="@+id/chk_XValue"
         android:layout_width="wrap_content"
         android:layout_margin="8dp"
-
         android:layout_height="wrap_content"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="Y Value" />
 
     <CheckBox
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="Z Value" />
 
     <TextView

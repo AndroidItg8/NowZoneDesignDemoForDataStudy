@@ -2,13 +2,16 @@ package itg8.com.nowzonedesigndemo.home;
 
 import android.Manifest;
 import android.content.ComponentCallbacks2;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -52,6 +55,7 @@ import itg8.com.nowzonedesigndemo.breath_history.BreathsHistoryActivity;
 import itg8.com.nowzonedesigndemo.common.BaseActivity;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 import itg8.com.nowzonedesigndemo.common.Prefs;
+import itg8.com.nowzonedesigndemo.connection.BleService;
 import itg8.com.nowzonedesigndemo.home.fragment.HomeFragment;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenter;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenterImp;
@@ -229,6 +233,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private int lastBatteryLevel = 0;
     private int calcBattery;
     private String title;
+
+
+
     private AdapterView.OnItemClickListener sliderClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -259,6 +266,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 /**
                  * Comment Now
                  */
+
 //                    String export = Helper.exportDB();
 //                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
 //// callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
@@ -272,13 +280,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //                    logoutFromUser();
             } else if (position == MENU_USER_PROFILE) {
                 title = "Pressure Raw Graph";
-                setFragment(PressureRawFragment.newInstance("", ""));
+                setFragment(HomeFragment.newInstance("", ""));
             } else if (position == MENU_DEVICE) {
                 title = "Pressure Process Graph";
-                setFragment(PressureProcessFragment.newInstance("", ""));
+                setFragment(PressureRawFragment.newInstance("", ""));
             } else if (position == MENU_NOTIFICATION) {
                 title = "Accelerometer Graph";
-
                 setFragment(AccelerometerFragment.newInstance(1));
             } else if (position == MENU_CONTACT_US) {
                 title = " MIC Graph";
@@ -289,7 +296,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             }else if (position == MENU_LOGOUT) {
                 logoutFromUser();
             }
-
 
             openDrawer();
         }
@@ -312,28 +318,27 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         presenter = new BreathPresenterImp(this);
         presenter.passContext(HomeActivity.this);
         presenter.onCreate();
+
         navigationViewBasic();
+        SetDrawerLayout();
+        setItemClickedListener();
+
+
+
         Log.d(TAG, "HEADERTOKEN: " + Prefs.getString(CommonMethod.TOKEN));
         // setIds();
         setFragment();
-
         Timber.tag(TAG);
         rolling = new Rolling(10);
         checkUserId();
-
-
         checkStoragePermission();
         setType();
-
-
         initOtherView();
-
         bottomBarTabSelected();
         DataStoreScheduleBroadcastReceiver.setAlarm(true, this);
 
 
-        if (listSlidermenu != null)
-            listSlidermenu.setOnItemClickListener(sliderClickListener);
+
 
     }
 
@@ -348,9 +353,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(new Intent(this, RegistrationNewActivity.class));
     }
 
+
     private void bottomBarTabSelected() {
         fab.setOnClickListener(this);
-
         bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
@@ -414,6 +419,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(),
                 navDrawerItemList);
+      if(listSlidermenu!=null)
         listSlidermenu.setAdapter(adapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -446,13 +452,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         setSupportActionBar(toolbar);
         battery.setmCharging(false);
         //toolbar.setContentInsetsAbsolute(200, toolbar.getContentInsetRight());
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-        drawerLayout.addDrawerListener(mDrawerToggle);
-        // toolbar.setNavigationIcon(R.drawable.ic_settings_black_24dp);
 
+        // toolbar.setNavigationIcon(R.drawable.ic_settings_black_24dp);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -464,6 +465,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         toolbar.setTitle(title);
 
 
+    }
+
+    private void SetDrawerLayout() {
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        drawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void logoutFromUser() {
@@ -659,7 +668,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
     }
 
@@ -931,6 +939,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 homeListener.onConnectionStateAvail(" Wait Device is discovering data!!!");
             }
         }
+    }
+
+    private void setItemClickedListener() {
+        if (listSlidermenu != null)
+            listSlidermenu.setOnItemClickListener(sliderClickListener);
+
+
+
     }
 
     @Override

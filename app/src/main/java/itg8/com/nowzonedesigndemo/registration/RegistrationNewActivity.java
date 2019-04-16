@@ -151,8 +151,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     private ProfileModel model;
     private float heightInFeet;
     private float weightInKg;
-    private boolean isFromCm;
-    private boolean isFromKG;
+    private boolean isFromCm=true;
+    private boolean isFromKG=false;
 
     private static final String TAG = "RegistrationNewActivity";
     private Calendar mcurrentDate = null;
@@ -178,8 +178,6 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         model = new ProfileModel();
         button.setOnClickListener(this);
         lblBirth.setOnClickListener(this);
@@ -200,8 +198,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
         edtHeightInch.setOnClickListener(this);
 
 
-//        FragmentManager fm = getSupportFragmentManager();
-//        fm.beginTransaction().replace(R.id.profileFrameLayout, new BasicProfileFragment(), getClass().getSimpleName()).addToBackStack(getClass().getSimpleName()).commit();
+
 
 
     }
@@ -276,7 +273,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     public static int getAge(Date date) {
 
-       age = 0;
+       int age = 0;
 
         Calendar now = Calendar.getInstance();
         Calendar dob = Calendar.getInstance();
@@ -315,10 +312,9 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 //                    model.setGender(edtGender.getText().toString());
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
-
                     Log.d(TAG, "onClick: "+new Gson().toJson(model));
-
                     sendDataToServer(model);
+
                 }
                 break;
             case R.id.lbl_birth:
@@ -668,21 +664,9 @@ showProgress();
         if (isFromCm)
             return Helper.centimeterToFeet(edtHeight.getText().toString());
         else {
-            double dCentimeter = 0d;
-            if (!TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
 
-
-                dCentimeter += ((Double.valueOf(edtHeightFeet.getText().toString())) * 30.48);
-
-
-                if (!TextUtils.isEmpty(edtHeightInch.getText().toString())) {
-                    dCentimeter += ((Double.valueOf(edtHeightInch.getText().toString())) * 2.54);
-                }
-
-            }
-            return (float) dCentimeter;
+              return Helper.feetToCentimeter(edtHeightFeet.getText().toString(), edtHeightInch.getText().toString());
         }
-          //  return (float) (Float.parseFloat(edtHeightInch.getText().toString()) + (0.1 * Float.parseFloat(edtHeightFeet.getText().toString())));
     }
 
     private boolean validate() {
@@ -691,12 +675,18 @@ showProgress();
             inputName.setError("Please provide name...");
             setFocus(edtName);
             valid = false;
+        }else {
+            inputName.setError("");
         }
-        if (TextUtils.isEmpty(edtMobile.getText().toString())) {
+        if (TextUtils.isEmpty(edtMobile.getText().toString()) || edtMobile.getText().toString().length()<10) {
             inputMobile.setError("Please provide mobile number...");
             setFocus(edtMobile);
             valid = false;
+        }else {
+            inputMobile.setError("");
+
         }
+
         if(isFromCm){
         if (TextUtils.isEmpty(edtHeight.getText().toString())) {
             inputHeight.setError("Please provide your height...");
@@ -704,50 +694,59 @@ showProgress();
             inputHeightInch.setError("");
             setFocus(edtHeight);
             valid = false;
+        }else{
+            inputHeight.setError("");
         } }else{
             if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
                 inputHeightInch.setError("Please provide your height...");
                 inputHeight.setError("");
                 setFocus(edtHeightInch);
                 valid = false;
+            } else{
+                inputHeightInch.setError("");
+
             }if (TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
                 inputHeightFeet.setError("Please provide your height...");
                 inputHeight.setError("");
                 setFocus(edtHeightFeet);
                 valid = false;
+            }else{
+                inputHeightFeet.setError("");
+
             }
 
 
         }
-        if(isFromKG){
+
         if (TextUtils.isEmpty(edtWeight.getText().toString())) {
             inputWeight.setError("Please provide your Weight...");
             setFocus(edtHeight);
             valid = false;
-        }
         }else{
-            if (TextUtils.isEmpty(edtWeight.getText().toString())) {
-                inputWeight.setError("Please provide your Weight...");
-                setFocus(edtHeightFeet);
-                valid = false;
-            }
-
+            inputWeight.setError("");
 
         }
+
         if (TextUtils.isEmpty(edtPassword.getText().toString()) || edtPassword.getText().length() < 6) {
             inputPassword.setError("Please enter valid password (minimum 6 character)");
             setFocus(edtPassword);
             valid = false;
+        }else{
+            inputPassword.setError("");
+
         }
-        if (TextUtils.isEmpty(edtWeight.getText().toString())) {
-            inputWeight.setError("Please provide your weight...");
-            setFocus(edtWeight);
-            valid = false;
-        }
-         if(TextUtils.isEmpty(edtDay.getText().toString())){
-             lblBirth.setText("Please Select Valid Date of Birth..");
+        if(TextUtils.isEmpty(edtDay.getText().toString())){
+//             lblBirth.setText("Please Select Valid Date of Birth..");
+             inputDay.setError("Please Select Valid Date of Birth..");
+             inputMonth.setError("Please Select Valid Date of Birth..");
+             inputYear.setError("Please Select Valid Date of Birth..");
+
              valid = false;
 
+         }else{
+             inputDay.setError("");
+             inputMonth.setError("");
+             inputYear.setError("");
          }
 
         return valid;
@@ -773,21 +772,27 @@ showProgress();
 
                 case R.id.rgb_cm:
                     isFromCm=true;
+                    inputHeightFeet.setHint("");
+                    inputHeightInch.setHint("");
+                    inputHeight.setHint(" Height ");
                     setDataFromBottomSheetForHeight();
                 break;
 
             case R.id.rgb_inch:
                 isFromCm=false;
+                inputHeightFeet.setHint("Height ( FEET )");
+                inputHeightInch.setHint("Height ( INCH )");
+                inputHeight.setHint("");
                 setDataFromBottomSheetForHeight();
                 break;
 
             case R.id.rgb_kg:
-                edtWeight.setHintTextColor(Color.WHITE);
+                edtWeight.setHintTextColor(Color.BLACK);
                 edtWeight.setHint("Weight[kg]");
                 isFromKG=true;
                 break;
             case R.id.rgb_pounds:
-                edtWeight.setHintTextColor(Color.WHITE);
+                edtWeight.setHintTextColor(Color.BLACK);
                 edtWeight.setHint("Weight[pounds]");
                 isFromKG=false;
                 break;

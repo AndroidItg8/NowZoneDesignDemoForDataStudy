@@ -111,6 +111,7 @@
                 android:gravity="center"
                 android:minWidth="40dp"
                 android:text="INCH "
+                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp" />
 
@@ -122,6 +123,7 @@
                 android:layout_marginEnd="8dp"
                 android:checked="true"
                 android:minWidth="40dp"
+                android:buttonTint="@color/colorAccent"
                 android:text="CM"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp" />
@@ -258,7 +260,7 @@
                 android:minWidth="40dp"
                 android:text="KG "
                 android:textColor="@color/colorBlack"
-
+                android:buttonTint="@color/colorAccent"
                 android:textSize="12sp" />
 
             <RadioButton
@@ -282,7 +284,7 @@
             android:layout_below="@+id/rgb_weight"
             android:layout_marginEnd="8dp"
             android:hint="Weight"
-
+            android:buttonTint="@color/colorAccent"
             android:textColorHint="@color/colorBlack"
             android:theme="@style/TextLabel">
 
@@ -359,6 +361,7 @@
                 android:gravity="center"
                 android:minWidth="40dp"
                 android:text="FEMALE "
+                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
 
             <RadioButton
@@ -370,7 +373,9 @@
                 android:checked="true"
                 android:minWidth="40dp"
                 android:text="MALE"
+                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
+
         </RadioGroup>
 
         <!--<android.support.design.widget.TextInputLayout-->
@@ -406,7 +411,6 @@
             android:layout_below="@+id/rgb_gender"
             android:layout_marginTop="20dp"
             android:clickable="true"
-
             android:text="Select your date of birth"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_value"
@@ -428,7 +432,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:textColorHint="@color/colorBlack"
-
                 android:theme="@style/TextLabel">
 
                 <EditText
@@ -454,7 +457,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:textColorHint="@color/colorBlack"
-
                 android:theme="@style/TextLabel">
 
                 <EditText

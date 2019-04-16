@@ -159,22 +159,20 @@ public class Helper {
         return (float) (inch * 2.54);
     }
 
-    public static String feetToCentimeter(String feet){
+    public static float feetToCentimeter(String feet, String inch){
         double dCentimeter = 0d;
-        if(!TextUtils.isEmpty(feet)){
-            if(feet.contains("'")){
-                String tempfeet = feet.substring(0, feet.indexOf("'"));
-                if(!TextUtils.isEmpty(tempfeet)){
-                    dCentimeter += ((Double.valueOf(tempfeet))*30.48);
-                }
-            }if(feet.contains("\"")){
-                String tempinch = feet.substring(feet.indexOf("'")+1, feet.indexOf("\""));
-                if(!TextUtils.isEmpty(tempinch)){
-                    dCentimeter += ((Double.valueOf(tempinch))*2.54);
-                }
+        if (!TextUtils.isEmpty(feet)) {
+
+
+            dCentimeter += ((Double.valueOf(feet)) * 30.48);
+
+
+            if (!TextUtils.isEmpty(inch)) {
+                dCentimeter += ((Double.valueOf(inch)) * 2.54);
             }
+
         }
-        return String.valueOf(dCentimeter);
+        return (float) dCentimeter;
         //Format to decimal digit as per your requirement
     }
 
