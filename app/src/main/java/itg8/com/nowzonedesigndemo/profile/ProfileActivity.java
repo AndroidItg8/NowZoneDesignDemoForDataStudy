@@ -19,9 +19,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +33,6 @@ import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
 import itg8.com.nowzonedesigndemo.utility.Helper;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    // RadioGroup.OnCheckedChangeListener,
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -120,9 +116,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         model = new ProfileModel();
         button.setOnClickListener(this);
         lblBirth.setOnClickListener(this);
@@ -298,10 +295,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void OpenBottomSheetDialogueForWeight() {
 
         View view = getLayoutInflater().inflate(R.layout.item_bottomsheet_weight, null);
-        CustomFontTextView txtKg = (CustomFontTextView) view.findViewById(R.id.lbl_kg);
-        CustomFontTextView txtPounds = (CustomFontTextView) view.findViewById(R.id.lbl_pounds);
+        CustomFontTextView txtKg = view.findViewById(R.id.lbl_kg);
+        CustomFontTextView txtPounds = view.findViewById(R.id.lbl_pounds);
 
-        Button btnOk = (Button) view.findViewById(R.id.btn_ok);
+        Button btnOk = view.findViewById(R.id.btn_ok);
         final Dialog mBottomSheetDialog = new Dialog(ProfileActivity.this,
                 R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(view);
@@ -310,30 +307,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
         mBottomSheetDialog.show();
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBottomSheetDialog.dismiss();
+        btnOk.setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        txtKg.setOnClickListener(v -> {
+            isFromKG = true;
+            mBottomSheetDialog.dismiss();
+            setDataFromBottomSheetForWieght();
 
-
-            }
         });
-        txtKg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isFromKG = true;
-                mBottomSheetDialog.dismiss();
-                setDataFromBottomSheetForWieght();
-
-            }
-        });
-        txtPounds.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isFromKG = false;
-                mBottomSheetDialog.dismiss();
-                setDataFromBottomSheetForWieght();
-            }
+        txtPounds.setOnClickListener(v -> {
+            isFromKG = false;
+            mBottomSheetDialog.dismiss();
+            setDataFromBottomSheetForWieght();
         });
 
 
@@ -343,10 +327,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void openBottomSheetDialogueForHeight() {
 
         View view = getLayoutInflater().inflate(R.layout.item_bottomsheet_height, null);
-        CustomFontTextView txtCm = (CustomFontTextView) view.findViewById(R.id.lbl_cm);
-        CustomFontTextView txtFeet = (CustomFontTextView) view.findViewById(R.id.lbl_feet);
+        CustomFontTextView txtCm = view.findViewById(R.id.lbl_cm);
+        CustomFontTextView txtFeet = view.findViewById(R.id.lbl_feet);
 
-        Button btnOk = (Button) view.findViewById(R.id.btn_ok);
+        Button btnOk = view.findViewById(R.id.btn_ok);
         final Dialog mBottomSheetDialog = new Dialog(ProfileActivity.this,
                 R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(view);
@@ -355,37 +339,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
         mBottomSheetDialog.show();
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnOk.setOnClickListener(v -> {
 
-            }
         });
-        txtCm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isFromCm= true;
-                setDataFromBottomSheetForHeight();
-                mBottomSheetDialog.dismiss();
+        txtCm.setOnClickListener(v -> {
+            isFromCm= true;
+            setDataFromBottomSheetForHeight();
+            mBottomSheetDialog.dismiss();
 
 
-            }
         });
-        txtFeet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isFromCm=false;
-                setDataFromBottomSheetForHeight();
-                mBottomSheetDialog.dismiss();
+        txtFeet.setOnClickListener(v -> {
+            isFromCm=false;
+            setDataFromBottomSheetForHeight();
+            mBottomSheetDialog.dismiss();
 
 
-            }
         });
 
     }
 
     private void setDataFromBottomSheetForHeight() {
-        if(isFromCm==true) {
+        if(isFromCm) {
             edtHeight.setVisibility(View.VISIBLE);
             llHeightFeet.setVisibility(View.GONE);
             edtHeight.setFocusable(true);
@@ -416,10 +391,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void openBottomSheetDialogueForGender() {
         View view = getLayoutInflater().inflate(R.layout.fragment_basic_profile, null);
-        CustomFontTextView txtFemale = (CustomFontTextView) view.findViewById(R.id.lbl_female);
-        CustomFontTextView txtMale = (CustomFontTextView) view.findViewById(R.id.lbl_male);
+        CustomFontTextView txtFemale = view.findViewById(R.id.lbl_female);
+        CustomFontTextView txtMale = view.findViewById(R.id.lbl_male);
 
-        Button btnOk = (Button) view.findViewById(R.id.btn_ok);
+        Button btnOk = view.findViewById(R.id.btn_ok);
         final Dialog mBottomSheetDialog = new Dialog(ProfileActivity.this,
                 R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(view);
@@ -428,30 +403,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
         mBottomSheetDialog.show();
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnOk.setOnClickListener(v -> {
 
-            }
         });
-        txtFemale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fe = txtFemale.getText().toString();
-                setDataFromBottomSheet(fe);
-                mBottomSheetDialog.dismiss();
+        txtFemale.setOnClickListener(v -> {
+            String fe = txtFemale.getText().toString();
+            setDataFromBottomSheet(fe);
+            mBottomSheetDialog.dismiss();
 
 
-            }
         });
-        txtMale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ma = txtMale.getText().toString();
-                setDataFromBottomSheet(ma);
-                mBottomSheetDialog.dismiss();
+        txtMale.setOnClickListener(v -> {
+            String ma = txtMale.getText().toString();
+            setDataFromBottomSheet(ma);
+            mBottomSheetDialog.dismiss();
 
-            }
         });
 
 
@@ -479,8 +445,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private float calculateHeightInFeet() {
         if (isFromCm)
             return Helper.centimeterToFeet(edtHeight.getText().toString());
-        else
-            return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
+        else {
+
+            double dCentimeter = 0d;
+            if(!TextUtils.isEmpty(edtHeightFeet.getText().toString())){
+
+
+                        dCentimeter += ((Double.valueOf(edtHeightFeet.getText().toString()))*30.48);
+
+
+                    if(!TextUtils.isEmpty(edtHeightInch.getText().toString())){
+                        dCentimeter += ((Double.valueOf(edtHeightInch.getText().toString()))*2.54);
+                    }
+
+            }
+            return (float) dCentimeter;
+        }
+           // return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
     }
 
     private boolean validate() {

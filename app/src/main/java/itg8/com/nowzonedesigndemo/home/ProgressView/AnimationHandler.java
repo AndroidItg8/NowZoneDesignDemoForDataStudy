@@ -24,16 +24,12 @@ public class AnimationHandler extends Handler {
 
     AnimationHandler(CircleProgressView circleView) {
         super(circleView.getContext().getMainLooper());
-        mCircleViewWeakReference = new WeakReference<CircleProgressView>(circleView);
+        mCircleViewWeakReference = new WeakReference<>(circleView);
     }
 
 
-    /**
-     * Sets interpolator for value animations.
-     *
-     * @param mInterpolator the m interpolator
-     */
-    public void setValueInterpolator(TimeInterpolator mInterpolator) {
+
+    void setValueInterpolator(TimeInterpolator mInterpolator) {
         this.mInterpolator = mInterpolator;
     }
 
@@ -43,7 +39,7 @@ public class AnimationHandler extends Handler {
      *
      * @param mLengthChangeInterpolator the m length change interpolator
      */
-    public void setLengthChangeInterpolator(TimeInterpolator mLengthChangeInterpolator) {
+    void setLengthChangeInterpolator(TimeInterpolator mLengthChangeInterpolator) {
         this.mLengthChangeInterpolator = mLengthChangeInterpolator;
     }
 

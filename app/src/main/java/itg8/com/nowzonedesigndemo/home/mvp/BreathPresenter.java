@@ -4,10 +4,6 @@ import android.content.Context;
 
 import itg8.com.nowzonedesigndemo.utility.BreathState;
 
-/**
- * Created by itg_Android on 3/2/2017.
- */
-
 public interface BreathPresenter {
     void onCreate();
     void onPause();

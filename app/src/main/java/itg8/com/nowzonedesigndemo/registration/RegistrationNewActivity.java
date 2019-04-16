@@ -22,9 +22,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -58,14 +61,14 @@ import okhttp3.ResponseBody;
 public class RegistrationNewActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
-//
+    private static int age;
+    //
 //    @BindView(R.id.basic_detail)
 //    CustomFontTextView basicDetail;
     @BindView(R.id.edt_name)
     EditText edtName;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.edt_mobile)
     EditText edtMobile;
     @BindView(R.id.input_name)
@@ -148,21 +151,22 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     private ProfileModel model;
     private float heightInFeet;
     private float weightInKg;
-    private boolean isFromCm;
-    private boolean isFromKG;
+    private boolean isFromCm=true;
+    private boolean isFromKG=false;
 
     private static final String TAG = "RegistrationNewActivity";
     private Calendar mcurrentDate = null;
 
     private static double poundsToKilos(double pounds) {
         return pounds * 0.454;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_new);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
+//        getWindow().setStatusBarColor(Color.TRANSPARENT);
         ButterKnife.bind(this);
 
         init();
@@ -174,8 +178,6 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     private void init() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Registration");
         model = new ProfileModel();
         button.setOnClickListener(this);
         lblBirth.setOnClickListener(this);
@@ -196,8 +198,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
         edtHeightInch.setOnClickListener(this);
 
 
-//        FragmentManager fm = getSupportFragmentManager();
-//        fm.beginTransaction().replace(R.id.profileFrameLayout, new BasicProfileFragment(), getClass().getSimpleName()).addToBackStack(getClass().getSimpleName()).commit();
+
 
 
     }
@@ -272,13 +273,13 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     public static int getAge(Date date) {
 
-        int age = 0;
+       int age = 0;
 
         Calendar now = Calendar.getInstance();
         Calendar dob = Calendar.getInstance();
         dob.setTime(date);
         if (dob.after(now)) {
-            throw new IllegalArgumentException("Can't be born in the future");
+            return 0;
         }
         int year1 = now.get(Calendar.YEAR);
         int year2 = dob.get(Calendar.YEAR);
@@ -311,7 +312,9 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 //                    model.setGender(edtGender.getText().toString());
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
+                    Log.d(TAG, "onClick: "+new Gson().toJson(model));
                     sendDataToServer(model);
+
                 }
                 break;
             case R.id.lbl_birth:
@@ -382,7 +385,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     }
 
     private void sendDataToServer(ProfileModel model) {
-
+showProgress();
         CommonMethod.getController().storeProfile(model.getMobile(), model.getName(), model.getAge(), model.getGender(), String.valueOf(model.getWeight()), model.getPassword(), model.getUserGroupId(), String.valueOf(model.getHeight())).flatMap(new Function<ResponseBody, Observable<String>>() {
             @Override
             public Observable<String> apply(ResponseBody responseBody) throws Exception {
@@ -393,12 +396,23 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                     String response = responseBody.string();
                     JSONObject jsonObject = null;
                     if (response != null) {
+
                         jsonObject = new JSONObject(response);
                         if (jsonObject.has("flag") && jsonObject.getInt("flag") == 1) {
                             if (jsonObject.has("userid")) {
                                 userID = jsonObject.getString("userid");
                                 Prefs.putString(CommonMethod.USER_ID, jsonObject.getString("userid"));
                             }
+
+                        }else if(jsonObject.has("msg") && jsonObject.getString("msg").equalsIgnoreCase("User Already exists")){
+                            if (jsonObject.has("userid")) {
+                                userID = jsonObject.getString("userid");
+                                Prefs.putString(CommonMethod.USER_ID, jsonObject.getString("userid"));
+                            }
+                            else
+                                return Observable.error(new IllegalStateException("User Already exists"));
+
+
 
                         }
                     }
@@ -409,7 +423,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                 }
                 return Observable.just(userID);
             }
-        }).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -417,7 +431,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onNext(String s) {
-                ((AppApplication) getApplication()).setProfileModel(model);
+                hideProgress();
+//                ((AppApplication) getApplication()).setProfileModel(model);
                 callHomeActivity();
                 // Snackbar.make(button,"User Profile created successfully, user id is"+s,Snackbar.LENGTH_LONG);
 
@@ -426,6 +441,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             @Override
             public void onError(Throwable e) {
                 Log.d(TAG, "onError: " + e.getMessage());
+                hideProgress();
+                showSnackbar(e);
                 e.printStackTrace();
 
 
@@ -439,9 +456,23 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     }
 
+    private void showSnackbar(Throwable e) {
+        Snackbar.make(button,e.getMessage(),Snackbar.LENGTH_LONG).show();
+    }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        button.setVisibility(View.GONE);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+        button.setVisibility(View.VISIBLE);
+    }
+
     private void callHomeActivity() {
-        this.finish();
         startActivity(new Intent(this, HomeActivity.class));
+        this.finish();
     }
 
     private void OpenBottomSheetDialogueForWeight() {
@@ -514,7 +545,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
         txtCm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isFromCm = true;
+              //  isFromCm = true;
                 setDataFromBottomSheetForHeight();
                 mBottomSheetDialog.dismiss();
 
@@ -535,7 +566,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     }
 
     private void setDataFromBottomSheetForHeight() {
-        if (isFromCm == true) {
+        if (isFromCm) {
             edtHeight.setVisibility(View.VISIBLE);
             llHeightFeet.setVisibility(View.GONE);
             edtHeight.setFocusable(true);
@@ -554,7 +585,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             edtHeightFeet.setFocusable(true);
             edtHeightFeet.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
-        isFromCm = !isFromCm;
+//        isFromCm = !isFromCm;
     }
 
     private void setDataFromBottomSheet(String gender) {
@@ -622,16 +653,20 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     private float calculateWeightInKg() {
         if (isFromKG)
-            return (float) poundsToKilos(Double.parseDouble(edtWeight.getText().toString()));
+            return Float.parseFloat(edtWeight.getText().toString()+".0");
+
         else
-            return Float.parseFloat(edtWeight.getText().toString());
+            return (float) poundsToKilos(Double.parseDouble(edtWeight.getText().toString()));
+
     }
 
     private float calculateHeightInFeet() {
         if (isFromCm)
             return Helper.centimeterToFeet(edtHeight.getText().toString());
-        else
-            return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
+        else {
+
+              return Helper.feetToCentimeter(edtHeightFeet.getText().toString(), edtHeightInch.getText().toString());
+        }
     }
 
     private boolean validate() {
@@ -640,41 +675,79 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             inputName.setError("Please provide name...");
             setFocus(edtName);
             valid = false;
+        }else {
+            inputName.setError("");
         }
-        if (TextUtils.isEmpty(edtMobile.getText().toString())) {
+        if (TextUtils.isEmpty(edtMobile.getText().toString()) || edtMobile.getText().toString().length()<10) {
             inputMobile.setError("Please provide mobile number...");
             setFocus(edtMobile);
             valid = false;
+        }else {
+            inputMobile.setError("");
+
         }
-//        if(isFromCm == true){
-//        if (TextUtils.isEmpty(edtHeight.getText().toString())) {
-//            inputHeight.setError("Please provide your height...");
-//            setFocus(edtHeight);
-//            valid = false;
-//        }
-//        }else{
-//            if (TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
-//                inputHeightFeet.setError("Please provide your height...");
-//                setFocus(edtHeightFeet);
-//                valid = false;
-//            }
-//            if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
-//                inputHeightInch.setError("Please provide your height...");
-//                setFocus(edtHeightInch);
-//                valid = false;
-//            }
-//
-//        }
+
+        if(isFromCm){
+        if (TextUtils.isEmpty(edtHeight.getText().toString())) {
+            inputHeight.setError("Please provide your height...");
+            inputHeightFeet.setError("");
+            inputHeightInch.setError("");
+            setFocus(edtHeight);
+            valid = false;
+        }else{
+            inputHeight.setError("");
+        } }else{
+            if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
+                inputHeightInch.setError("Please provide your height...");
+                inputHeight.setError("");
+                setFocus(edtHeightInch);
+                valid = false;
+            } else{
+                inputHeightInch.setError("");
+
+            }if (TextUtils.isEmpty(edtHeightFeet.getText().toString())) {
+                inputHeightFeet.setError("Please provide your height...");
+                inputHeight.setError("");
+                setFocus(edtHeightFeet);
+                valid = false;
+            }else{
+                inputHeightFeet.setError("");
+
+            }
+
+
+        }
+
+        if (TextUtils.isEmpty(edtWeight.getText().toString())) {
+            inputWeight.setError("Please provide your Weight...");
+            setFocus(edtHeight);
+            valid = false;
+        }else{
+            inputWeight.setError("");
+
+        }
+
         if (TextUtils.isEmpty(edtPassword.getText().toString()) || edtPassword.getText().length() < 6) {
             inputPassword.setError("Please enter valid password (minimum 6 character)");
             setFocus(edtPassword);
             valid = false;
+        }else{
+            inputPassword.setError("");
+
         }
-        if (TextUtils.isEmpty(edtWeight.getText().toString())) {
-            inputWeight.setError("Please provide your weight...");
-            setFocus(edtWeight);
-            valid = false;
-        }
+        if(TextUtils.isEmpty(edtDay.getText().toString())){
+//             lblBirth.setText("Please Select Valid Date of Birth..");
+             inputDay.setError("Please Select Valid Date of Birth..");
+             inputMonth.setError("Please Select Valid Date of Birth..");
+             inputYear.setError("Please Select Valid Date of Birth..");
+
+             valid = false;
+
+         }else{
+             inputDay.setError("");
+             inputMonth.setError("");
+             inputYear.setError("");
+         }
 
         return valid;
     }
@@ -699,21 +772,27 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
                 case R.id.rgb_cm:
                     isFromCm=true;
+                    inputHeightFeet.setHint("");
+                    inputHeightInch.setHint("");
+                    inputHeight.setHint(" Height ");
                     setDataFromBottomSheetForHeight();
                 break;
 
             case R.id.rgb_inch:
                 isFromCm=false;
+                inputHeightFeet.setHint("Height ( FEET )");
+                inputHeightInch.setHint("Height ( INCH )");
+                inputHeight.setHint("");
                 setDataFromBottomSheetForHeight();
                 break;
 
             case R.id.rgb_kg:
-                edtWeight.setHintTextColor(Color.WHITE);
+                edtWeight.setHintTextColor(Color.BLACK);
                 edtWeight.setHint("Weight[kg]");
                 isFromKG=true;
                 break;
             case R.id.rgb_pounds:
-                edtWeight.setHintTextColor(Color.WHITE);
+                edtWeight.setHintTextColor(Color.BLACK);
                 edtWeight.setHint("Weight[pounds]");
                 isFromKG=false;
                 break;

@@ -3,7 +3,6 @@ package itg8.com.nowzonedesigndemo.posture;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
@@ -185,11 +184,10 @@ public class PostureCalibrationActivity extends AppCompatActivity implements  Br
         int x = random.nextInt(tClass.getEnumConstants().length);
         return tClass.getEnumConstants()[x];
     }
-    private List<? extends Parcelable> getListFromType(BreathState type) {
+    private void getListFromType(BreathState type) {
         List<TblState> filterList = new FilterUtility.FilterBuilder().createBuilder(listState).setFilter(type).build().getFilteredList();
         setRecyclerView(filterList);
 
-        return filterList;
     }
 
     @Override

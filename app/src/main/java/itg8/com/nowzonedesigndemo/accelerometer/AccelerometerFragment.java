@@ -3,7 +3,6 @@ package itg8.com.nowzonedesigndemo.accelerometer;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +18,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 
 import com.github.mikephil.charting.data.LineData;
@@ -26,11 +26,15 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 
 
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 
-import java.math.BigDecimal;
-
+import java.lang.ref.PhantomReference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.accelerometer.controller.AccController;
@@ -43,7 +47,7 @@ import itg8.com.nowzonedesigndemo.accelerometer.controller.SingleController;
  * Use the {@link AccelerometerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AccelerometerFragment extends BaseFragment<BaseController> implements OnChartValueSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class AccelerometerFragment extends BaseFragment<BaseController> implements OnChartValueSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,8 +63,11 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
 
     private TextView title;
     private BaseController accController;
-
-
+    WeakReference<BaseController> referenceQueue;
+    private CheckBox xValue;
+    private CheckBox yValue;
+    private CheckBox zValue;
+    CheckChangeListener listener;
 
 
     public AccelerometerFragment() {
@@ -116,16 +123,12 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         chart = view.findViewById(R.id.barChat);
         title = view.findViewById(R.id.title);
 
-//        xValue = view.findViewById(R.id.chk_XValue);
-//        yValue = view.findViewById(R.id.chk_YValue);
-//        zValue = view.findViewById(R.id.chk_ZValue);
-//        xValue.setOnCheckedChangeListener(this);
-//        yValue.setOnCheckedChangeListener(this);
-//        zValue.setOnCheckedChangeListener(this);
-
+        xValue = view.findViewById(R.id.chk_XValue);
+        yValue = view.findViewById(R.id.chk_YValue);
+        zValue = view.findViewById(R.id.chk_ZValue);
 
         setFrom();
-
+        setFilterVisible();
         setLineChart();
         if(whereFrom()==1 || whereFrom()==2 || whereFrom()==3)
             accController = new AccController(this::NotifyAll,lineData());
@@ -133,37 +136,78 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
             accController = new LoadCellController(this::NotifyAll,lineData());
         else
             accController = new SingleController(this::NotifyAll,lineData());
+
+        referenceQueue=new WeakReference<BaseController>(accController);
         return view;
     }
 
 
+
+    private void setFilterVisible() {
+        xValue.setVisibility(isToShowX()?View.VISIBLE:View.GONE);
+        yValue.setVisibility(isToShowY()?View.VISIBLE:View.GONE);
+        zValue.setVisibility(isToShowZ()?View.VISIBLE:View.GONE);
+    }
+
+    private boolean isToShowX() {
+        return whereFrom()==1||whereFrom()==2||whereFrom()==3||whereFrom()==4;
+    }
+    private boolean isToShowY() {
+        return whereFrom()==1||whereFrom()==2||whereFrom()==3||whereFrom()==4;
+    }
+    private boolean isToShowZ() {
+        return whereFrom()==1||whereFrom()==2||whereFrom()==3;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        accController=null;
+    }
+
     @Override
     public BaseController getController() {
-        if (accController != null)
+        if (referenceQueue.get() != null)
             return accController;
 
         return null;
     }
 
+//
+
     private void setLineChart() {
         chart.setOnChartValueSelectedListener(this);
 
+        // enable description text
         chart.getDescription().setEnabled(true);
+
+        // enable touch gestures
         chart.setTouchEnabled(true);
 
         // enable scaling and dragging
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
         chart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);
+
+        // set an alternative background color
         chart.setBackgroundColor(Color.WHITE);
 
         LineData data = new LineData();
         data.setValueTextColor(Color.BLACK);
+
+        // add empty data
         chart.setData(data);
+
+        // get the legend (only possible after setting data)
         Legend l = chart.getLegend();
+
+        // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTextColor(Color.BLACK);
+
         XAxis xl = chart.getXAxis();
         xl.setTextColor(Color.BLACK);
         xl.setDrawGridLines(false);
@@ -178,6 +222,7 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         } else {
             leftAxis.setAxisMaximum(70000f);
             leftAxis.setAxisMinimum(-70000f);
+
         }
         leftAxis.setDrawGridLines(true);
 
@@ -185,15 +230,93 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         rightAxis.setEnabled(false);
 
 
+
+
+
+
+
+
     }
+
+    private void setLineChart2() {
+        chart.setOnChartValueSelectedListener(this);
+
+        // enable description text
+        chart.getDescription().setEnabled(true);
+
+        // enable touch gestures
+        chart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+        // set an alternative background color
+        chart.setBackgroundColor(Color.WHITE);
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
+
+        // add empty data
+        chart.setData(data);
+
+        // get the legend (only possible after setting data)
+        Legend l = chart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
+
+        XAxis xl = chart.getXAxis();
+        xl.setTextColor(Color.BLACK);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+        xl.setEnabled(true);
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setAxisMaximum(8000f);
+        leftAxis.setAxisMinimum(-2000f);
+        leftAxis.setDrawGridLines(true);
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+
+
+
+
+
+
+    }
+
 
     private void NotifyAll() {
         if (chart != null) {
-            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
-            chart.getData().notifyDataChanged();
+            removeOutdatedEntries(lineData().getDataSets());
+            lineData().notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.invalidate();
+            chart.setVisibleXRangeMaximum(MAX_ENTRIES);
+            chart.moveViewToX(lineData().getEntryCount());
+//            if(chart.getXChartMax()>MAX_ENTRIES){
+//                chart.getLineData().getDataSetByIndex(0).removeEntry()
+//            }
         }
+
+    }
+
+    public  void removeOutdatedEntries(List<ILineDataSet> dataSets) {
+        for (IDataSet ds : dataSets) {
+            while (ds.getEntryCount() > MAX_ENTRIES*3) {
+                ds.removeFirst();
+            }
+        }
+
     }
 
 
@@ -212,18 +335,8 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         Log.d(TAG, "onNothingSelected: ");
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.chk_XValue:
-                break;
-            case R.id.chk_YValue:
-                break;
-            case R.id.chk_ZValue:
-                break;
-        }
 
-    }
+
 
 
 }

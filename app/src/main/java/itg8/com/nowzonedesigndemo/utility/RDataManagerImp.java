@@ -212,7 +212,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 lastMin--;
                 lastMax--;
             }
-            Log.d(TAG, "LastMax: " + lastMax + " lastMIn:" + lastMin);
+            //Log.d(TAG, "LastMax: " + lastMax + " lastMIn:" + lastMin);
         }
 //        }
 
@@ -270,7 +270,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             if (!lastMaxDecreased && !lastMinIncreased) {
                 lastMin--;
                 lastMax++;
-                Log.d(TAG, "LastMinLastMax booliean: MAX " + lastMax + " MIN " + " " + lastMin);
+                //Log.d(TAG, "LastMinLastMax booliean: MAX " + lastMax + " MIN " + " " + lastMin);
 
                 return;
             }
@@ -282,7 +282,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 lastMax++;
                 lastMin--;
             }
-            Log.d(TAG, "LastMinLastMax: MAX " + lastMax + " MIN " + " " + lastMin);
+            //Log.d(TAG, "LastMinLastMax: MAX " + lastMax + " MIN " + " " + lastMin);
 
              */
 
@@ -297,7 +297,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
          }else if(pressure<lastMin){
          lastMin=pressure;
          }
-         Log.d(TAG,"LastMinLastMax: increaseDecrease"+rollingG.getMax()+" MIN "+rollingG.getMin()+" "+lastMax+" "+lastMin);
+         //Log.d(TAG,"LastMinLastMax: increaseDecrease"+rollingG.getMax()+" MIN "+rollingG.getMin()+" "+lastMax+" "+lastMin);
          return;
          }else {
          //                    lastMin--;
@@ -309,7 +309,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
          }else if(pressure<lastMin){
          lastMin=pressure;
          }
-         Log.d(TAG,"LastMinLastMax: increaseDecrease... Else "+rollingG.getMax()+" MIN "+rollingG.getMin()+" "+lastMax+" "+lastMin);
+         //Log.d(TAG,"LastMinLastMax: increaseDecrease... Else "+rollingG.getMax()+" MIN "+rollingG.getMin()+" "+lastMax+" "+lastMin);
          }
          }else{
          if(lastMax<8191){
@@ -352,7 +352,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        else if(pressure>(((lastMax+lastMax)/2)+50)){
 //         lastMax++;
 //         lastMin++;
-//                        Log.d(TAG,"MAXMINVALUE: Lastmin++    "+lastMax);
+//                        //Log.d(TAG,"MAXMINVALUE: Lastmin++    "+lastMax);
 //
 //        }else if( pressure<(((lastMax+lastMax)/2)-50)){
 //            lastMax--;
@@ -362,11 +362,11 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        else if(((lastMax+lastMin)/2)>rollingGf.getaverage()){
 //            lastMin++;
 //            lastMax--;
-//            Log.d(TAG,"MAXMINVALUE: Lastmin++");
+//            //Log.d(TAG,"MAXMINVALUE: Lastmin++");
 //        }else if(((lastMax+lastMin)/2)<rollingGf.getaverage()){
 //            lastMax--;
 //            lastMin++;
-//            Log.d(TAG,"MAXMINVALUE: LastMax        --");
+//            //Log.d(TAG,"MAXMINVALUE: LastMax        --");
 //        }
 
 //        if(Math.abs(rollingGf.getaverage()-pressure)<10){
@@ -376,7 +376,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        else if(Math.abs(rollingGf.getaverage()-pressure)>500){
 //            lastMax=lastMax+10;
 //            lastMin=lastMin-10;
-//            Log.d(TAG, "500 Pressure: " + pressure + " lastMax: " + lastMax + " average: " + rollingGf.getaverage() + "  lastMIN: " + lastMin);
+//            //Log.d(TAG, "500 Pressure: " + pressure + " lastMax: " + lastMax + " average: " + rollingGf.getaverage() + "  lastMIN: " + lastMin);
 //        }
 //
 //        rollingG.add(lastMax);
@@ -388,10 +388,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //            lastMin++;
 //        }
 
-//        Log.d(TAG, "100 Pressure: " + pressure + " lastMax: " + lastMax + " average: " + rollingGf.getaverage() + "  lastMIN: " + lastMin);
+//        //Log.d(TAG, "100 Pressure: " + pressure + " lastMax: " + lastMax + " average: " + rollingGf.getaverage() + "  lastMIN: " + lastMin);
 
 
-//        Log.d(TAG,);
+//        //Log.d(TAG,);
 
     }
 
@@ -405,7 +405,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             }
             return 1;
         } else {
-            Log.d(TAG, "STDEV:" + rollingG.getStdev());
+            //Log.d(TAG, "STDEV:" + rollingG.getStdev());
             return (pressure - rollingG.getaverage()) / rollingG.getStdev();
         }
     }
@@ -439,12 +439,12 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        rolling.add(pressure);
 //        d=rolling.getaverage();
 //        dLast = d;
-        // Log.d(TAG,"ds:"+d);
+        // //Log.d(TAG,"ds:"+d);
 //        return (PI_MIN + ((PI_MAX - PI_MIN) * ((dLastnew - (MIN_PRESSURE)) / (MAX_PRESSURE - MIN_PRESSURE))));
         return (PI_MIN + ((PI_MAX - PI_MIN) * (dLastnew - (lastMin)) / (lastMax - lastMin)));
 
 //        update(pressure);
-//        Log.d(TAG, String.valueOf(var()));
+//        //Log.d(TAG, String.valueOf(var()));
 
 //        return (MIN_CIRCLE_SIZE + ((MAX_CIRCLE_SIZE- MIN_CIRCLE_SIZE) * ((d - (lastMin)) / (lastMax - lastMin))));
 //        return (lastMin + ((lastMax- lastMin) * ((d - (MIN_PRESSURE)) / (MAX_PRESSURE - MIN_PRESSURE))));
@@ -528,16 +528,17 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     @Override
     public void onRawDataModel(final DataModelPressure model, Context context) {
         if (model != null) {
-            Log.d(TAG, "onRawDataModel: " + model.toString());
+            //Log.d(TAG, "onRawDataModel: " + model.toString());
             sb.setLength(0);
             if (!isSleepStarted) {
                 listener.onBatteryAvail(model.getBattery());
                 /**
                  * Add now for Raw Process Data line chart
                  */
-
+                listener.onRawData(model.getPressure());
                 listener.onAccelerometer(model);
-                Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
+
+                //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
                 processModelData(model, mContext);
             }
 //            if(countActualData>100)
@@ -549,11 +550,11 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //                min=model.getPressure();
 //            }
 //            pressureque.add(model);
-//            Log.d(TAG, sb.append("pressure max : ").append(model.getPressure()).toString());
+//            //Log.d(TAG, sb.append("pressure max : ").append(model.getPressure()).toString());
 
 //            processForStepCounting(model);
 
-            //  Log.d(RDataManagerImp.class.getSimpleName(), "data received:" + model.getPressure());
+            //  //Log.d(RDataManagerImp.class.getSimpleName(), "data received:" + model.getPressure());
             Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
                 public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
@@ -594,7 +595,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
 
         } else {
-            Log.d(RDataManagerImp.class.getSimpleName(), "data received: model is null");
+            //Log.d(RDataManagerImp.class.getSimpleName(), "data received: model is null");
         }
     }
 
@@ -640,7 +641,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
         newData = (pressure - min) / (max - min);
         listener.onDataProcessed(newData);
-        Log.d(TAG, "someItemWithCoeff : " + newData + " max: " + max + " min: " + min);
+        //Log.d(TAG, "someItemWithCoeff : " + newData + " max: " + max + " min: " + min);
         double k = (-20 / 2) + (coIndex * (20 / (20 - 1)));
         gf = Math.exp(-(Math.pow(k, 2)) / (2 * (Math.pow(0.98, 2))));
         sumGf += gf;
@@ -762,7 +763,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
 //        tempPressure = calculateProportion(model.getPressure(), 0.96d);
 
-        Log.d(TAG, "count : " + model.getPressure());
+        //Log.d(TAG, "count : " + model.getPressure());
         c++;
         if (movement) {
             hasMovementInGathering = true;
@@ -844,11 +845,11 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         if (lookForMax) {
             if (value < maximum - delta) {
                 if (peakDetected) {
-                    Log.d(TAG, "Deteced: " + "peak2Detected  222222");
+                    //Log.d(TAG, "Deteced: " + "peak2Detected  222222");
                     peak2Detected = true;
                     endPos = minPos;
                 } else {
-                    Log.d(TAG, "Deteced: " + "peakDetected");
+                    //Log.d(TAG, "Deteced: " + "peakDetected");
                     if (!peakDetected) {
                         peakDetected = true;
 //                        startPos = minPos;
@@ -863,11 +864,11 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         } else {
             if (value > minimum + delta) {
                 if (troughDetected) {
-                    Log.d(TAG, "Deteced: " + "trough2Detected  222222");
+                    //Log.d(TAG, "Deteced: " + "trough2Detected  222222");
                     trough2Detected = true;
                     endPos = maxPos;
                 } else {
-                    Log.d(TAG, "Deteced: " + "troughDetected");
+                    //Log.d(TAG, "Deteced: " + "troughDetected");
                     if (!troughDetected) {
                         troughDetected = true;
 //                        startPos = maxPos;
@@ -942,9 +943,9 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             return false;
         }
 //        if (endTimestamp - startTimestamp > 0)
-//        Log.d(TAG, "Deteced = TimeTaken" + (ONE_MINUTE / (endTimestamp - startTimestamp)) + " " + endTimestamp + " " + startTimestamp);
+//        //Log.d(TAG, "Deteced = TimeTaken" + (ONE_MINUTE / (endTimestamp - startTimestamp)) + " " + endTimestamp + " " + startTimestamp);
         newCount = (ONE_MINUTE / totalMillies);
-//        Log.d(TAG, "Deteced = TimeTaken" + (ONE_MINUTE / totalMillies) + " " + minPos + " " + maxPos + " " + ONE_MINUTE / (endTimestamp - startTimestamp));
+//        //Log.d(TAG, "Deteced = TimeTaken" + (ONE_MINUTE / totalMillies) + " " + minPos + " " + maxPos + " " + ONE_MINUTE / (endTimestamp - startTimestamp));
         try {
             if (newCount < 35) {
                 if (lastCount > newCount + 1)
@@ -954,7 +955,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 } else {
                     lastCount = newCount;
                 }
-                Log.d(TAG, "Deteced Count= NewCount" + newCount + " LastCount : " + lastCount);
+                //Log.d(TAG, "Deteced Count= NewCount" + newCount + " LastCount : " + lastCount);
                 listener.onCountAvailable((int) lastCount, System.currentTimeMillis());
 
 //            lastCount=newCount;
@@ -976,7 +977,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         checkIfDataGatheringCompleted(model, context, dataModel);
         pModel = model;
         changed = true;
-        Log.d(TAG, "SmallestPressure:" + mSmallestPressure);
+        //Log.d(TAG, "SmallestPressure:" + mSmallestPressure);
         if (mSmallestPressure <= 500 || (mSmallestPressure > model.getPressure()))
             mSmallestPressure = model.getPressure();
         if (mPressureCount > 100) {
@@ -1026,7 +1027,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             detailOld.setTimeOf(Helper.convertTimestampToTime(actualLastTimestamp));
             detailOld.setStateofmindmasterId(Helper.getIdByState(actualLastState));
             BreathingModel model = AppApplication.getInstance().addBreathing(detailOld);
-            Log.d(TAG, "OKL:" + "lastServerTimestamp!=actualLastTimestamp");
+            //Log.d(TAG, "OKL:" + "lastServerTimestamp!=actualLastTimestamp");
         }
         Breathingmaster detail = new Breathingmaster();
         detail.setCount(count);
@@ -1198,13 +1199,13 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             public void run() {
                 try {
                     InetAddress serverAddr = InetAddress.getByName(ipAddress);
-                    Log.d("ClientActivity", "C: Connecting...");
+                    //Log.d("ClientActivity", "C: Connecting...");
                     Socket socket = new Socket(serverAddr, 8080);
                     connected = true;
                     while (connected) {
                         try {
                             if (changed) {
-                                Log.d("ClientActivity", "C: Sending command.");
+                                //Log.d("ClientActivity", "C: Sending command.");
                                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket
                                         .getOutputStream())), true);
                                 // WHERE YOU ISSUE THE COMMANDS
@@ -1233,17 +1234,17 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                                             (toSendSocket);
 
 
-                                Log.d("ClientActivity", "C: Sent.");
+                                //Log.d("ClientActivity", "C: Sent.");
                                 changed = false;
                             }
                         } catch (Exception e) {
-                            Log.e("ClientActivity", "S: Error", e);
+                            //Log.e("ClientActivity", "S: Error", e);
                         }
                     }
                     socket.close();
-                    Log.d("ClientActivity", "C: Closed.");
+                    //Log.d("ClientActivity", "C: Closed.");
                 } catch (Exception e) {
-                    Log.e("ClientActivity", "C: Error", e);
+                    //Log.e("ClientActivity", "C: Error", e);
                     listener.onSocketInterrupted();
                     connected = false;
                 }
@@ -1257,10 +1258,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         dataStorage[indexDataStorage] = model;
         //TODO this is only to create file with both filters. this will help to understand to noise problem.
         dataStorageRaw[indexDataStorage] = rawData;
-        // Log.d(TAG,"Size of dataStorage "+dataStorage.size());
+        // //Log.d(TAG,"Size of dataStorage "+dataStorage.size());
         tempLineChartData[indexDataStorage] = tempPressure;
         if (indexDataStorage == PACKET_READY_TO_IMP - 1) {
-            Log.d(TAG, "datas  is greater");
+            //Log.d(TAG, "datas  is greater");
             implementStorageProcess(context, dataStorage);
             indexDataStorage = 0;
         } else {
@@ -1321,8 +1322,8 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
             @Override
             public void onError(Throwable e) {
-                    e.printStackTrace();
-                    throw new IllegalStateException("Kuch to bhi error: "+e.getMessage());
+                e.printStackTrace();
+                throw new IllegalStateException("Kuch to bhi error: " + e.getMessage());
             }
 
             @Override
@@ -1337,10 +1338,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         int insert = -1;
 
         if (dataStorage != null) {
-            Log.d(TAG, "storeDataInDatabase: b4 data store ");
+            //Log.d(TAG, "storeDataInDatabase: b4 data store ");
 
             insert = preAccSateImp.create(dataStorage);
-            Log.d(TAG, "storeDataInDatabase: after  data store ");
+            //Log.d(TAG, "storeDataInDatabase: after  data store ");
 
         }
         if (insert > -1) {
@@ -1354,27 +1355,27 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
 
     private void scheduleJob(Context context) {
-        Log.d(TAG, "scheduleJob: ");
+        //Log.d(TAG, "scheduleJob: ");
 
-         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(
+        JobScheduler jobScheduler = (JobScheduler) context.getSystemService(
                 Context.JOB_SCHEDULER_SERVICE);
 
-    ComponentName name = new ComponentName(context, NetworkCallScheduler.class);
-    int result = jobScheduler.schedule(getJobInfo(123, 1, name));
+        ComponentName name = new ComponentName(context, NetworkCallScheduler.class);
+        int result = jobScheduler.schedule(getJobInfo(123, 1, name));
 
         if (result == JobScheduler.RESULT_SUCCESS) {
-            Log.d(TAG, "Scheduled job successfully!");
+            //Log.d(TAG, "Scheduled job successfully!");
 
         } else {
-            Log.d(TAG, "scheduleJob:  not connect ");
+            //Log.d(TAG, "scheduleJob:  not connect ");
         }
 
     }
 
-    private JobInfo getJobInfo(final int id,  final long minute, ComponentName name) {
+    private JobInfo getJobInfo(final int id, final long minute, ComponentName name) {
         final long interval = TimeUnit.SECONDS.toMillis(minute); // run every minute
-        Log.d(TAG, "getJobInfo: interval " + interval);
-        final JobInfo jobInfo ;
+        //Log.d(TAG, "getJobInfo: interval " + interval);
+        final JobInfo jobInfo;
 //        String value = new Gson().toJson(dataStorage);
 //        PersistableBundle bundle = new PersistableBundle();
 //        bundle.putString("data", value);
@@ -1402,7 +1403,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     }
 
     private void passForCalculation(DataModelPressure[] dataStorage, double[] tempLineChartRaw) {
-        Log.d(TAG, "came for calculation: " + dataStorage.length);
+        //Log.d(TAG, "came for calculation: " + dataStorage.length);
         if (!movement) {
             async = new AlgoAsync(this, tempLineChartRaw);
             async.execute(dataStorage);
@@ -1415,7 +1416,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
     @Override
     public void onCountResultAvailable(int count, long timestamp, SparseArray<List<Integer>> allDiff) {
-        Log.d(TAG, "bpmCount = " + count);
+        //Log.d(TAG, "bpmCount = " + count);
         if (!attached) {
             listener.onDeviceNotAttached();
             return;
@@ -1435,21 +1436,21 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
     @Override
     public void onMotionStarts() {
-        Log.d(TAG, "motion: started");
+        //Log.d(TAG, "motion: started");
     }
 
     @Override
     public void onMotionEnds() {
-        Log.d(TAG, "motion: finish");
+        //Log.d(TAG, "motion: finish");
     }
 
     @Override
     public void onStep(int step) {
         if (attached) {
-            Log.d(TAG, "valid step attached: " + step);
+            //Log.d(TAG, "valid step attached: " + step);
             listener.onStepCountReceived(step);
         } else {
-            Log.d(TAG, "valid not attached: " + step);
+            //Log.d(TAG, "valid not attached: " + step);
         }
     }
 
@@ -1510,7 +1511,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
 
     private int check5SecPosture(float accelY) {
-        Log.d(TAG, "TIMESTAMPFOR20DATA " + accelY);
+        //Log.d(TAG, "TIMESTAMPFOR20DATA " + accelY);
 
         if (Prefs.getBoolean(CommonMethod.POSTURE_PAUSE, false)) {
             return 0;
@@ -1533,7 +1534,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
                 sum = sum / 300;
 
                 countPosture = 0;
-                Log.d(TAG, "POSTURERAW: " + accelY + " " + calibrate);
+                //Log.d(TAG, "POSTURERAW: " + accelY + " " + calibrate);
                 Arrays.fill(accelGatheredData, 0);
                 if (sum > calibrate + 100 || sum < calibrate - 100) {
                     listener.onPostureResult(false);

@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -25,9 +23,7 @@ import itg8.com.nowzonedesigndemo.common.Prefs;
 import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
 
 import static itg8.com.nowzonedesigndemo.common.CommonMethod.calculate;
-import static itg8.com.nowzonedesigndemo.connection.BleService.ACTION_CALIBRATE_POSTURE;
 import static itg8.com.nowzonedesigndemo.home.StepMovingActivity.AXIS_Y;
-import static itg8.com.nowzonedesigndemo.home.StepMovingActivity.AXIS_Z;
 
 public class PostureCalibrateSettingActivity extends AppCompatActivity {
 
@@ -100,44 +96,29 @@ public class PostureCalibrateSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posture_calibrate_setting);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        FloatingActionButton fabPause = (FloatingActionButton) findViewById(R.id.fabPause);
-        fabPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Prefs.putBoolean(CommonMethod.POSTURE_PAUSE,true);
+        FloatingActionButton fabPause = findViewById(R.id.fabPause);
+        fabPause.setOnClickListener(view -> Prefs.putBoolean(CommonMethod.POSTURE_PAUSE,true));
 
-            }
-        });
-
-        FloatingActionButton fabPlay = (FloatingActionButton) findViewById(R.id.fabPlay);
-        fabPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Prefs.putBoolean(CommonMethod.POSTURE_PAUSE,false);
-            }
-        });
+        FloatingActionButton fabPlay = findViewById(R.id.fabPlay);
+        fabPlay.setOnClickListener(view -> Prefs.putBoolean(CommonMethod.POSTURE_PAUSE,false));
 
         if(Prefs.getBoolean(CommonMethod.POSTURE_PAUSE,false)){
-            fabPause.setVisibility(View.GONE);
-            fabPlay.setVisibility(View.VISIBLE);
+            fabPause.hide();//.setVisibility(View.GONE);
+            fabPlay.show();//.setVisibility(View.VISIBLE);
         }else {
-            fabPause.setVisibility(View.VISIBLE);
-            fabPlay.setVisibility(View.GONE);
+            fabPause.show();//.setVisibility(View.VISIBLE);
+            fabPlay.hide();//.setVisibility(View.GONE);
         }
 
 
 
-        btnCalibrate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startCalibration();
-            }
-        });
+        btnCalibrate.setOnClickListener(v -> startCalibration());
     }
 
     private void startCalibration() {

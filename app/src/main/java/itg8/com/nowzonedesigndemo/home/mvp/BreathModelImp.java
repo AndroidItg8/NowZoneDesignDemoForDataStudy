@@ -34,7 +34,7 @@ public class BreathModelImp extends BaseModuleOrm implements BreathFragmentModel
     private final Runnable r;
     private BreathPresenter.BreathFragmentModelListener listener;
 
-    Dao<TblState,Integer> stateDao=null;
+    private Dao<TblState,Integer> stateDao=null;
     private DbHelper dbHelper;
     private boolean dbInited;
     private boolean isReceivingStarted=false;
@@ -43,14 +43,11 @@ public class BreathModelImp extends BaseModuleOrm implements BreathFragmentModel
     BreathModelImp(BreathPresenter.BreathFragmentModelListener listener) {
         this.listener = listener;
         handler = new Handler();
-        r=new Runnable() {
-            @Override
-            public void run() {
-                if (!isReceivingStarted) {
-                    listener.onDeviceNotConnectedInTime();
-                } else {
-                    listener.onDataReceivingStarted();
-                }
+        r= () -> {
+            if (!isReceivingStarted) {
+                listener.onDeviceNotConnectedInTime();
+            } else {
+                listener.onDataReceivingStarted();
             }
         };
         handler.postDelayed(r, TIME_LIMIT_OF_CONNECT);
@@ -185,8 +182,8 @@ public class BreathModelImp extends BaseModuleOrm implements BreathFragmentModel
     private String checkMinutesOfHrFromSize(int size) {
         int minute=0;
         String hrMinute="";
-        int hours = (int)size / 60;
-        minute = (int)size%60;
+        int hours = size / 60;
+        minute = size %60;
 
         if(hours>0)
             hrMinute=String.valueOf(hours)+" Hr ";

@@ -33,7 +33,8 @@ public class SingleController extends BaseController{
     }
 
     private void initDataSetForLines() {
-        dataSetGraphA = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
+//        dataSetGraphA = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
+        dataSetGraphA =  (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
         checkIfNewDataSetGraph();
 
     }

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-
     tools:context=".accelerometer.AccelerometerFragment">
 
 
@@ -15,6 +14,7 @@
         android:layout_margin="8dp"
         android:checked="true"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="X Value" />
 
     <CheckBox
@@ -24,6 +24,7 @@
         android:layout_margin="8dp"
         android:layout_height="wrap_content"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="Y Value" />
 
     <CheckBox
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:visibility="invisible"
+        android:buttonTint="@color/colorAccent"
         android:text="Z Value" />
 
     <TextView
@@ -41,8 +43,9 @@
         android:textColor="@color/colorBlack"
         android:textSize="14sp"
         android:textAllCaps="true"
-        android:layout_below="@+id/chk_ZValue"
+        android:layout_below="@+id/chk_YValue"
         android:id="@+id/title"
+        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp"/>
 

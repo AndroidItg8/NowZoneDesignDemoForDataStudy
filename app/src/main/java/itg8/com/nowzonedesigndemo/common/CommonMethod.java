@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -542,7 +543,7 @@ public class CommonMethod {
             set.setAxisDependency(YAxis.AxisDependency.LEFT);
             set.setColor(Color.parseColor(colorCode));
 //        set.setCircleColor(Color.BLUE);
-            set.setLineWidth(2f);
+            set.setLineWidth(20f);
 //        set.setCircleRadius(4f);
             set.setFillAlpha(65);
             set.setFillColor(Color.parseColor(colorCode));
@@ -552,6 +553,33 @@ public class CommonMethod {
             set.setDrawCircleHole(false);
             set.setDrawCircles(false);
             set.setDrawValues(false);
+
+
+//        LineDataSet set = new LineDataSet(null, s);
+//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        set.setColor(ColorTemplate.getHoloBlue());
+//        set.setCircleColor(Color.BLACK);
+//        set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+//        set.setFillAlpha(65);
+//        set.setFillColor(ColorTemplate.getHoloBlue());
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLACK);
+//        set.setValueTextSize(9f);
+//        set.setDrawValues(false);
+
+//        LineDataSet set = new LineDataSet(null, s);
+//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+//        set.setColor(ColorTemplate.getHoloBlue());
+//        set.setCircleColor(Color.BLUE);
+//        set.setLineWidth(2f);
+//        set.setCircleRadius(4f);
+//        set.setFillAlpha(65);
+//        set.setFillColor(ColorTemplate.getHoloBlue());
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
+//        set.setValueTextSize(9f);
+//        set.setDrawValues(false);
             return set;
     }
 

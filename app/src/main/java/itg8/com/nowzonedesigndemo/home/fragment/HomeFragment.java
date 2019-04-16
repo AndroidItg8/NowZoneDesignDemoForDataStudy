@@ -185,8 +185,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     public void onMovementStarted() {
         if(isViewEnable) {
             mStepImage.startSteps();
-            breathview.setVisibility(View.GONE);
-            mStepImage.setVisibility(View.VISIBLE);
+            breathview.setVisibility(View.VISIBLE);
+            /**
+             * Change now for the Demo test to visible to gone mStep Image
+             */
+            mStepImage.setVisibility(View.GONE);
         }
     }
 
@@ -245,8 +248,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
                 imgState.setVisibility(View.VISIBLE);
             } else {
                 imgState.setVisibility(View.GONE);
-            }
-            if (state != null) {
+            }if (state != null) {
                 txtStateValue.setText(state);
                 txtStateValue.setVisibility(View.VISIBLE);
             } else {
@@ -269,14 +271,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onResume() {
-
         super.onResume();
     }
 
     @Override
     public void onPause() {
-
-            if (breathview != null)
+        if (breathview != null)
                 breathview.reset();
 
         super.onPause();

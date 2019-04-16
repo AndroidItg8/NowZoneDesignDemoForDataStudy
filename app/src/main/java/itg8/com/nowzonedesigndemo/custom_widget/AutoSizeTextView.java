@@ -21,7 +21,7 @@ import itg8.com.nowzonedesigndemo.R;
  * Created by Android itg 8 on 5/20/2017.
  */
 
-public class AutoSizeTextView  extends TextView {
+public class AutoSizeTextView  extends android.support.v7.widget.AppCompatTextView {
 
     final String ZERO_WIDTH_SPACE = "\u200B";
 

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Your Basic details"
+            android:text="Your Basic Details"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -83,6 +83,7 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
+            android:paddingTop="8dp"
             android:text="Select height"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_value_sleep" />
@@ -110,7 +111,9 @@
                 android:gravity="center"
                 android:minWidth="40dp"
                 android:text="INCH "
-                android:textColor="@color/colorBlack" />
+                android:buttonTint="@color/colorAccent"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/rgb_cm"
@@ -120,8 +123,10 @@
                 android:layout_marginEnd="8dp"
                 android:checked="true"
                 android:minWidth="40dp"
+                android:buttonTint="@color/colorAccent"
                 android:text="CM"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp" />
         </RadioGroup>
 
 
@@ -136,9 +141,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:hint="Height ( CM )"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorBlack"
-
                 android:theme="@style/TextLabel"
                 android:visibility="visible">
 
@@ -146,9 +151,7 @@
                     android:id="@+id/edt_height"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:focusable="false"
-                    android:hint="Height ( CM )"
                     android:inputType="number"
                     android:lines="1"
                     android:textColor="@color/colorBlack"
@@ -170,7 +173,6 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:textColor="@color/colorBlack"
-
                     android:textColorHint="@color/colorBlack"
                     android:theme="@style/TextLabel">
 
@@ -180,7 +182,7 @@
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:focusable="false"
-                        android:hint="height feet"
+                        android:hint="Height Feet"
                         android:inputType="number"
                         android:lines="1"
                         android:maxLines="1"
@@ -207,7 +209,7 @@
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:focusable="false"
-                        android:hint="height inch"
+                        android:hint="Height Inch"
                         android:inputType="number"
                         android:lines="1"
                         android:maxLines="1"
@@ -227,6 +229,7 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
+            android:paddingTop="8dp"
             android:text="Select Weight "
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_value_sleep" />
@@ -236,6 +239,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/frame_height"
+            android:layout_alignLeft="@+id/rgb_height"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -253,8 +257,11 @@
                 android:layout_marginEnd="8dp"
                 android:checked="true"
                 android:gravity="center"
+                android:minWidth="40dp"
                 android:text="KG "
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                android:buttonTint="@color/colorAccent"
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/rgb_pounds"
@@ -263,8 +270,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:checked="true"
+                android:minWidth="40dp"
                 android:text="POUNDS"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp" />
         </RadioGroup>
 
 
@@ -274,8 +283,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rgb_weight"
             android:layout_marginEnd="8dp"
+            android:hint="Weight"
+            android:buttonTint="@color/colorAccent"
             android:textColorHint="@color/colorBlack"
-
             android:theme="@style/TextLabel">
 
             <EditText
@@ -286,7 +296,6 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:hint="Weight"
                 android:inputType="number"
                 android:lines="1"
                 android:maxLines="1"
@@ -324,6 +333,7 @@
             android:layout_alignBaseline="@+id/rbg_main_steps"
             android:layout_centerVertical="true"
             android:layout_marginTop="10dp"
+            android:paddingTop="8dp"
             android:text="Select Gender "
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_value_sleep" />
@@ -349,7 +359,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
+                android:minWidth="40dp"
                 android:text="FEMALE "
+                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
 
             <RadioButton
@@ -358,10 +370,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-
                 android:checked="true"
+                android:minWidth="40dp"
                 android:text="MALE"
+                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
+
         </RadioGroup>
 
         <!--<android.support.design.widget.TextInputLayout-->
@@ -397,10 +411,10 @@
             android:layout_below="@+id/rgb_gender"
             android:layout_marginTop="20dp"
             android:clickable="true"
-
             android:text="Select your date of birth"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/txt_value" />
+            android:textSize="@dimen/txt_value"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/ll_age"
@@ -418,7 +432,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:textColorHint="@color/colorBlack"
-
                 android:theme="@style/TextLabel">
 
                 <EditText
@@ -444,7 +457,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:textColorHint="@color/colorBlack"
-
                 android:theme="@style/TextLabel">
 
                 <EditText
@@ -489,15 +501,24 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/ll_age"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_age"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="30dp"
             android:background="@color/colorPrimary"
-            android:layout_below="@+id/ll_age"
             android:text="Save"
             android:textColor="@color/colorWhite" />
 

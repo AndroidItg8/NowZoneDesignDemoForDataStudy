@@ -172,10 +172,10 @@ class CheckAccelImp {
                     if (is25Steps <= MAX_POSSIBLE_STEPS && is25Steps > MIN_POSSIBLE_STEPS) {
                         todaysActualSteps = todaysActualSteps + is25Steps;
                         listener.onStep(todaysActualSteps);
-                        Log.d(TAG, "valid step:" + is25Steps + " todaysSteps:" + todaysActualSteps);
+                        //Log.d(TAG, "valid step:" + is25Steps + " todaysSteps:" + todaysActualSteps);
                         is25Steps = 0;
                     } else {
-                        Log.d(TAG, "valid not step:" + is25Steps);
+                        //Log.d(TAG, "valid not step:" + is25Steps);
                         is25Steps = 0;
                     }
                     validStepCount = 0;
@@ -234,13 +234,13 @@ class CheckAccelImp {
             double zG = model.getZ();
             sb = new StringBuilder();
             sb.append("RawXYZ: X: ").append(xG).append(" Y: ").append(yG).append(" Z: ").append(zG);
-            Log.d(TAG, sb.toString());
+            //Log.d(TAG, sb.toString());
 
             checkMovementForView(xG, yG, zG);
             something = calculatePitchRoll(xG, yG, zG);
             listener.onAngleAvail(something);
 
-            Log.d(TAG, "SOMETHING : " + something);
+            //Log.d(TAG, "SOMETHING : " + something);
 
             xG = (xG * G) / 1000;
             yG = (yG * G) / 1000;
@@ -254,12 +254,12 @@ class CheckAccelImp {
 //            float delta = (float) (roll - mAccelLast);
 //            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
-//            Log.d("gdata:","X:"+xG+" Y:"+yG+" Z:"+zG);
-//              Log.d("Rollng avg:",String.valueOf(roll));
+//            //Log.d("gdata:","X:"+xG+" Y:"+yG+" Z:"+zG);
+//              //Log.d("Rollng avg:",String.valueOf(roll));
 
 //            log="X:"+formatter.format( (model.getX() * 0.224)/1000)+ " Y:"+formatter.format((model.getY() * 0.224)/1000)+" Z:"+formatter.format((model.getZ() * 0.224)/1000);
 //            log="X:"+formatter.format( (model.getX() * 0.224)/1000)+ " Y:"+formatter.format((model.getY() * 0.224)/1000)+" Z:"+formatter.format((model.getZ() * 0.224)/1000);
-//              Log.d("gdata:",String.valueOf(log));
+//              //Log.d("gdata:",String.valueOf(log));
             /**
              * This is for creating file with roll
              */
@@ -292,10 +292,10 @@ class CheckAccelImp {
 //                    print(" Z =  %fG  #####" % ((ACCz * 0.224)/1000))
             pitch = atan2(-model.getX(), sqrt((model.getY() * model.getY()) + (model.getZ() * model.getZ()))) * degconvert;
 
-            // Log.d(TAG, "value ---" + model.getX() + " " + model.getY() + " " + model.getZ() + " roll " + roll + " pitch " + pitch);
-//            Log.d(TAG, "value ---" + model.getX() + " " + model.getY() + " " + model.getZ() + " theta " + theta + " pie " + pie+" alpha "+alpha);
+            // //Log.d(TAG, "value ---" + model.getX() + " " + model.getY() + " " + model.getZ() + " roll " + roll + " pitch " + pitch);
+//            //Log.d(TAG, "value ---" + model.getX() + " " + model.getY() + " " + model.getZ() + " theta " + theta + " pie " + pie+" alpha "+alpha);
 //                double vector = calculateVector(model.getX(), model.getY(), model.getZ());
-//                Log.d(TAG, "vector: " + vector);
+//                //Log.d(TAG, "vector: " + vector);
             /**
              * This is new method for testing 22/06/2017
              * <TESTED
@@ -384,11 +384,11 @@ class CheckAccelImp {
     private synchronized void checkMovementForView(double xG, double yG, double zG) {
         mAccelLast = roll2;
         roll2 = sqrt((xG * xG) + (yG * yG) + (zG * zG));
-        Log.d(TAG, "ROLLING VECTOR:" + roll2);
+        //Log.d(TAG, "ROLLING VECTOR:" + roll2);
 
         float delta = (float) (roll2 - mAccelLast);
         mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-        // Log.d(TAG, "ACCEL:" + mAccel + " DELTA:" + delta);
+        // //Log.d(TAG, "ACCEL:" + mAccel + " DELTA:" + delta);
         rollingForStep.add(roll2);
 
         detectPeak(mAccel);
@@ -416,7 +416,7 @@ class CheckAccelImp {
         List<Map<Integer, Double>> result = CommonMethod.peak_detection(accList, 50.0);
         if (result.size() > 0) {
             if (result.get(0) != null && result.get(1) != null) {
-                Log.i(TAG, "peaks in accel: " + result.get(0).size());
+                //Log.i(TAG, "peaks in accel: " + result.get(0).size());
                 if (result.get(0).size() >= 1
                         && result.get(0).size() <= 3
                         && result.get(1).size() >= 1
@@ -473,7 +473,7 @@ class CheckAccelImp {
 
 
     private double calculatePitchRoll(double x, double y, double z) {
-//        Log.v(TAG, "axis: x:" + x + " y:" + y + " z:" + z);
+//        //Log.v(TAG, "axis: x:" + x + " y:" + y + " z:" + z);
 
         //Low Pass Filter
         fXg = fXg * alpha + (x * (1.0 - alpha));
@@ -483,12 +483,12 @@ class CheckAccelImp {
 
         //Roll & Pitch Equations
         newX = Math.toDegrees(Math.atan((Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) / (z)));
-        Log.d(TAG, "NewX: " + newX);
+        //Log.d(TAG, "NewX: " + newX);
         newY = y - fYg;
         newZ = z - fZg;
 //        roll2 = (atan2(-fYg, fZg) * 360.0) / M_PI;
         pitch = (atan2(fXg, sqrt(fYg * fYg + fZg * fZg)) * 360.0) / M_PI;
-        Log.d(TAG, "Roll: " + (atan2(fYg, fZg) * 180.0) / M_PI);
+        //Log.d(TAG, "Roll: " + (atan2(fYg, fZg) * 180.0) / M_PI);
 
 
         //This is from <a href='https://www.biopac.com/wp-content/uploads/app273.pdf'>ss</a>
@@ -668,9 +668,9 @@ class CheckAccelImp {
             nZ[i] = (float) (objectArray[i].getZ() + 32768) / 65535.f;
             //Logs.d("#"+nZ[i]);
             n3D[i] = (float) sqrt(nX[i] * nX[i] + nY[i] * nY[i] + nZ[i] * nZ[i]);
-//            Log.d("###","#"+n3D[i]);
+//            //Log.d("###","#"+n3D[i]);
         }
-        // Log.d(TAG, "n3D " + Arrays.toString(n3D));
+        // //Log.d(TAG, "n3D " + Arrays.toString(n3D));
 
         //PeakDetector peakDetect = new PeakDetector(nY);
         PeakDetector peakDetect = new PeakDetector(n3D);
@@ -915,7 +915,7 @@ class CheckAccelImp {
         //public void onSensorChanged(int sensor, float[] values) {
         stepModule = new StepModule();
         stepListener = 0;
-        Log.d(TAG, String.valueOf(v));
+        //Log.d(TAG, String.valueOf(v));
         synchronized (this) {
 
             int j = 1;
@@ -942,7 +942,7 @@ class CheckAccelImp {
                     boolean isNotContra = (mLastMatch != 1 - extType);
 
                     if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-                        Log.i(TAG, "step");
+                        //Log.i(TAG, "step");
                         stepListener++;
                         mLastMatch = extType;
                     } else {
@@ -988,7 +988,7 @@ class CheckAccelImp {
                     }
                 }
                 createFileSleep(info);
-                Log.d(TAG, "sleep started");
+                //Log.d(TAG, "sleep started");
 //                model.setX(model.getX() >= 0 ? model.getX() : 65535 + model.getX());
 //                model.setY(model.getY() >= 0 ? model.getY() : 65535 + model.getY());
 //                model.setZ(model.getZ() >= 0 ? model.getZ() : 65535 + model.getZ());
@@ -1038,7 +1038,7 @@ class CheckAccelImp {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage(), e);
+                        //Log.e(TAG, e.getMessage(), e);
                     }
 
                     @Override
@@ -1109,7 +1109,7 @@ class CheckAccelImp {
                 long diffMinutes;
                 long diffLong;
                 while (line != null) {
-                    // Log.d("StackOverflow", line);
+                    // //Log.d("StackOverflow", line);
                     line = reader.readLine();
                     if (line != null) {
                         long timestamp = Long.parseLong(line);
@@ -1130,7 +1130,7 @@ class CheckAccelImp {
                 listener.onSleepEnded();
                 if (completeFileStructure.delete()) {
 
-                    Log.d(TAG, "Deleted");
+                    //Log.d(TAG, "Deleted");
                 }
 
             } catch (FileNotFoundException e) {
@@ -1144,7 +1144,7 @@ class CheckAccelImp {
 
     public void startCalibrationg() {
 //        Prefs.putFloat(CommonMethod.POSTURE_CALIBRATION, (float) Math.abs(something));
-//        Log.d(TAG,"POSTURERESULT "+something);
+//        //Log.d(TAG,"POSTURERESULT "+something);
 //        if(Prefs.getFloat(CommonMethod.POSTURE_CALIBRATION,0)!=0){
 //            listener.onPostureClibrated();
 //        }else {

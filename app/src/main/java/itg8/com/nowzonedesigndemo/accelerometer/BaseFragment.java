@@ -46,7 +46,6 @@ public abstract class BaseFragment<T> extends Fragment {
     private static final String TAG = "BaseFragment";
     private BigDecimal AXIS_Z, AXIS_Y, AXIS_X;
     private DataModelPressure model;
-    private ColorController controller;
     public String title;
 
 
@@ -127,6 +126,7 @@ public abstract class BaseFragment<T> extends Fragment {
                                 if(getController()!=null)
                                     ((LoadCellController)getController()).setLoadData(AXIS_X.floatValue(), AXIS_Y.floatValue());
                             }
+
                             title = "Load Cell graph";
                         }
 
@@ -302,11 +302,25 @@ public abstract class BaseFragment<T> extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
-        controller = new ColorController();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         registerReceiver();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //    @Override
@@ -320,16 +334,7 @@ public abstract class BaseFragment<T> extends Fragment {
 //        model.onInitStateTime();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public abstract int whereFrom();
 
