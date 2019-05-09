@@ -231,10 +231,6 @@
         <item>@drawable/ic_help_outline_black_24dp</item>
         <item>@drawable/ic_logout</item>
         <item>@drawable/ic_logout</item>
-        <item>@drawable/ic_logout</item>
-        <item>@drawable/ic_logout</item>
-
-
     </array>
     <string name="title_activity_main">MainActivity</string>
     <string name="name">Name</string>

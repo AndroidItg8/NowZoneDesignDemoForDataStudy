@@ -445,8 +445,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private float calculateHeightInFeet() {
         if (isFromCm)
             return Helper.centimeterToFeet(edtHeight.getText().toString());
-        else
-            return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
+        else {
+
+            double dCentimeter = 0d;
+            if(!TextUtils.isEmpty(edtHeightFeet.getText().toString())){
+
+
+                        dCentimeter += ((Double.valueOf(edtHeightFeet.getText().toString()))*30.48);
+
+
+                    if(!TextUtils.isEmpty(edtHeightInch.getText().toString())){
+                        dCentimeter += ((Double.valueOf(edtHeightInch.getText().toString()))*2.54);
+                    }
+
+            }
+            return (float) dCentimeter;
+        }
+           // return (float) (Float.parseFloat(edtHeight.getText().toString()) + (0.1 * Float.parseFloat(edtHeight.getText().toString())));
     }
 
     private boolean validate() {

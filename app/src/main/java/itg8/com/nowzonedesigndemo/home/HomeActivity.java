@@ -2,12 +2,17 @@ package itg8.com.nowzonedesigndemo.home;
 
 import android.Manifest;
 import android.content.ComponentCallbacks2;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -52,6 +57,7 @@ import itg8.com.nowzonedesigndemo.breath_history.BreathsHistoryActivity;
 import itg8.com.nowzonedesigndemo.common.BaseActivity;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 import itg8.com.nowzonedesigndemo.common.Prefs;
+import itg8.com.nowzonedesigndemo.connection.BleService;
 import itg8.com.nowzonedesigndemo.home.fragment.HomeFragment;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenter;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenterImp;
@@ -237,6 +243,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private int lastBatteryLevel = 0;
     private int calcBattery;
     private String title;
+
+
+
     private AdapterView.OnItemClickListener sliderClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -290,6 +299,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             } else if (position == MENU_NOTIFICATION) {
                 title = "Accelerometer Graph";
                 setFragment(AccelerometerFragment.newInstance(FROM_ACCEL));
+
             } else if (position == MENU_CONTACT_US) {
                 title = " MIC Graph";
                 setFragment(AccelerometerFragment.newInstance(FROM_MIC));
@@ -306,6 +316,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 startExportWalaItem();
 
             }
+
 
             openDrawer();
         }
@@ -333,35 +344,34 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         presenter = new BreathPresenterImp(this);
         presenter.passContext(HomeActivity.this);
         presenter.onCreate();
+
         navigationViewBasic();
+        SetDrawerLayout();
+        setItemClickedListener();
+
+
+
         Log.d(TAG, "HEADERTOKEN: " + Prefs.getString(CommonMethod.TOKEN));
         // setIds();
         setFragment();
-
         Timber.tag(TAG);
         rolling = new Rolling(10);
         checkUserId();
-
-
         checkStoragePermission();
         setType();
-
-
         initOtherView();
-
         bottomBarTabSelected();
         DataStoreScheduleBroadcastReceiver.setAlarm(true, this);
 
 
-        if (listSlidermenu != null)
-            listSlidermenu.setOnItemClickListener(sliderClickListener);
+
 
     }
 
     private void checkUserId() {
         if (TextUtils.isEmpty(Prefs.getString(CommonMethod.USER_ID))) {
             callRegistritrationActivity();
-//            this.finish();
+            this.finish();
         }
     }
 
@@ -369,9 +379,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(new Intent(this, RegistrationNewActivity.class));
     }
 
+
     private void bottomBarTabSelected() {
         fab.setOnClickListener(this);
-
         bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
@@ -435,6 +445,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         // setting the nav drawer list adapter
         adapter = new NavDrawerListAdapter(getApplicationContext(),
                 navDrawerItemList);
+      if(listSlidermenu!=null)
         listSlidermenu.setAdapter(adapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -467,13 +478,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         setSupportActionBar(toolbar);
         battery.setmCharging(false);
         //toolbar.setContentInsetsAbsolute(200, toolbar.getContentInsetRight());
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-        drawerLayout.addDrawerListener(mDrawerToggle);
-        // toolbar.setNavigationIcon(R.drawable.ic_settings_black_24dp);
 
+        // toolbar.setNavigationIcon(R.drawable.ic_settings_black_24dp);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -485,6 +491,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         toolbar.setTitle(title);
 
 
+    }
+
+    private void SetDrawerLayout() {
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        drawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void logoutFromUser() {
@@ -680,7 +694,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
     }
 
@@ -952,8 +965,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                         || deviceState == DeviceState.WRITE) {
                     homeListener.onConnectionStateAvail("");
                 }
+
             }
         }
+    }
+
+    private void setItemClickedListener() {
+        if (listSlidermenu != null)
+            listSlidermenu.setOnItemClickListener(sliderClickListener);
+
+
+
     }
 
     @Override

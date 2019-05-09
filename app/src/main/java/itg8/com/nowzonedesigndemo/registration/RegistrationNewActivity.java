@@ -27,6 +27,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -59,9 +61,8 @@ import okhttp3.ResponseBody;
 public class RegistrationNewActivity extends AppCompatActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
 
-
-
-//
+    private static int age;
+    //
 //    @BindView(R.id.basic_detail)
 //    CustomFontTextView basicDetail;
     @BindView(R.id.edt_name)
@@ -158,6 +159,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     private static double poundsToKilos(double pounds) {
         return pounds * 0.454;
+
     }
 
     @Override
@@ -271,7 +273,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 
     public static int getAge(Date date) {
 
-        int age = 0;
+       int age = 0;
 
         Calendar now = Calendar.getInstance();
         Calendar dob = Calendar.getInstance();
@@ -311,9 +313,9 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
 
-//                    Log.d(TAG, "onClick: "+new Gson().toJson(model));
-
+                    Log.d(TAG, "onClick: "+new Gson().toJson(model));
                     sendDataToServer(model);
+
                 }
                 break;
             case R.id.lbl_birth:
@@ -664,7 +666,8 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             return Helper.centimeterToFeet(edtHeight.getText().toString());
         else {
 
-            return Helper.feetToCentimeter(edtHeightFeet.getText().toString(), edtHeightInch.getText().toString());
+
+              return Helper.feetToCentimeter(edtHeightFeet.getText().toString(), edtHeightInch.getText().toString());
         }
     }
 
@@ -746,7 +749,22 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
             inputDay.setError("");
             inputMonth.setError("");
             inputYear.setError("");
+
+          
         }
+        if(TextUtils.isEmpty(edtDay.getText().toString())){
+//             lblBirth.setText("Please Select Valid Date of Birth..");
+             inputDay.setError("Please Select Valid Date of Birth..");
+             inputMonth.setError("Please Select Valid Date of Birth..");
+             inputYear.setError("Please Select Valid Date of Birth..");
+
+             valid = false;
+
+         }else{
+             inputDay.setError("");
+             inputMonth.setError("");
+             inputYear.setError("");
+         }
 
         return valid;
     }
@@ -769,12 +787,14 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
                 model.setGender("M");
                 break;
 
+            
             case R.id.rgb_cm:
                 isFromCm=true;
                 inputHeightFeet.setHint("");
                 inputHeightInch.setHint("");
                 inputHeight.setHint(" Height ");
                 setDataFromBottomSheetForHeight();
+
                 break;
 
             case R.id.rgb_inch:

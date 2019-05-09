@@ -622,6 +622,7 @@ public class CommonMethod {
     public static String checkBreathing(long latestTimestamp, long lastTimeStamp) {
         long timeTaken = latestTimestamp - lastTimeStamp;
         return String.valueOf((int) ((ONE_MINUTE)/timeTaken));
+
     }
 
 
