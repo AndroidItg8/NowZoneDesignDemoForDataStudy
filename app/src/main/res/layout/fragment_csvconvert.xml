@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".csv.CSVConvertFragment"
+    android:background="@color/colorWhite"
+    android:layout_margin="10dp">
+
+
+    <LinearLayout
+        android:id="@+id/ll_datetime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/lblStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="From Date"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblStartDate"
+                android:text="dd-MM-yyyy"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/lblDDMMYYY"
+                android:layout_marginTop="4dp"
+                />
+            <View
+                android:id="@+id/seperator_1"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/lblDDMMYYY"
+                android:layout_height="1dp"
+                android:background="@color/colorBlack" />
+            <TextView
+                android:id="@+id/lblStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seperator_1"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"
+                android:text="From Time"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblStartTime"
+                android:text="HH : MM : SS"
+                android:id="@+id/lblHHMMSS"
+
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="4dp"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/lblEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="End Date"
+                android:textStyle="bold"
+                />
+
+
+            <TextView
+                android:id="@+id/lblEndDDMMYYY"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblEndDate"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"
+                android:text="dd-MM-yyyy"
+                android:layout_marginTop="4dp"
+                />
+            <View
+                android:id="@+id/seperator_2"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/lblEndDDMMYYY"
+                android:layout_height="1dp"
+                android:background="@color/colorBlack" />
+
+            <TextView
+                android:id="@+id/lblEndTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seperator_2"
+                android:layout_marginTop="4dp"
+                android:text="From Date"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lblEndTime"
+                android:text="HH : MM : SS"
+
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/colorBlack"   android:id="@+id/lblEndHHMMSS"
+                android:layout_marginTop="4dp"
+                />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnExport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_datetime"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/view1"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
+        android:text="EXPORT TO CSV"
+        />
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_datetime"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignStart="@+id/view1"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
+        android:text="Clear"
+        />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnExport"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/txtProgressVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/color_dark_green"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_below="@+id/progressbar"
+        android:layout_centerHorizontal="true"
+        />
+</RelativeLayout>

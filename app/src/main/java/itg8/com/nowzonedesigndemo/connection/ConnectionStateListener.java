@@ -15,4 +15,6 @@ public interface ConnectionStateListener {
     void connectGatt(BluetoothDevice device, BluetoothGattCallback callback);
 
     void onFail(DeviceState state, int status);
+
+    void onDeviceDisConnected();
 }

@@ -1,5 +1,9 @@
 package itg8.com.nowzonedesigndemo.utility;
 
+import android.util.Log;
+
+import java.math.BigInteger;
+
 /**
  * Created by itg_Android on 3/7/2017.
  */
@@ -7,7 +11,7 @@ package itg8.com.nowzonedesigndemo.utility;
 public class Rolling {
 
     private int size;
-    private double total = 0d;
+    private double total = 0;
     private int index = 0;
     private double samples[];
     private double max=0;
@@ -22,14 +26,21 @@ public class Rolling {
         for (int i = 0; i < size; i++) samples[i] = 0d;
     }
 
+    public double getTotal() {
+        return total;
+    }
+
     public void add(double x) {
+        Log.d("Rolling", "rawadd: "+x);
         if(max==0 || x>max)
             max=x;
         if(min==0 || x<min)
             min=x;
         total -= samples[index];
+//        total=total.subtract(BigInteger.valueOf((long) samples[index]));
         samples[index] = x;
         total += x;
+//        total.add(x)
         if (++index == size) {
             index = 0; // cheaper than modulus
             max=0;

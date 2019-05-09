@@ -22,17 +22,17 @@ public class NavDrawerListAdapter extends BaseAdapter {
     private static final int TYPE_HEADER = 1;
     private Context context;
     private ArrayList<NavDrawerItem> navDrawerItems;
-     LayoutInflater mInflater;
-     private enum ItemList
-     {
-         ITEM_LIST,
-         HEADER_ITEM
-     }
+    LayoutInflater mInflater;
 
-    public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems){
+    private enum ItemList {
+        ITEM_LIST,
+        HEADER_ITEM
+    }
+
+    public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems) {
         this.context = context;
         this.navDrawerItems = navDrawerItems;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
@@ -53,7 +53,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(getItem(position) instanceof  NavDrawerItem)
+        if (getItem(position) instanceof NavDrawerItem)
             return ItemList.ITEM_LIST.ordinal();
         else
             return ItemList.HEADER_ITEM.ordinal();
@@ -66,17 +66,14 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
         ViewHolder holder = null;
         int rowType = getItemViewType(position);
-        View View;
+        holder = new ViewHolder();
         if (convertView == null) {
-            holder = new ViewHolder();
 
             switch (rowType) {
                 case TYPE_ITEM:
-                    convertView = mInflater.inflate(R.layout.item_navigation_view,null);
-                 holder.imgView = (ImageView) convertView.findViewById(R.id.icon);
+                    convertView = mInflater.inflate(R.layout.item_navigation_view, null);
+                    holder.imgView = (ImageView) convertView.findViewById(R.id.icon);
                     holder.textView = (TextView) convertView.findViewById(R.id.title);
-                    holder.imgView .setImageResource(navDrawerItems.get(position).getIcon());
-                    holder.textView.setText(navDrawerItems.get(position).getTitle());
 
                     break;
                 case TYPE_HEADER:
@@ -89,11 +86,14 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
                     break;
             }
-             convertView.setTag(holder);
-        }else
-        {
+            convertView.setTag(holder);
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.imgView.setImageResource(navDrawerItems.get(position).getIcon());
+        holder.textView.setText(navDrawerItems.get(position).getTitle());
+
 
         return convertView;
 
@@ -113,9 +113,9 @@ public class NavDrawerListAdapter extends BaseAdapter {
 //
 //        return convertView;
     }
-     public  static class ViewHolder
-     {
-         TextView textView;
-         ImageView imgView;
-     }
+
+    public static class ViewHolder {
+        TextView textView;
+        ImageView imgView;
+    }
 }

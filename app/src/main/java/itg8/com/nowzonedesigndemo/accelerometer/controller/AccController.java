@@ -59,6 +59,13 @@ public class AccController extends BaseController {
             dataSetGraphC = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(Z_AXIS);
             checkIfNewDataSetGraph();
 
+            dataSetGraphA.setVisible(listener.isXtoShow());
+            dataSetGraphB.setVisible(listener.isYtoShow());
+            dataSetGraphC.setVisible(listener.isZtoShow());
+//            dataSetGraphA.setVisible(true);
+//            dataSetGraphB.setVisible(true);
+//            dataSetGraphC.setVisible(true);
+
         }
 
     }
@@ -68,6 +75,7 @@ public class AccController extends BaseController {
             dataSetGraphA = getDataSetGraph("X Value", ColorController.COLOR_X);
             lineData.addDataSet(dataSetGraphA);
         }
+
         if (dataSetGraphB == null) {
             Log.d(TAG, "onCheckedChanged: ");
             dataSetGraphB = getDataSetGraph("Y Value", ColorController.COLOR_Y);
@@ -86,21 +94,19 @@ public class AccController extends BaseController {
     public LineDataSet getDataSetGraph(String s, String colorCode) {
 
         LineDataSet set = new LineDataSet(null, s);
-            set.setAxisDependency(YAxis.AxisDependency.LEFT);
-            set.setColor(Color.parseColor(colorCode));
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(Color.parseColor(colorCode));
 //        set.setCircleColor(Color.BLUE);
-            set.setLineWidth(2f);
+        set.setLineWidth(2f);
 //        set.setCircleRadius(4f);
-            set.setFillAlpha(65);
-            set.setFillColor(Color.parseColor(colorCode));
+        set.setFillAlpha(65);
+        set.setFillColor(Color.parseColor(colorCode));
 //        set.setHighLightColor(Color.rgb(244, 117, 117));
 //        set.setValueTextColor(Color.BLUE);
-            set.setValueTextSize(9f);
-            set.setDrawCircleHole(false);
-            set.setDrawCircles(false);
-            set.setDrawValues(false);
-
-
+        set.setValueTextSize(9f);
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+        set.setDrawValues(false);
 
 
 //        LineDataSet set = new LineDataSet(null, s);

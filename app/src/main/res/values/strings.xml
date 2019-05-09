@@ -214,6 +214,8 @@
         <item>Optical</item>
         <item>Temperature</item>
         <item>Logout</item>
+        <item>Disconnect</item>
+        <item>Export to csv</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -265,8 +267,9 @@
     <string name="line3">Pull your belly button  toward your back to feel the support from your core.Breath deeply and stay relaxed.  </string>
     <string name="title_activity_posture_calibration" />
     <string name="title_activity_posture_calibrate_setting">Posture Calibrate</string>
-    <string name="action_pressure_raw">Pressure Raw</string>
+
     <string name="action_presssure_processed">Pressure processed</string>
+    <string name="action_pressure_raw">Pressure Raw</string>
     <string name="action_accelerometer">accelerometer</string>
     <string name="action_gynometer">gynometer</string>
     <string name="action_magnetometer">magnetometer</string>

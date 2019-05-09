@@ -9,8 +9,6 @@ import android.util.Log;
 import android.util.SparseArray;
 
 
-import com.google.gson.Gson;
-
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.io.BufferedWriter;
@@ -43,6 +41,8 @@ import itg8.com.nowzonedesigndemo.db.PresureAccelerometerSateImp;
 import itg8.com.nowzonedesigndemo.db.tbl.TblStepCount;
 import itg8.com.nowzonedesigndemo.tosort.RDataManager;
 import itg8.com.nowzonedesigndemo.tosort.RDataManagerListener;
+import itg8.com.nowzonedesigndemo.utility.activity_algo.ActivityDetection;
+import itg8.com.nowzonedesigndemo.utility.load_cell_algo.RDataManagerImpV2;
 import itg8.com.nowzonedesigndemo.utility.model.breath.BreathingModel;
 import itg8.com.nowzonedesigndemo.utility.model.breath.Breathingmaster;
 import itg8.com.nowzonedesigndemo.utility.model.step.Stepmaster;
@@ -82,6 +82,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             }
         }
     });
+    private final ActivityDetection activityImp;
     private boolean disconnected = false;
     private Queue<DataModelPressure> pressureque = new ArrayDeque<>();
     private CheckAccelImp accelImp;
@@ -130,6 +131,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     //TODO DUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeeeDUMEeeeeeeeeeee
     private double lastMax = 4.02;
     private double lastMin = -4.02;
+    //    private float a = 0.94f;
     private float a = 0.94f;
     private double dLast;
     private double actMin = 0;
@@ -159,6 +161,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     private boolean lastMinIncreased;
     private DescriptiveStatistics stats;
     private PresureAccelerometerSateImp preAccSateImp;
+
+
+    private RDataManagerImpV2 loadCellImp;
+
 
     private void secondPref(double pressure) {
 
@@ -406,6 +412,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             return 1;
         } else {
             //Log.d(TAG, "STDEV:" + rollingG.getStdev());
+            Log.d(TAG, "calculateProportionBySTD: " + rollingG.getaverage() + "  --- " + rollingG.getStdev());
             return (pressure - rollingG.getaverage()) / rollingG.getStdev();
         }
     }
@@ -490,6 +497,8 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         dataStorageRaw = new DataModelPressure[PACKET_READY_TO_IMP];
         tempHolderRaw = new DataModelPressure[PACKET_READY_TO_IMP];
         accelImp = new CheckAccelImp(this, Prefs.getInt(CommonMethod.STEP_COUNT));
+        loadCellImp = new RDataManagerImpV2(this.listener);
+        activityImp = new ActivityDetection(this.listener);
     }
 
 
@@ -529,6 +538,9 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     public void onRawDataModel(final DataModelPressure model, Context context) {
         if (model != null) {
             //Log.d(TAG, "onRawDataModel: " + model.toString());
+            Log.d(TAG, "onRawDataModel: " + model.getBattery());
+            if (loadCellImp != null) loadCellImp.onLoadCellDataAvail(model);
+            if(activityImp!=null) activityImp.isActivityStarted(model.getX(),model.getY(),model.getZ());
             sb.setLength(0);
             if (!isSleepStarted) {
                 listener.onBatteryAvail(model.getBattery());
@@ -691,6 +703,8 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     private DataModelPressure copy(DataModelPressure model) {
         modelTemp = new DataModelPressure();
         modelTemp.setTimestamp(model.getTimestamp());
+        modelTemp.setTimestampDate(model.getTimestampDate());
+        modelTemp.setPressureProcessed(model.getPressureProcessed());
         modelTemp.setBattery(model.getBattery());
         modelTemp.setPressure(model.getPressure());
         modelTemp.setTemprature(model.getTemprature());
@@ -737,6 +751,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
         rolling3.add(model.getPressure());
         alpha = getAlphaFilter(rolling3.getaverage());
+        model.setPressureProcessed(rolling3.getaverage());
 //        alpha=getAlphaFilter(model.getPressure());
 //        lowPassFilterValue=getLowPassFilterValue(rolling3.getaverage(),alpha);
 //        lowPassFilterValue=getLowPassFilterValue(model.getPressure(),alpha);
@@ -744,8 +759,9 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        tempPressure= calculateProportion(lowPassFilterValue,alpha);
 
         dataModel = copy(model);
-
         dLastnew = a * calculateProportionBySTD(model.getPressure()) + ((1 - a) * dLastnew);
+        Log.d(TAG, "processModelData: " + dataModel.getPressure() + " Processed Done: " + dLastnew);
+
 //        dLastnew = calculateProportionBySTD(model.getPressure());
         tempPressure = (PI_MIN + ((PI_MAX - PI_MIN) * (dLastnew - (lastMin)) / (lastMax - lastMin)));
         rollingGf.add(tempPressure);
@@ -769,7 +785,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             hasMovementInGathering = true;
         }
 
-        tryToFindPeakAndTrough(model.getPressure(), model.getTimestamp(), 2.0d);
+        //tryToFindPeakAndTrough(model.getPressure(), model.getTimestamp(), 2.0d);
 
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -889,7 +905,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
             endTimestamp = timestamp;
 //            counted = calculateTimeTaken(startPos, endPos);
-            counted = calculateTimeTaken(startPos, endPos);
+//            counted = calculateTimeTaken(startPos, endPos);
             peakDetected = true;
             startPos = endPos;
 //            maxPos = 0;
@@ -900,7 +916,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             peak2Detected = false;
             trough2Detected = false;
             endTimestamp = timestamp;
-            counted = calculateTimeTaken(startPos, endPos);
+//            counted = calculateTimeTaken(startPos, endPos);
             troughDetected = true;
             startPos = endPos;
         }

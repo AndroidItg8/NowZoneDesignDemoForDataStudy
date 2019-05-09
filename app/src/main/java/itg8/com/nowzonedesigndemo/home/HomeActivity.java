@@ -10,6 +10,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IdRes;
@@ -47,6 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import itg8.com.nowzonedesigndemo.csv.CSVConvertFragment;
 import itg8.com.nowzonedesigndemo.DataStoreScheduleBroadcastReceiver;
 import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.accelerometer.AccelerometerFragment;
@@ -62,7 +64,6 @@ import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenterImp;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathView;
 import itg8.com.nowzonedesigndemo.home.mvp.StateTimeModel;
 import itg8.com.nowzonedesigndemo.login.LoginActivity;
-import itg8.com.nowzonedesigndemo.pressure.PressureProcessFragment;
 import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
 import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
 import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
@@ -104,6 +105,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MENU_PROGRAMS = 3;
     private static final int MENU_TEMP = 8;
     private static final int MENU_LOGOUT = 9;
+    private static final int MENU_DISCONNECT = 10;
+    private static final int MENU_EXPORT = 11;
     private static final int MENU_PROCESS_RAW = 9;
     private static final int MENU_PROCESS_PRESSURE = 9;
 
@@ -137,6 +140,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int STAT = 3;
     private static final int PROGRAMS = 6;
     private static final int MAX_BATTERY_VALUE = 8191;
+    public static final int FROM_ACCEL = 1;
+    public static final int FROM_GYRO = 2;
+    public static final int FROM_LOAD_CELL = 4;
+    public static final int FROM_MAG = 3;
+    public static final int FROM_OPTICAL = 6;
+    public static final int FROM_MIC = 5;
+    public static final int FROM_TEMPRETURE = 7;
     private final String TAG = this.getClass().getSimpleName();
     long n = 0;
     double mu = 0.0;
@@ -243,21 +253,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
  * Comment Now
  */
 
- if (navDrawerItemList.size() - 1 == position)
-                    onDeviceDisconnected();
+//            if (navDrawerItemList.size() - 1 == position)
+//                onDeviceDisconnected();
 
 
             if (position == MENU_PROGRAMS) {
 //                    startActivity(new Intent(getApplicationContext(), StepMovingActivity.class));
-                setFragment(AccelerometerFragment.newInstance(2));
-                title = "Gynometer Graph";
+                setFragment(AccelerometerFragment.newInstance(FROM_GYRO));
+                title = "Gyrometer Graph";
 
 
             } else if (position == MENU_POSTURE) {
                 /**
                  * Comment Now
                  */
-                setFragment(AccelerometerFragment.newInstance(4));
+                setFragment(AccelerometerFragment.newInstance(FROM_LOAD_CELL));
                 title = "Load cell Graph ";
 
 
@@ -271,11 +281,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //                    Toast.makeText(HomeActivity.this, export, Toast.LENGTH_SHORT).show();
 //// callSettingActvity(CommonMethod.FROM_ALARM_HOME);//
 
-                setFragment(AccelerometerFragment.newInstance(3));
+                setFragment(AccelerometerFragment.newInstance(FROM_MAG));
+                title = "Magnetometer Graph ";
 
             } else if (position == MENU_FAQS) {
                 title = "Optical Graph";
-                setFragment(AccelerometerFragment.newInstance(6));
+                setFragment(AccelerometerFragment.newInstance(FROM_OPTICAL));
+
 
 //                    logoutFromUser();
             } else if (position == MENU_USER_PROFILE) {
@@ -286,20 +298,34 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 setFragment(PressureRawFragment.newInstance("", ""));
             } else if (position == MENU_NOTIFICATION) {
                 title = "Accelerometer Graph";
-                setFragment(AccelerometerFragment.newInstance(1));
+                setFragment(AccelerometerFragment.newInstance(FROM_ACCEL));
+
             } else if (position == MENU_CONTACT_US) {
                 title = " MIC Graph";
-                setFragment(AccelerometerFragment.newInstance(5));
+                setFragment(AccelerometerFragment.newInstance(FROM_MIC));
             } else if (position == MENU_TEMP) {
                 title = " Temperature Graph";
-                setFragment(AccelerometerFragment.newInstance(7));
-            }else if (position == MENU_LOGOUT) {
+                setFragment(AccelerometerFragment.newInstance(FROM_TEMPRETURE));
+            } else if (position == MENU_LOGOUT) {
                 logoutFromUser();
+
+            } else if (position == MENU_DISCONNECT) {
+                onDeviceDisconnected();
+            } else if (position == MENU_EXPORT) {
+                title = " Export CSV";
+                startExportWalaItem();
+
             }
+
 
             openDrawer();
         }
     };
+
+    private void startExportWalaItem() {
+
+        setFragment(CSVConvertFragment.newInstance("", ""));
+    }
 
 //
 
@@ -651,9 +677,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.action_device_history:
                 callSettingActvity(CommonMethod.FROM_DEVICE_HISTORY);
                 break;
-            case R.id.action_pressure_raw:
-                setFragment(PressureRawFragment.newInstance("", ""));
-                break;
+//            case R.id.action_pressure_raw:
+//                setFragment(PressureRawFragment.newInstance("", ""));
+//                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -856,7 +882,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         Intent intent = new Intent("ACTION_NW_DEVICE_DISCONNECT");
         intent.putExtra(CommonMethod.ENABLE_TO_CONNECT, true);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
 //        Prefs.remove(CommonMethod.ISLOGIN);
 //        Prefs.remove(CommonMethod.TOKEN);
     }
@@ -881,30 +906,35 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onMovementStarted() {
-        homeListener.onMovementStarted();
+        if (homeListener != null)
+            homeListener.onMovementStarted();
     }
 
     @Override
     public void onMovementStopped() {
-        homeListener.onMovementStopped();
+        if (homeListener != null)
+            homeListener.onMovementStopped();
     }
 
     @Override
     public void onDeviceNotAttachedToBody() {
-        homeListener.onDeviceNotAttachedToBody();
+        if (homeListener != null)
+            homeListener.onDeviceNotAttachedToBody();
     }
 
     @Override
     public void onDeviceAttached() {
-        homeListener.ondeviceAttached();
+        if (homeListener != null)
+            homeListener.ondeviceAttached();
     }
 
     @Override
     public void onBatteryCountAvail(int intExtra) {
         Log.d(TAG, "Battery Level: " + intExtra);
 //        calcBattery=(intExtra/MAX_BATTERY_VALUE)*100;
-        calcBattery = (((100) * (intExtra - (4000)) / (8191 - 4000)));
+//        calcBattery = (((100) * (intExtra - (4000)) / (8191 - 4000)));
         ;
+        calcBattery = intExtra;
         if (lastBatteryLevel != calcBattery) {
 //            battery.setmLevel((intExtra/MAX_BATTERY_VALUE)*100);
             battery.setmLevel(calcBattery);
@@ -923,20 +953,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onDeviceStateAvail(DeviceState deviceState) {
         if (deviceState.name() != null) {
-            homeListener.onConnectionStateAvail(deviceState.name());
-            if (deviceState == DeviceState.CONNECTED) {
-                hideSnackbar();
+            if (homeListener != null) {
+                homeListener.onConnectionStateAvail(deviceState.name());
+                if (deviceState == DeviceState.CONNECTED) {
+                    hideSnackbar();
+                    homeListener.onConnectionStateAvail("");
+                } else if (deviceState == DeviceState.DISCONNECTED) {
+                    checkDeviceConnection(coordinator);
+                }
+                if (deviceState == DeviceState.CHARACTERISTICS_WRITE
+                        || deviceState == DeviceState.WRITE) {
+                    homeListener.onConnectionStateAvail("");
+                }
 
-                homeListener.onConnectionStateAvail("");
-            } else if (deviceState == DeviceState.DISCONNECTED) {
-                checkDeviceConnection(coordinator);
-                homeListener.onConnectionStateAvail(" Device is disconnected...");
-
-
-            }
-            if (deviceState == DeviceState.CHARACTERISTICS_WRITE
-                    || deviceState == DeviceState.WRITE) {
-                homeListener.onConnectionStateAvail(" Wait Device is discovering data!!!");
             }
         }
     }
@@ -952,7 +981,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onBreathCountAvailable(int intExtra) {
         Log.d(TAG, "Breath count: " + intExtra);
-        homeListener.onBreathingCountAvail(intExtra);
+        if(homeListener!=null)
+            homeListener.onBreathingCountAvail(intExtra);
     }
 
     @Override
@@ -1016,7 +1046,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void reactUnkownState() {
-        homeListener.onBreathingStateAvail(null, 0);
+        if(homeListener!=null)
+            homeListener.onBreathingStateAvail(null, 0);
     }
 
 
@@ -1042,18 +1073,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void reactStressState() {
-        homeListener.onBreathingStateAvail("Stress\nState", R.drawable.stress_streak_icon);
+        if(homeListener!=null)
+            homeListener.onBreathingStateAvail("Stress\nState", R.drawable.stress_streak_icon);
 
 //        setState(BreathState.STRESS.name(), Color.parseColor(COLOR_STRESS_M), Color.parseColor(COLOR_STRESS_S));
     }
 
     private void reactFocusedState() {
-        homeListener.onBreathingStateAvail("Attentive\nState", R.drawable.focus_streak_icon);
+        if(homeListener!=null)
+            homeListener.onBreathingStateAvail("Attentive\nState", R.drawable.focus_streak_icon);
 //        setState(BreathState.FOCUSED.name(), Color.parseColor(COLOR_FOCUSED_M), Color.parseColor(COLOR_FOCUSED_S));
     }
 
     private void reactCalmState() {
-        homeListener.onBreathingStateAvail("Composed\nState", R.drawable.calm_streak_icon);
+        if(homeListener!=null)
+            homeListener.onBreathingStateAvail("Composed\nState", R.drawable.calm_streak_icon);
 //        setState(BreathState.CALM.name(), Color.parseColor(COLOR_CALM_M), Color.parseColor(COLOR_CALM_S));
     }
 
@@ -1153,6 +1187,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     public void setHomeListener(HomeFragmentInteractor homeListener) {
         this.homeListener = homeListener;
+    }
+
+    public void destroyHomeListener() {
+        this.homeListener = null;
     }
 
     public interface HomeFragmentInteractor {

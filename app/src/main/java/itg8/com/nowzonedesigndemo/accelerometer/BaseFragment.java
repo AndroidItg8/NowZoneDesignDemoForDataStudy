@@ -7,9 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 import itg8.com.nowzonedesigndemo.R;
@@ -21,6 +26,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 import itg8.com.nowzonedesigndemo.accelerometer.controller.AccController;
 import itg8.com.nowzonedesigndemo.accelerometer.controller.LoadCellController;
@@ -72,7 +78,7 @@ public abstract class BaseFragment<T> extends Fragment {
 //        return fragment;
 //    }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    public BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
@@ -103,7 +109,7 @@ public abstract class BaseFragment<T> extends Fragment {
                                     ((AccController)getController()).setAccData(AXIS_X.floatValue(),AXIS_Y.floatValue(),AXIS_Z.floatValue());
 
                             }
-                            title = "Gynometer graph";
+                            title = "Gyrometer graph";
 
                         }
 
@@ -120,12 +126,10 @@ public abstract class BaseFragment<T> extends Fragment {
                         }
 
                         if (whereFrom() == 4) {
-                            if (model.getLoadCell2() > 0L) {
-                                AXIS_X = new BigDecimal(model.getLoadCell1() == 0 ? 0 : model.getLoadCell1());
+                                AXIS_X = new BigDecimal(model.getLoadCell1());
                                 AXIS_Y = new BigDecimal(model.getLoadCell2());
                                 if(getController()!=null)
                                     ((LoadCellController)getController()).setLoadData(AXIS_X.floatValue(), AXIS_Y.floatValue());
-                            }
 
                             title = "Load Cell graph";
                         }
@@ -171,125 +175,6 @@ public abstract class BaseFragment<T> extends Fragment {
     };
 
 
-//    private void manupulateData(float x, float y, float z) {
-//        if (x > 0 && y > 0 && z > 0) {
-//            AccGynoMagno(x, y, z, 3);
-//        } else if (x == 0 && y > 0) {
-//            AccGynoMagno(x, y, z, 2);
-//        } else if (x > 0) {
-//            AccGynoMagno(x, y, z, 1);
-//        }
-//
-//
-//    }
-//
-//    private void AccGynoMagno(float x, float y, float z, int all) {
-//        LineDataSet dataSetGraphA;
-//        LineDataSet dataSetGraphB;
-//        LineDataSet dataSetGraphC;
-//        if (lineData() != null) {
-//            if (all == 3) {
-//                Log.d(TAG, "AccGynoMagno All 3:  X :" + x + " Y :" + y + " Z : " + z);
-//
-//                dataSetGraphA = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(0);
-//                dataSetGraphB = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(1);
-//                dataSetGraphC = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(2);
-//
-//
-//                if (dataSetGraphA == null) {
-//                    dataSetGraphA = createSet(0);
-//                    lineData().addDataSet(dataSetGraphA);
-//                }
-//                if (dataSetGraphB == null) {
-//                    dataSetGraphB = createSet(1);
-//                    lineData().addDataSet(dataSetGraphB);
-//                }
-//                if (dataSetGraphC == null) {
-//                    dataSetGraphC = createSet(2);
-//                    lineData().addDataSet(dataSetGraphC);
-//                }
-//
-//                lineData().addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA), 0);
-//                lineData().addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), 1);
-//                lineData().addEntry(new Entry(dataSetGraphC.getEntryCount(), z, dataSetGraphB), 2);
-//                lineData().notifyDataChanged();
-//
-//            } else if (all == 2) {
-//
-//                Log.d(TAG, "AccGynoMagno All 2:  X :" + x + " Y :" + y);
-//
-//
-//                dataSetGraphA = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(0);
-//                dataSetGraphB = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(1);
-//
-//                if (dataSetGraphA == null) {
-//                    dataSetGraphA = createSet(0);
-//                    lineData().addDataSet(dataSetGraphA);
-//                }
-//
-//                if (dataSetGraphB == null) {
-//                    dataSetGraphB = createSet(1);
-//                    lineData().addDataSet(dataSetGraphB);
-//                }
-//
-//
-//                lineData().addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA), 0);
-//                lineData().addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), 1);
-//                lineData().notifyDataChanged();
-//
-//            } else if (all == 1) {
-//
-//                Log.d(TAG, "AccGynoMagno All 1:  X :" + x);
-//                dataSetGraphA = lineData().getDataSetCount() == 0 ? null : (LineDataSet) lineData().getDataSetByIndex(0);
-//
-//                if (dataSetGraphA == null) {
-//                    dataSetGraphA = createSet(0);
-//                    lineData().addDataSet(dataSetGraphA);
-//                }
-//
-//                lineData().addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA), 0);
-//                lineData().notifyDataChanged();
-//
-////    if(lineData().getEntryCount()==100)
-////                    lineData().getDataSetByIndex(0).removeEntry(0);
-//
-//
-//            }
-//        }
-//
-//        onChartInvalidate();
-//
-//
-//    }
-//
-//    LineDataSet set;
-//
-//    private LineDataSet createSet(int temp) {
-//        String s = null;
-//        if (temp == 0) {
-//            s = "X Value";
-//        } else if (temp == 1) {
-//            s = "Y Value";
-//        } else if (temp == 2) {
-//            s = "Z Value";
-//        }
-//
-//        set = new LineDataSet(null, s);
-//        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        set.setColor(Color.parseColor(controller != null ? controller.setColorToGraph(temp, whereFrom()) : null));
-////        set.setCircleColor(Color.BLUE);
-//        set.setLineWidth(2f);
-////        set.setCircleRadius(4f);
-//        set.setFillAlpha(65);
-//        set.setFillColor(Color.parseColor(controller != null ? controller.setColorToGraph(temp, whereFrom()) : null));
-////        set.setHighLightColor(Color.rgb(244, 117, 117));
-////        set.setValueTextColor(Color.BLUE);
-//        set.setValueTextSize(9f);
-//        set.setDrawCircleHole(false);
-//        set.setDrawCircles(false);
-//        set.setDrawValues(false);
-//        return set;
-//    }
 
 
     public void setFrom() {
@@ -309,18 +194,12 @@ public abstract class BaseFragment<T> extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        registerReceiver();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        try {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //    @Override
@@ -329,7 +208,7 @@ public abstract class BaseFragment<T> extends Fragment {
 //        // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_base, container, false);
 //    }
-    private void registerReceiver() {
+    public void registerReceiver() {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, new IntentFilter(getActivity().getResources().getString(R.string.action_data_avail)));
 //        model.onInitStateTime();
     }
@@ -344,6 +223,12 @@ public abstract class BaseFragment<T> extends Fragment {
 
 
     public abstract T getController();
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
 
 }

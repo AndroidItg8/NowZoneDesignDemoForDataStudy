@@ -312,6 +312,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
 //                    model.setGender(edtGender.getText().toString());
                     model.setPassword(edtPassword.getText().toString());
                     model.setAge(String.valueOf(getAge(mcurrentDate.getTime())));
+
                     Log.d(TAG, "onClick: "+new Gson().toJson(model));
                     sendDataToServer(model);
 
@@ -385,7 +386,7 @@ public class RegistrationNewActivity extends AppCompatActivity implements View.O
     }
 
     private void sendDataToServer(ProfileModel model) {
-showProgress();
+        showProgress();
         CommonMethod.getController().storeProfile(model.getMobile(), model.getName(), model.getAge(), model.getGender(), String.valueOf(model.getWeight()), model.getPassword(), model.getUserGroupId(), String.valueOf(model.getHeight())).flatMap(new Function<ResponseBody, Observable<String>>() {
             @Override
             public Observable<String> apply(ResponseBody responseBody) throws Exception {
@@ -545,7 +546,7 @@ showProgress();
         txtCm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  isFromCm = true;
+                //  isFromCm = true;
                 setDataFromBottomSheetForHeight();
                 mBottomSheetDialog.dismiss();
 
@@ -665,6 +666,7 @@ showProgress();
             return Helper.centimeterToFeet(edtHeight.getText().toString());
         else {
 
+
               return Helper.feetToCentimeter(edtHeightFeet.getText().toString(), edtHeightInch.getText().toString());
         }
     }
@@ -688,15 +690,15 @@ showProgress();
         }
 
         if(isFromCm){
-        if (TextUtils.isEmpty(edtHeight.getText().toString())) {
-            inputHeight.setError("Please provide your height...");
-            inputHeightFeet.setError("");
-            inputHeightInch.setError("");
-            setFocus(edtHeight);
-            valid = false;
-        }else{
-            inputHeight.setError("");
-        } }else{
+            if (TextUtils.isEmpty(edtHeight.getText().toString())) {
+                inputHeight.setError("Please provide your height...");
+                inputHeightFeet.setError("");
+                inputHeightInch.setError("");
+                setFocus(edtHeight);
+                valid = false;
+            }else{
+                inputHeight.setError("");
+            } }else{
             if (TextUtils.isEmpty(edtHeightInch.getText().toString())) {
                 inputHeightInch.setError("Please provide your height...");
                 inputHeight.setError("");
@@ -737,6 +739,21 @@ showProgress();
         }
         if(TextUtils.isEmpty(edtDay.getText().toString())){
 //             lblBirth.setText("Please Select Valid Date of Birth..");
+            inputDay.setError("Please Select Valid Date of Birth..");
+            inputMonth.setError("Please Select Valid Date of Birth..");
+            inputYear.setError("Please Select Valid Date of Birth..");
+
+            valid = false;
+
+        }else{
+            inputDay.setError("");
+            inputMonth.setError("");
+            inputYear.setError("");
+
+          
+        }
+        if(TextUtils.isEmpty(edtDay.getText().toString())){
+//             lblBirth.setText("Please Select Valid Date of Birth..");
              inputDay.setError("Please Select Valid Date of Birth..");
              inputMonth.setError("Please Select Valid Date of Birth..");
              inputYear.setError("Please Select Valid Date of Birth..");
@@ -770,12 +787,14 @@ showProgress();
                 model.setGender("M");
                 break;
 
-                case R.id.rgb_cm:
-                    isFromCm=true;
-                    inputHeightFeet.setHint("");
-                    inputHeightInch.setHint("");
-                    inputHeight.setHint(" Height ");
-                    setDataFromBottomSheetForHeight();
+            
+            case R.id.rgb_cm:
+                isFromCm=true;
+                inputHeightFeet.setHint("");
+                inputHeightInch.setHint("");
+                inputHeight.setHint(" Height ");
+                setDataFromBottomSheetForHeight();
+
                 break;
 
             case R.id.rgb_inch:

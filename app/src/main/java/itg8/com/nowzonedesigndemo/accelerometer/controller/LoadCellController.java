@@ -32,6 +32,8 @@ public class LoadCellController extends BaseController {
 
     }
 
+
+
     private void createEntries(float x, float y) {
         lineData.addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA),X_AXIS);
         lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB),Y_AXIS);
@@ -45,6 +47,9 @@ public class LoadCellController extends BaseController {
         dataSetGraphA = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
         dataSetGraphB = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(Y_AXIS);
         checkIfNewDataSetGraph();
+
+        dataSetGraphA.setVisible(listener.isXtoShow());
+        dataSetGraphB.setVisible(listener.isYtoShow());
 
     }
 

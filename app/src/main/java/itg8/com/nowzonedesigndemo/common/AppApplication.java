@@ -53,19 +53,20 @@ public class AppApplication extends Application {
         mInstance.initPreference();
         mBreathModel = new BreathingModel();
         Prefs.putString(CommonMethod.STATE, null);
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
 
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
         if (BuildConfig.DEBUG) {
             Timber.plant(new DebugTree());
         } else {
             Timber.plant(new CrashReportingTree());
         }
     }
+
 
     private void initPreference() {
         new Prefs.Builder()

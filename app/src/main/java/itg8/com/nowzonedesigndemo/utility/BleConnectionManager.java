@@ -246,6 +246,7 @@ public class BleConnectionManager implements ConnectionManager {
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.DISCONNECTED));
                     //Log.i(TAG, "Disconnected from GATT server.");
+                    listener.onDeviceDisConnected();
                     connecting = false;
                 } else if (status != BluetoothGatt.GATT_SUCCESS) {
                     gatt.disconnect();
@@ -303,7 +304,7 @@ public class BleConnectionManager implements ConnectionManager {
 
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            //Log.d(TAG,"UUIDHEX "+characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
+            Log.d(TAG,"UUIDHEX "+characteristic.getUuid()+" : "+ bytesToHex(characteristic.getValue()));
             //Log.d(TAG,"UUIDBYTES "+characteristic.getUuid()+" : "+ Arrays.toString(characteristic.getValue()));
 //                mHandler.sendMessage(Message.obtain(null,MSG_PRESSURE_ACCEL,characteristic));
                 if(characteristic.getUuid().toString().equalsIgnoreCase(CommonMethod.DATA_ENABLE_A4.toString()))
@@ -480,7 +481,8 @@ public class BleConnectionManager implements ConnectionManager {
     private void connectToDevice(String address) throws StringEmptyException {
         disconnect();
         if (address != null && !TextUtils.isEmpty(address)) {
-            connect(address);
+            if(connect(address))
+                mHandler.sendMessage(Message.obtain(null, MSG_CURRENT_STATE, DeviceState.CONNECTING));
             this.address = address;
         } else {
             throw new StringEmptyException("not having valid address");
