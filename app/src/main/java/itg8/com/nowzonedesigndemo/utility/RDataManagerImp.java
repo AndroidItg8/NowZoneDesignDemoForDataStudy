@@ -552,6 +552,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 
                 //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
                 processModelData(model, mContext);
+                return;
             }
 //            if(countActualData>100)
 
