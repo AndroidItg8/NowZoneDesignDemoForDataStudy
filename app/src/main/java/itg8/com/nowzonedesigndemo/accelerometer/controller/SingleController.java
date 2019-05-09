@@ -45,7 +45,6 @@ public class SingleController extends BaseController{
             lineData.addDataSet(dataSetGraphA);
         }
 
-
     }
 }
 

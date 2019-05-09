@@ -39,6 +39,15 @@ android {
     dexOptions {
         javaMaxHeapSize '4096m'
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a'
+            universalApk true
+        }
+    }
 }
 
 

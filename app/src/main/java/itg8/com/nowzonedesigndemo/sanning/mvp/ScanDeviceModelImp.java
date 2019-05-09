@@ -99,8 +99,13 @@ public class ScanDeviceModelImp implements ScanDeviceModel {
 
     @Override
     public void onStopScanning(BluetoothLeScanner scanner) {
-        if (scanner != null && bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+//        if (scanner != null && bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+        try {
             scanner.stopScan(callback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         scanningCompleted = true;
         initStartScanningText();
     }

@@ -69,7 +69,7 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     FrameLayout frameInside;
     @BindView(R.id.listOfBluetoothDevices)
     ListView listOfBluetoothDevices;
-//    @BindView(R.id.frame_listview)
+    //    @BindView(R.id.frame_listview)
 //    FrameLayout frameListview;
     @BindView(R.id.bt_status)
     TextView btStatus;
@@ -91,14 +91,14 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     private boolean firstResult = true;
     private ProgressDialog dialog;
     private BluetoothAdapter mBluetoothAdapter;
-    private android.bluetooth.BluetoothGattCallback mGattCallback= new BluetoothGattCallback() {
+    private android.bluetooth.BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
-            Log.d(TAG,"Connection state changed: "+(newState== BluetoothProfile.STATE_CONNECTED?"Connected":"Disconnected"));
+            Log.d(TAG, "Connection state changed: " + (newState == BluetoothProfile.STATE_CONNECTED ? "Connected" : "Disconnected"));
         }
     };
-    private boolean canDisconnect=false;
+    private boolean canDisconnect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +123,13 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
 
     }
 
+
     private void setSwipeToScrollListener() {
         listOfBluetoothDevices.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int topRowVerticalPosition =
@@ -150,8 +152,8 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
 //                intent.putExtra(CommonMethod.DEVICE_NAME, model.getName());
 //                startService(intent);
 //                presenter.cancelScanning();
-                canDisconnect=false;
-                presenter.selectedDevice(model,ScanDeviceActivity.this);
+                canDisconnect = false;
+                presenter.selectedDevice(model, ScanDeviceActivity.this);
                 presenter.refreshBtnClicked(linearLayout);
             }
         });
@@ -176,11 +178,11 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
 
     @Override
     public void checkBleAvailability() {
-          /*
-        * Check for bluetooth LE Support.In production, our manifest entry will keep this
-        * from installing on these devices, but this will allow test devices or other
-        * sideloads to report whether or not the feature exists.
-        * */
+        /*
+         * Check for bluetooth LE Support.In production, our manifest entry will keep this
+         * from installing on these devices, but this will allow test devices or other
+         * sideloads to report whether or not the feature exists.
+         * */
         if (Helper.checkBLE(this)) {
             BluetoothManager bluetoothManager =
                     (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -198,9 +200,9 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     }
 
     /*
-          * We need to enforce that bluetooth is first enabled, and takes the user
-          * to settings to enable it if they have not done so
-   * */
+     * We need to enforce that bluetooth is first enabled, and takes the user
+     * to settings to enable it if they have not done so
+     * */
     private void checkBleAdapter() {
 
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
@@ -282,7 +284,7 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     }
 
     private void disconnectFirst() {
-        if(canDisconnect){
+        if (canDisconnect) {
             Intent intent = new Intent("ACTION_NW_DEVICE_DISCONNECT");
             intent.putExtra(CommonMethod.ENABLE_TO_CONNECT, true);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -308,7 +310,7 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     @Override
     public void onNewDeviceResult(BluetoothDevice result, int rssi) {
         Log.d(TAG, "New Device Arrived:" + result + " with range: " + rssi);
-        if(!TextUtils.isEmpty(result.getName()) && result.getName().toLowerCase().contains("Nowzone".toLowerCase())) {
+        if (!TextUtils.isEmpty(result.getName()) && result.getName().toLowerCase().contains("Nowzone".toLowerCase())) {
             toggleView(frameInside, listOfBluetoothDevices);
             DeviceModel model = new DeviceModel();
             model.setName(result.getName());
@@ -357,7 +359,7 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
+        presenter.cancelScanning();
     }
 
     @Override
@@ -367,7 +369,7 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
 
     @Override
     public void onClick(View view) {
-        canDisconnect=true;
+        canDisconnect = true;
         if (view.getId() == R.id.btn_connect_with_bt) {
 //            presenter.refreshBtnClicked(view);
             startBleScan();
@@ -384,7 +386,6 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
     }
 
 
-
     @Override
     public void startHomeActivity() {
         stopConnectingDialog();
@@ -395,24 +396,24 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
 
     @Override
     public void startConnectingDialog() {
-        if(dialog==null)
-        {
+        if (dialog == null) {
             showDialog();
         }
-        if(!dialog.isShowing()){
+        if (!dialog.isShowing()) {
             showDialog();
         }
-        
+
     }
 
     private void showDialog() {
-        dialog= ProgressDialog.show(ScanDeviceActivity.this,"","Connecting...",true,true);
+        dialog = ProgressDialog.show(ScanDeviceActivity.this, "", "Connecting...", true, true);
     }
 
     @Override
     public void stopConnectingDialog() {
-        if(dialog!=null && dialog.isShowing())
-            dialog.dismiss();
+        if (!isDestroyed())
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
     }
 
     @Override
@@ -444,8 +445,6 @@ public class ScanDeviceActivity extends BaseActivity implements ScanDeviceView, 
             btnRetry.setVisibility(View.VISIBLE);
         }
     }
-
-
 
 
     @Override

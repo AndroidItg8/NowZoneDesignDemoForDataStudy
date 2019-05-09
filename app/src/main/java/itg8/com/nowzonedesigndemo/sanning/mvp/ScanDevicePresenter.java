@@ -69,9 +69,19 @@ public class ScanDevicePresenter implements ScanDeviceModelListener, BluetoothAd
                     setDeviceConnected();
 
                 connected=true;
+            }else if(intent.getAction().equals(BleService.ACTION_DEVICE_DISCONNECTED)){
+                if(!connected)
+                    setDeviceDisconnected();
             }
         }
     };
+
+    private void setDeviceDisconnected() {
+        if(view!=null){
+            view.stopConnectingDialog();
+        }
+    }
+
     private ScanDeviceModelImp model;
     private Handler handler;
     private Runnable r = new Runnable() {
@@ -155,6 +165,7 @@ public class ScanDevicePresenter implements ScanDeviceModelListener, BluetoothAd
         if (view != null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BleService.ACTION_DEVICE_CONNECTED);
+            filter.addAction(BleService.ACTION_DEVICE_DISCONNECTED);
             LocalBroadcastManager.getInstance(((Context) view)).registerReceiver(receiver, filter);
             Log.d(TAG, "Receiver Registered");
         }
@@ -183,6 +194,7 @@ public class ScanDevicePresenter implements ScanDeviceModelListener, BluetoothAd
     @Override
     public void onDestroy() {
         model.onDestroy();
+        model.cancelScanning();
         handler.removeCallbacks(r);
     }
 

@@ -21,7 +21,7 @@
         android:layout_toEndOf="@+id/chk_XValue"
         android:layout_width="wrap_content"
         android:layout_margin="8dp"
-
+        android:checked="true"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:text="Y Value" />
@@ -31,6 +31,7 @@
         android:layout_toEndOf="@+id/chk_YValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checked="true"
         android:layout_margin="8dp"
         android:visibility="invisible"
         android:text="Z Value" />
@@ -41,7 +42,7 @@
         android:textColor="@color/colorBlack"
         android:textSize="14sp"
         android:textAllCaps="true"
-        android:layout_below="@+id/chk_ZValue"
+        android:layout_below="@+id/chk_YValue"
         android:id="@+id/title"
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"

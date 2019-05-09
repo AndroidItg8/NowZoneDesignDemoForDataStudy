@@ -30,14 +30,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointD;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -47,6 +50,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.R;
+import itg8.com.nowzonedesigndemo.accelerometer.ColorController;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
 
 import static itg8.com.nowzonedesigndemo.common.CommonMethod.RAW_DATA_PRESSURE;
@@ -57,7 +61,7 @@ import static itg8.com.nowzonedesigndemo.common.CommonMethod.RAW_DATA_PRESSURE;
  * Use the {@link PressureRawFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PressureRawFragment extends Fragment implements OnChartValueSelectedListener {
+public class PressureRawFragment extends Fragment implements OnChartValueSelectedListener, OnChartGestureListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -93,6 +97,8 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
     };
 
 
+    private MPPointD topLeft;
+    private MPPointD bottomLeft;
 
     private void onPressureReceived(float pressureRaw) {
         Log.d(TAG, "onPressureReceived: Pressure"+pressureRaw);
@@ -202,7 +208,7 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
     }
 
     private void setLineChart() {
-        chart.setOnChartValueSelectedListener(this);
+        chart.setOnChartGestureListener(this);
 
         // enable description text
         chart.getDescription().setEnabled(true);
@@ -214,9 +220,10 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
         chart.setDrawGridBackground(false);
+//        chart.getAxisLeft().setStartAtZero(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(false);
+        chart.setPinchZoom(true);
 
         // set an alternative background color
         chart.setBackgroundColor(Color.WHITE);
@@ -226,12 +233,14 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
 
         // add empty data
         chart.setData(data);
-
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setScaleXEnabled(false);
+//        chart.setDragDecelerationEnabled(true);
         // get the legend (only possible after setting data)
         Legend l = chart.getLegend();
 
         // modify the legend ...
-        l.setForm(LegendForm.LINE);
+        l.setForm(Legend.LegendForm.LINE);
         l.setTextColor(Color.BLACK);
 
         XAxis xl = chart.getXAxis();
@@ -334,18 +343,19 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
             e.printStackTrace();
         }
     }
-
+    ILineDataSet set;
+    LineData data;
     private void addEntry(Float aFloat) {
 //        BigDecimal bigDecimal = new BigDecimal(aFloat);
 //        Log.d(TAG, "addEntry: bigDecimal"+bigDecimal.floatValue());
-        LineData data = chart.getData();
+         data = chart.getData();
 
         if (data != null ) {
 
 //            ILineDataSet set = data.getDataSetByIndex(0);
 //         LineDataSet   set = (LineDataSet) data.getDataSetByIndex(0);
 
-            ILineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
+             set = (LineDataSet) data.getDataSetByIndex(0);
 //             set.addEntry(new Entry(set.getEntryCount(),aFloat)); // can be called as well
 
             if (set == null) {
@@ -354,55 +364,60 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
             }
             Log.d(TAG, "addEntry: set.getEntryCount +"+ set.getEntryCount());
             data.addEntry(new Entry(set.getEntryCount(),aFloat), 0);
-//            data.addEntry(new Entry(data.getXMax()+1,bigDecimal.floatValue()), 0);
 
-            data.notifyDataChanged();
-//            set.notifyDataSetChanged();
+            NotifyAll(data);
+        }
+    }
 
-//            removeOutdatedEntries(set);
-
-            // let the chart know it's data has changed
+    private void NotifyAll(LineData lineData) {
+        if (chart != null) {
+            removeOutdatedEntries(lineData.getDataSets());
+            lineData.notifyDataChanged();
             chart.notifyDataSetChanged();
-
-            // limit the number of visible entries
-
-            chart.invalidate();
+//            chart.invalidate();
             chart.setVisibleXRangeMaximum(MAX_ENTRIES);
+            chart.moveViewToX(lineData.getEntryCount());
+//            chart.moveViewTo(chart.getX(), (float) topLeft.y, YAxis.AxisDependency.LEFT);
 
-//             chart.setVisibleYRange(30, YAxis.AxisDependency.LEFT);
+//            YAxis yAxis=chart.getAxisLeft();
+            if(topLeft!=null)
+                chart.moveViewTo(lineData.getEntryCount(), (float) (topLeft.y+bottomLeft.y)/2, YAxis.AxisDependency.LEFT);
 
 
+//            if(chart.getXChartMax()>MAX_ENTRIES){
+//                chart.getLineData().getDataSetByIndex(0).removeEntry()
+//            }
+        }
 
+    }
 
-
-            if (moveToLastEntry) {
-                // move to the latest entry
-
-                chart.moveViewToX(data.getEntryCount());
+    int lastEntry;
+    public  void removeOutdatedEntries(List<ILineDataSet> dataSets) {
+        for (IDataSet ds : dataSets) {
+            lastEntry=ds.getEntryCount();
+            while (ds.getEntryCount() > MAX_ENTRIES*2 && lastEntry!=ds.getEntryCount()) {
+                ds.removeFirst();
             }
-
-
-
-
-            // this automatically refreshes the chart (calls invalidate())
-//             chart.moveViewTo(data.getXValCount()-7, 55f,
-//             AxisDependency.LEFT);
         }
     }
 
     private LineDataSet createSet() {
 
         LineDataSet set = new LineDataSet(null, "Pressure Raw Data ");
+
+
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.BLUE);
+        set.setColor(Color.parseColor(ColorController.COLOR_X));
+//        set.setCircleColor(Color.BLUE);
         set.setLineWidth(2f);
-        set.setCircleRadius(4f);
+//        set.setCircleRadius(4f);
         set.setFillAlpha(65);
-        set.setFillColor(ColorTemplate.getHoloBlue());
-        set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.BLUE);
+        set.setFillColor(Color.parseColor(ColorController.COLOR_X));
+//        set.setHighLightColor(Color.rgb(244, 117, 117));
+//        set.setValueTextColor(Color.BLUE);
         set.setValueTextSize(9f);
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
         set.setDrawValues(false);
         return set;
     }
@@ -415,6 +430,107 @@ public class PressureRawFragment extends Fragment implements OnChartValueSelecte
                     ds.removeFirst();
                 }
             }
+
+    }
+
+
+    /**
+     * Callbacks when a touch-gesture has started on the chart (ACTION_DOWN)
+     *
+     * @param me
+     * @param lastPerformedGesture
+     */
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+        Log.d(TAG, "onChartGestureStart: ");
+    }
+
+    /**
+     * Callbacks when a touch-gesture has ended on the chart (ACTION_UP, ACTION_CANCEL)
+     *
+     * @param me
+     * @param lastPerformedGesture
+     */
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+        Log.d(TAG, "onChartGestureEnd: ");
+        getYViewport();
+        Log.d(TAG, "onChartScale: ---------->Y1: "+ topLeft.y+" Y2: "+ bottomLeft.y);
+
+    }
+
+    /**
+     * Callbacks when the chart is longpressed.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    /**
+     * Callbacks when the chart is double-tapped.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+        Log.d(TAG, "onChartDoubleTapped: ");
+    }
+
+    /**
+     * Callbacks when the chart is single-tapped.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    /**
+     * Callbacks then a fling gesture is made on the chart.
+     *
+     * @param me1
+     * @param me2
+     * @param velocityX
+     * @param velocityY
+     */
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+        Log.d(TAG, "onChartFling: ");
+    }
+
+    /**
+     * Callbacks when the chart is scaled / zoomed via pinch zoom gesture.
+     *
+     * @param me
+     * @param scaleX scalefactor on the x-axis
+     * @param scaleY scalefactor on the y-axis
+     */
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+        ;
+
+        getYViewport();
+    }
+
+    private void getYViewport() {
+        topLeft = chart.getValuesByTouchPoint(chart.getViewPortHandler().contentLeft(), chart.getViewPortHandler().contentTop(), YAxis.AxisDependency.LEFT);
+        bottomLeft = chart.getValuesByTouchPoint(chart.getViewPortHandler().contentLeft(), chart.getViewPortHandler().contentBottom(), YAxis.AxisDependency.LEFT);
+
+    }
+
+    /**
+     * Callbacks when the chart is moved / translated via drag gesture.
+     *
+     * @param me
+     * @param dX translation distance on the x-axis
+     * @param dY translation distance on the y-axis
+     */
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
     }
 }

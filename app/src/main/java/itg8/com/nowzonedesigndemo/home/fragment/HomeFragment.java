@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static final String TAG = "HomeFragment";
 
     @BindView(R.id.breathview)
     BreathwaveView breathview;
@@ -154,6 +157,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     public void onDestroyView() {
         super.onDestroyView();
         isViewEnable=false;
+        if((HomeActivity)getActivity()!=null)
+            ((HomeActivity)getActivity()).destroyHomeListener();
         unbinder.unbind();
     }
 
@@ -175,6 +180,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onBreathingWaveValueAvail(double value) {
+        Log.d(TAG, "onBreathingWaveValueAvail: "+value);
         if(breathview!=null && !TextUtils.isEmpty(String.valueOf(value)))
             breathview.addSample(SystemClock.elapsedRealtime(), value);
 
@@ -185,8 +191,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     public void onMovementStarted() {
         if(isViewEnable) {
             mStepImage.startSteps();
-            breathview.setVisibility(View.GONE);
-            mStepImage.setVisibility(View.VISIBLE);
+//            mStepImage.stopSteps();
+            breathview.setVisibility(View.VISIBLE);
+
+            mStepImage.setVisibility(View.GONE);
         }
     }
 
@@ -227,7 +235,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     @Override
     public void onConnectionStateAvail(String name) {
         if(isViewEnable) {
-            if (txtConnectionstatus != null && !TextUtils.isEmpty(name))
+            if (txtConnectionstatus != null)
                 txtConnectionstatus.setText(name);
         }
     }

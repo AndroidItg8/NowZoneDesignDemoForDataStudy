@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+
+import static com.j256.ormlite.field.DataType.DATE_LONG;
+
 /**
  * Created by itg_Android on 3/2/2017.
  */
@@ -49,6 +53,7 @@ public class DataModelPressure implements Parcelable {
     public static final String FIELD_TIME = "time";
     public static final String FIELD_UNUSED = "unused";
     public static final String FIELD_USERID = "user_id";
+    public static final String FIELD_TIMESTAMP_DATE = "timestamp_date";
 
     @DatabaseField(columnName = FIELD_SERIAL_NO, generatedId = true)
     @SerializedName("sr_no")
@@ -63,17 +68,17 @@ public class DataModelPressure implements Parcelable {
     @DatabaseField(columnName = FIELD_ACC_X)
     @SerializedName("acc_x")
     @Expose
-    private double x;
+    private float x;
 
     @DatabaseField(columnName = FIELD_ACC_Y)
     @SerializedName("acc_y")
     @Expose
-    private double y;
+    private float y;
 
     @DatabaseField(columnName = FIELD_ACC_Z)
     @SerializedName("acc_z")
     @Expose
-    private double z;
+    private float z;
 
     @DatabaseField(columnName = FIELD_GYR_X)
     @SerializedName("gyr_x")
@@ -108,7 +113,7 @@ public class DataModelPressure implements Parcelable {
     @DatabaseField(columnName = FIELD_TEMP)
     @SerializedName("tempreture")
     @Expose
-    private int temprature;
+    private float temprature;
 
     @DatabaseField(columnName = FIELD_BATTERY)
     @SerializedName("battery")
@@ -118,11 +123,14 @@ public class DataModelPressure implements Parcelable {
     @DatabaseField(columnName = FIELD_TIMESTAMP)
     @Expose
     private long timestamp;
+    @DatabaseField(columnName = FIELD_TIMESTAMP_DATE,dataType = DATE_LONG)
+    @Expose
+    private Date timestampDate;
 
     @DatabaseField(columnName = FIELD_PRESSURE_COUNT)
     @SerializedName("pressure_processed")
     @Expose
-    private int pressureProcessed;
+    private double pressureProcessed;
 
     @DatabaseField(columnName = FIELD_LOAD_CELL_ONE)
     @SerializedName("load_cell_1")
@@ -278,11 +286,11 @@ public class DataModelPressure implements Parcelable {
         this.mZ = mZ;
     }
 
-    public int getPressureProcessed() {
+    public double getPressureProcessed() {
         return pressureProcessed;
     }
 
-    public void setPressureProcessed(int pressureProcessed) {
+    public void setPressureProcessed(double pressureProcessed) {
         this.pressureProcessed = pressureProcessed;
     }
 
@@ -342,35 +350,35 @@ public class DataModelPressure implements Parcelable {
         this.pressure = pressure;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
-    public void setZ(double z) {
+    public void setZ(float z) {
         this.z = z;
     }
 
-    public int getTemprature() {
+    public float getTemprature() {
         return temprature;
     }
 
-    public void setTemprature(int temprature) {
+    public void setTemprature(float temprature) {
         this.temprature = temprature;
     }
 
@@ -395,6 +403,21 @@ public class DataModelPressure implements Parcelable {
     }
 
 
+    public Date getTimestampDate() {
+        return timestampDate;
+    }
+
+    public void setTimestampDate(Date timestampDate) {
+        this.timestampDate = timestampDate;
+    }
+
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("serial_no:").append(serialNo).append(" ").append("pressure: ").append(pressure).append("pressure_count :").append(pressureProcessed).append("acc_x :").append(x).append(" ").append("acc_y :").append(y).append(" ").append("acc_z :").append(z).append(" ").append("gyr_x :").append(gX).append(" ").append("gyr_y :").append(gY).append(" ").append("gyr_z :").append(gZ).append(" ").append("mag_x :").append(mX).append(" ").append("mag_y :").append(mY).append(" ").append("mag_z :").append(mZ).append(" ").append("temp :").append(temprature).append(" ").append("battery :").append(battery).append(" ").append("timestamp :").append(timestamp).append(" ").append("load_cell_one :").append(loadCell1).append(" ").append("load_cell_two :").append(loadCell2).append(" ").append("mic :").append(mic).append(" ").append("charging :").append(charging).append(" ").append("optical :").append(optical).append(" ").append("is_sent :").append(isSent).toString();
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -402,49 +425,64 @@ public class DataModelPressure implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.serialNo);
         dest.writeDouble(this.pressure);
-        dest.writeDouble(this.x);
-        dest.writeDouble(this.y);
-        dest.writeDouble(this.z);
+        dest.writeFloat(this.x);
+        dest.writeFloat(this.y);
+        dest.writeFloat(this.z);
         dest.writeDouble(this.gX);
         dest.writeDouble(this.gY);
         dest.writeDouble(this.gZ);
         dest.writeDouble(this.mX);
         dest.writeDouble(this.mY);
         dest.writeDouble(this.mZ);
-        dest.writeInt(this.temprature);
+        dest.writeFloat(this.temprature);
         dest.writeInt(this.battery);
         dest.writeLong(this.timestamp);
-        dest.writeInt(this.pressureProcessed);
+        dest.writeLong(this.timestampDate != null ? this.timestampDate.getTime() : -1);
+        dest.writeDouble(this.pressureProcessed);
         dest.writeLong(this.loadCell1);
         dest.writeLong(this.loadCell2);
         dest.writeLong(this.mic);
         dest.writeInt(this.charging);
         dest.writeLong(this.optical);
-        dest.writeLong(this.serialNo);
+        dest.writeByte(this.isSent ? (byte) 1 : (byte) 0);
+        dest.writeString(this.datetime);
+        dest.writeString(this.date);
+        dest.writeString(this.time);
+        dest.writeString(this.unused);
+        dest.writeString(this.userId);
     }
 
     protected DataModelPressure(Parcel in) {
+        this.serialNo = in.readLong();
         this.pressure = in.readDouble();
-        this.x = in.readDouble();
-        this.y = in.readDouble();
-        this.z = in.readDouble();
+        this.x = in.readFloat();
+        this.y = in.readFloat();
+        this.z = in.readFloat();
         this.gX = in.readDouble();
         this.gY = in.readDouble();
         this.gZ = in.readDouble();
         this.mX = in.readDouble();
         this.mY = in.readDouble();
         this.mZ = in.readDouble();
-        this.temprature = in.readInt();
+        this.temprature = in.readFloat();
         this.battery = in.readInt();
         this.timestamp = in.readLong();
-        this.pressureProcessed = in.readInt();
+        long tmpTimestampDate = in.readLong();
+        this.timestampDate = tmpTimestampDate == -1 ? null : new Date(tmpTimestampDate);
+        this.pressureProcessed = in.readDouble();
         this.loadCell1 = in.readLong();
         this.loadCell2 = in.readLong();
         this.mic = in.readLong();
         this.charging = in.readInt();
         this.optical = in.readLong();
-        this.serialNo = in.readLong();
+        this.isSent = in.readByte() != 0;
+        this.datetime = in.readString();
+        this.date = in.readString();
+        this.time = in.readString();
+        this.unused = in.readString();
+        this.userId = in.readString();
     }
 
     public static final Creator<DataModelPressure> CREATOR = new Creator<DataModelPressure>() {
@@ -458,9 +496,4 @@ public class DataModelPressure implements Parcelable {
             return new DataModelPressure[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return new StringBuilder().append("serial_no:").append(serialNo).append(" ").append("pressure: ").append(pressure).append("pressure_count :").append(pressureProcessed).append("acc_x :").append(x).append(" ").append("acc_y :").append(y).append(" ").append("acc_z :").append(z).append(" ").append("gyr_x :").append(gX).append(" ").append("gyr_y :").append(gY).append(" ").append("gyr_z :").append(gZ).append(" ").append("mag_x :").append(mX).append(" ").append("mag_y :").append(mY).append(" ").append("mag_z :").append(mZ).append(" ").append("temp :").append(temprature).append(" ").append("battery :").append(battery).append(" ").append("timestamp :").append(timestamp).append(" ").append("load_cell_one :").append(loadCell1).append(" ").append("load_cell_two :").append(loadCell2).append(" ").append("mic :").append(mic).append(" ").append("charging :").append(charging).append(" ").append("optical :").append(optical).append(" ").append("is_sent :").append(isSent).toString();
-    }
 }
