@@ -192,9 +192,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
         if(isViewEnable) {
             mStepImage.startSteps();
 //            mStepImage.stopSteps();
-            breathview.setVisibility(View.VISIBLE);
-
-            mStepImage.setVisibility(View.GONE);
+            breathview.setVisibility(View.GONE);
+            mStepImage.setVisibility(View.VISIBLE);
         }
     }
 

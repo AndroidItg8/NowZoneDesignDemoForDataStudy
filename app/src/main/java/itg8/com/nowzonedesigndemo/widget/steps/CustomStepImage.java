@@ -26,7 +26,7 @@ public class CustomStepImage extends View {
     private Bitmap[] bitmaps;
     private Bitmap rightBitmap, leftBitmap;
     private boolean leftToDraw = true;
-    private boolean toStop=false;
+    private boolean toStop=true;
 
 
     public CustomStepImage(Context context, AttributeSet attrs) {
@@ -47,7 +47,8 @@ public class CustomStepImage extends View {
 //            invalidate(); //will trigger the onDraw
             if(!toStop) {
                 addStep();
-                handler.postDelayed(this, stepSpeed); //in 0.5 sec player0 will move again
+//                handler.postDelayed(this, stepSpeed); //in 0.5 sec player0 will move again
+                handler.postDelayed(this, 500); //in 0.5 sec player0 will move again
             }
         }
     };
@@ -57,13 +58,15 @@ public class CustomStepImage extends View {
     }
 
     public void startSteps(){
-        toStop=false;
-        try {
-            handler.removeCallbacks(movePlayer0Runnable);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(toStop) {
+            toStop = false;
+            try {
+                handler.removeCallbacks(movePlayer0Runnable);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            movePlayer0Runnable.run();
         }
-        movePlayer0Runnable.run();
     }
 
 
