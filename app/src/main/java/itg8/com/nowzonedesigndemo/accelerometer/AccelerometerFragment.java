@@ -51,6 +51,7 @@ import itg8.com.nowzonedesigndemo.home.HomeActivity;
  * create an instance of this fragment.
  */
 public class AccelerometerFragment extends BaseFragment<BaseController> implements OnChartValueSelectedListener, CompoundButton.OnCheckedChangeListener, AccelListener, OnChartGestureListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -69,11 +70,15 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
     private CheckBox xValue;
     private CheckBox yValue;
     private CheckBox zValue;
+
     private boolean xVisible = true;
     private boolean yVisible = true;
     private boolean zVisible = true;
     private MPPointD topLeft;
     private MPPointD bottomLeft;
+
+    CheckChangeListener listener;
+
 
 
     public AccelerometerFragment() {
@@ -224,48 +229,7 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         return null;
     }
 
-//    private void setLineChart() {
-//      //  chart.setOnChartValueSelectedListener(this);
 //
-//        chart.getDescription().setEnabled(true);
-//        chart.setTouchEnabled(true);
-//
-//        // enable scaling and dragging
-//        chart.setDragEnabled(true);
-//        chart.setScaleEnabled(true);
-//        chart.setDrawGridBackground(false);
-//        chart.setPinchZoom(false);
-//        chart.setBackgroundColor(Color.WHITE);
-//
-//        LineData data = new LineData();
-//        data.setValueTextColor(Color.BLACK);
-//        chart.setData(data);
-//        Legend l = chart.getLegend();
-//        l.setForm(Legend.LegendForm.LINE);
-//        l.setTextColor(Color.BLACK);
-//        XAxis xl = chart.getXAxis();
-//        xl.setTextColor(Color.BLACK);
-//        xl.setDrawGridLines(false);
-//        xl.setAvoidFirstLastClipping(true);
-//        xl.setEnabled(true);
-//
-//        YAxis leftAxis = chart.getAxisLeft();
-//        leftAxis.setTextColor(Color.BLACK);
-//        if (from == 4) {
-//            leftAxis.setAxisMaximum(16777215);
-//            leftAxis.setAxisMinimum(-700000f);
-//        } else {
-//            leftAxis.setAxisMaximum(70000f);
-//            leftAxis.setAxisMinimum(-70000f);
-//
-//        }
-//        leftAxis.setDrawGridLines(true);
-//
-//        YAxis rightAxis = chart.getAxisRight();
-//        rightAxis.setEnabled(false);
-//
-//
-//    }
 
     private void setLineChart() {
 //        chart.setOnChartValueSelectedListener(this);
@@ -397,7 +361,7 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
                 break;
         }
 
-    }
+
 
 
     @Override

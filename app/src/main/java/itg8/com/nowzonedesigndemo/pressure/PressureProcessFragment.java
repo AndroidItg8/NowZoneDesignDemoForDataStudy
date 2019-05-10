@@ -78,6 +78,7 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
             }
         }
     };
+    private LineData data;
 
     public PressureProcessFragment() {
         // Required empty public constructor
@@ -116,7 +117,6 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_pressure_process, container, false);
         chart=view.findViewById(R.id.line_chart);
-        registerReceiver();
         setLineChart();
 
         return view;
@@ -126,14 +126,34 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        registerReceiver();
+
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
         try {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
+
     private void setLineChart() {
         chart.setOnChartValueSelectedListener(this);
 
@@ -254,7 +274,7 @@ public class PressureProcessFragment extends Fragment implements OnChartValueSel
         BigDecimal bigDecimal = new BigDecimal(aFloat);
         Log.d(TAG, "addEntry: bigDecimal"+bigDecimal.floatValue());
 
-        LineData data = chart.getData();
+      data = chart.getData();
 
         if (data != null ) {
 

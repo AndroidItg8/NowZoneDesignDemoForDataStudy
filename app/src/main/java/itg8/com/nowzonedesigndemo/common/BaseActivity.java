@@ -1,6 +1,8 @@
 package itg8.com.nowzonedesigndemo.common;
 
+
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +16,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Calendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -39,9 +40,22 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 //        dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(BaseActivity.this));
 //        initDispatcher();
         zipTest();
-        if (Prefs.getString(CommonMethod.STATE, null) == null || Prefs.getString(CommonMethod.STATE, null).equalsIgnoreCase(DeviceState.DISCONNECTED.name()))
-            startService(new Intent(this, BleService.class));
+        startBleService();
     }
+
+    private void startBleService() {
+        if (Prefs.getString(CommonMethod.STATE, null) == null || Prefs.getString(CommonMethod.STATE, null).equalsIgnoreCase(DeviceState.DISCONNECTED.name())) {
+            Intent intent = new Intent(this, BleService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+            }else{
+                startService(intent);
+            }
+
+        }
+    }
+
+
 
     private void zipTest() {
 
@@ -88,6 +102,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity {
 
         String state = Prefs.getString(CommonMethod.STATE, null);
         if (state == null || state.equalsIgnoreCase(DeviceState.DISCONNECTED.name())) {
+
             deviceDisconnected = true;
             checkDeviceDisconnected(v);
         } else {

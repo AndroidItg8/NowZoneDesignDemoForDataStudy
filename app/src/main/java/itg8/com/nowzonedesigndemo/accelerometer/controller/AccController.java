@@ -2,19 +2,16 @@ package itg8.com.nowzonedesigndemo.accelerometer.controller;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+
 
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
-import itg8.com.nowzonedesigndemo.R;
 import itg8.com.nowzonedesigndemo.accelerometer.AccelListener;
 import itg8.com.nowzonedesigndemo.accelerometer.ColorController;
-import itg8.com.nowzonedesigndemo.common.CommonMethod;
+
 
 public class AccController extends BaseController {
 
@@ -45,11 +42,11 @@ public class AccController extends BaseController {
     }
 
     private void createEntries(float x, float y, float z) {
-        lineData.addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA), X_AXIS);
-        lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), Y_AXIS);
-        lineData.addEntry(new Entry(dataSetGraphC.getEntryCount(), z, dataSetGraphC), Z_AXIS);
+            lineData.addEntry(new Entry(dataSetGraphA.getEntryCount(), x, dataSetGraphA), X_AXIS);
+             lineData.addEntry(new Entry(dataSetGraphB.getEntryCount(), y, dataSetGraphB), Y_AXIS);
+              lineData.addEntry(new Entry(dataSetGraphC.getEntryCount(), z, dataSetGraphC), Z_AXIS);
 
-//        lineData.notifyDataChanged();
+        //lineData.notifyDataChanged();
         listener.invalidateChart();
 
 
@@ -60,12 +57,6 @@ public class AccController extends BaseController {
             dataSetGraphA = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
             dataSetGraphB = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(Y_AXIS);
             dataSetGraphC = lineData.getDataSetCount() == 0 ? null : (LineDataSet) lineData.getDataSetByIndex(Z_AXIS);
-
-
-//            dataSetGraphA = (LineDataSet) lineData.getDataSetByIndex(X_AXIS);
-//            dataSetGraphB = (LineDataSet) lineData.getDataSetByIndex(Y_AXIS);
-//            dataSetGraphC = (LineDataSet) lineData.getDataSetByIndex(Z_AXIS);
-
             checkIfNewDataSetGraph();
 
             dataSetGraphA.setVisible(listener.isXtoShow());
@@ -74,6 +65,7 @@ public class AccController extends BaseController {
 //            dataSetGraphA.setVisible(true);
 //            dataSetGraphB.setVisible(true);
 //            dataSetGraphC.setVisible(true);
+
         }
 
     }
@@ -131,6 +123,7 @@ public class AccController extends BaseController {
 //        set.setDrawValues(false);
         return set;
     }
+
 
 
 }
