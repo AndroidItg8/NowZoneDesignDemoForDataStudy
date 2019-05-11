@@ -15,10 +15,12 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +40,7 @@ import static java.lang.Long.parseLong;
 
 public class CommonMethod {
 
+    public static final String LAST_SLEEP_ID = "LAST_SLEEP_ID";
     private static final String TAG = "CommonMethod";
 
     static final String TEMPTOKEN = "HcENDQvJAk3UG2qIWyXKTS6UYbxg4SxBE98He6Cr29hAA4GaI7ZZ1sf_FPCqfRL3Yvjie8J6Q6370IQm0z628xmcI7Gm_HjdAFinQktoLpDSl_ANma3kA_KNUZT5WJJD-2AQB-wltgbgHVXlOBQRIPVpHZr8ejdRq7QNlDTIY0iwnz10a9Gjkqpu5l0SMWbspcWl1p3w39kZ_6heDMP_0y5rMZ-fI6hd-VrbSiDI_8bMl3JDm7sA2wn9JyMksGkCGrMfzMfqdnIjN_E-I0SFyydsn1_8FBeHXEy87LQnsBFayuytZUNZmjSg_w7N5Xxkn3cp_x_5j2bV0WFGkj23T1nEZHmqaY2Amj7W9OaXeD_0Le3_uCsgR3-L20Lm5WbpjSW9ZEMTOhCFcy3awwEDWrGZWjMw-Doy2WS7mzz-R0pQOxmWYd7wmV9k-I--QRi9liJ3Dd5J3mSrM7As4y0AC2BfmyPUp0EkYQuEKuhpCcI";
@@ -579,16 +582,10 @@ public class CommonMethod {
     public static Calendar ConvertTime(Context mContext, int hourOfDay, int minute) {
 
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, minute);
-        c.add(Calendar.HOUR_OF_DAY, hourOfDay);
-        Prefs.putLong(CommonMethod.START_ALARM_TIME, c.getTimeInMillis());
-        c.add(Calendar.MINUTE, 30);
-        Prefs.putLong(CommonMethod.END_ALARM_TIME, c.getTimeInMillis());
-        c.add(Calendar.MINUTE, -30);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 
         return c;
-
-
     }
 
     public static void resetTmpstmp() {
@@ -617,11 +614,12 @@ public class CommonMethod {
         set.setDrawValues(false);
         return set;
     }
+
     public static final long ONE_MINUTE = 60000;
 
     public static String checkBreathing(long latestTimestamp, long lastTimeStamp) {
         long timeTaken = latestTimestamp - lastTimeStamp;
-        return String.valueOf((int) ((ONE_MINUTE)/timeTaken));
+        return String.valueOf((int) ((ONE_MINUTE) / timeTaken));
 
     }
 
@@ -675,25 +673,28 @@ public class CommonMethod {
     }
 
 
-    public static double getZScore(double loadCellVal1,double[] arr) {
-//        Log.d(TAG, "getZScore," + min(arr) + "," + max(arr) + "," + (loadCellVal1));
-        Arrays.sort(arr);
-//        WeakReference<Double> max=new WeakReference<>(max(arr));
-//        WeakReference<Double> min=new WeakReference<>(min(arr));
-        if ((max(arr) - min(arr)) > 0)
-            return ((loadCellVal1 - min(arr)) / (max(arr) - min(arr)));
+    public static double getZScore(double loadCellVal1, Double[] arr) {
+        WeakReference<Double> max = new WeakReference<>(max(arr));
+        WeakReference<Double> min = new WeakReference<>(min(arr));
+//        if ((max(arr) - min(arr)) > 0)
+//            return ((loadCellVal1 - min(arr)) / (max(arr) - min(arr)));
+//        else
+//            return 0;
+        Log.d(TAG, "isActivityStarted: max: " + max.get() + " min: " + min.get() + " value:" + loadCellVal1);
+        if ((max.get() - min.get()) > 0)
+            return ((loadCellVal1 - min.get()) / (max.get() - min.get()));
         else
             return 0;
     }
 
-    public static double min(double[] arr) {
-//        return Collections.min(Arrays.asList(loadCellRaw));
-        return arr[0];
+    public static double min(Double[] arr) {
+        return Collections.min(Arrays.asList(arr));
+//        return arr[0];
     }
 
-    public static double max(double[] arr) {
-//        return Collections.max(Arrays.asList(loadCellRaw));
-        return arr[arr.length-1];
+    public static double max(Double[] arr) {
+        return Collections.max(Arrays.asList(arr));
+//        return arr[arr.length-1];
     }
 
 

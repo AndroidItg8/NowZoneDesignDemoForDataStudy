@@ -32,6 +32,7 @@ public class Rolling {
 
     public void add(double x) {
         Log.d("Rolling", "rawadd: "+x);
+
         if(max==0 || x>max)
             max=x;
         if(min==0 || x<min)

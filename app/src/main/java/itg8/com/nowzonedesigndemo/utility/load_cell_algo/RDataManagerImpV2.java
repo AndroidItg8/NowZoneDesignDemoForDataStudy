@@ -3,6 +3,7 @@ package itg8.com.nowzonedesigndemo.utility.load_cell_algo;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -29,7 +30,10 @@ public class RDataManagerImpV2 {
 
     private static final int DATA_GATHER_LIMIT = DATA_PER_SECOND * 5;
 
-    private double[] loadCellRaw;
+    public static DecimalFormat df2 = new DecimalFormat("#.####");
+
+
+    private Double[] loadCellRaw;
     private double[] loadCellProcessed;
 
     private Rolling mMA1;
@@ -47,7 +51,7 @@ public class RDataManagerImpV2 {
         mMA1 = new Rolling(ROLLING_AVG_SIZE);
         mMA2 = new Rolling(ROLLING_AVG_SIZE);
         mMA3 = new Rolling(ROLLING_AVG_SIZE);
-        loadCellRaw = new double[5];
+        loadCellRaw = new Double[5];
         loadCellProcessed = new double[DATA_GATHER_LIMIT];
         algo = new AlgoLoadCellBreathing();
     }
@@ -63,11 +67,11 @@ public class RDataManagerImpV2 {
         loadCellRaw[isGatheringLimit - 1] = loadCellVal1.get();
         Log.d(TAG, "onLoadCellDataAvail: LoadCellRaw:->" + Arrays.toString(loadCellRaw));
         z = CommonMethod.getZScore(loadCellVal1.get(),loadCellRaw);
-        mMA1.add(z);
-        mMA2.add(mMA1.getaverage());
-        mMA3.add(mMA2.getaverage());
+        mMA1.add(Double.parseDouble(df2.format(z)));
+        mMA2.add(Double.parseDouble(df2.format(mMA1.getaverage())));
+        mMA3.add(Double.parseDouble(df2.format(mMA2.getaverage())));
         Log.d(TAG, "onLoadCellDataAvail: MA1:-> " + mMA1.getaverage() + "  MA2:-> " + mMA2.getaverage() + " MA3:-> " + mMA3.getaverage());
-        if (algo.isPeakGot(mMA3.getaverage())) {
+        if (algo.isPeakGot(Double.parseDouble(df2.format(mMA3.getaverage())))) {
             if (lastPeakTimeStamp <= 0) {
                 lastPeakTimeStamp = model.getTimestamp();
                 return;
@@ -81,7 +85,7 @@ public class RDataManagerImpV2 {
 
 
 
-    private double[] shiftLeft(double[] values) {
+    private Double[] shiftLeft(Double[] values) {
         //n stores the length of array
         WeakReference<Double> temp = new WeakReference<Double>(values[0]);
 

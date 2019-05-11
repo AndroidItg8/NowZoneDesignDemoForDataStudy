@@ -22,6 +22,9 @@ import itg8.com.nowzonedesigndemo.common.Prefs;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    public static final String COMPONENT_NAME="itg8.com.nowzonedesigndemo.setting.AlarmReceiver";
+
     private static final int ALARM_ID = 1234;
     private static final String TAG = AlarmReceiver.class.getSimpleName();
     private static final int PENDING_RQ = 234;
@@ -46,37 +49,32 @@ public class AlarmReceiver extends BroadcastReceiver {
         // an Intent broadcast.
         if (intent.hasExtra(CommonMethod.ALARM_FROMTIMEPICKER)) {
             long startTime = Prefs.getLong(CommonMethod.START_ALARM_TIME,0);
-            long endTime = Prefs.getLong(CommonMethod.END_ALARM_TIME,0);
             Log.d(getClass().getSimpleName(), "startTime:" + startTime);
 
-            String time = Prefs.getString(CommonMethod.SAVEALARMTIME,null);
-            String amPm = Prefs.getString(CommonMethod.ALARM_AP,null);
-
+            String time=CommonMethod.getTimeFromTMPAmPm(startTime);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.item_rv_alarm_notification);
-            remoteView.setTextViewText(R.id.txt_app_name, "NowZone");
-            remoteView.setTextViewText(R.id.txt_times, time + " " + amPm);
-            remoteView.setTextViewText(R.id.txt_hours_diff, "Hours");
+            remoteView.setTextViewText(R.id.txt_times, time);
 //              remoteView.setInt(R.id.relative,"setBackgroundResource",R.drawable.sun);
             Calendar c = Calendar.getInstance();
             long seconds = c.getTimeInMillis();
 
             Log.d(getClass().getSimpleName(), "seconds:" + c.getTime());
             Log.d(getClass().getSimpleName(), "seconds:" + c.getTime());
-            remoteView.setTextViewText(R.id.txt_hours, calculateHours(seconds, startTime));
             //remoteView.setImageViewResource(R.id.img_close,R.drawable.ic_closes);
             remoteView.setOnClickPendingIntent(R.id.btn_close, createSelfPendingIntent(context));
             Log.d(getClass().getSimpleName(), "Time:" + time);
-            noti = new NotificationCompat.Builder(context)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "M_CH_ID");
+            noti =  notificationBuilder
                     .setAutoCancel(true)
                     .setSmallIcon(R.drawable.ic_alarms)
                     .setContentIntent(pendingIntent)
                     .setCustomBigContentView(remoteView)
-                    .setPriority(Notification.PRIORITY_MIN)
+                    .setPriority(Notification.VISIBILITY_PUBLIC)
                     .setCustomContentView(remoteView)
-                    .setVisibility(Notification.PRIORITY_MIN)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC)
                     .setFullScreenIntent(pendingIntent, true);
 
 
@@ -87,7 +85,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             Prefs.putString(CommonMethod.SLEEP_STARTED, "ss");
             intent1 = new Intent(context.getResources().getString(R.string.action_device_sleep_start));
             intent1.putExtra(CommonMethod.START_ALARM_TIME, startTime);
-            intent1.putExtra(CommonMethod.END_ALARM_TIME, endTime);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
             notificationManager.notify(ALARM_ID, noti.build());
            // notificationManager.cancel(ALARM_ID);
@@ -98,6 +95,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             intent1.putExtra(CommonMethod.ALARM_END, System.currentTimeMillis());
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent1);
             Prefs.remove(CommonMethod.SLEEP_STARTED);
+            Prefs.remove(CommonMethod.START_ALARM_TIME);
 
         }
 

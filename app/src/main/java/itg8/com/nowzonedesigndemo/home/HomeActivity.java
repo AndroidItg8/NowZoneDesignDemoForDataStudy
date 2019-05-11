@@ -67,7 +67,9 @@ import itg8.com.nowzonedesigndemo.login.LoginActivity;
 import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
 import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
 import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
+import itg8.com.nowzonedesigndemo.setting.AlarmSettingActivity;
 import itg8.com.nowzonedesigndemo.setting.SettingMainActivity;
+import itg8.com.nowzonedesigndemo.setting.fragment.AlarmSettingFragment;
 import itg8.com.nowzonedesigndemo.sleep.SleepActivity;
 import itg8.com.nowzonedesigndemo.steps.StepsActivity;
 import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
@@ -107,6 +109,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MENU_LOGOUT = 9;
     private static final int MENU_DISCONNECT = 10;
     private static final int MENU_EXPORT = 11;
+    private static final int MENU_SLEEP = 12;
     private static final int MENU_PROCESS_RAW = 9;
     private static final int MENU_PROCESS_PRESSURE = 9;
 
@@ -306,9 +309,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             } else if (position == MENU_TEMP) {
                 title = " Temperature Graph";
                 setFragment(AccelerometerFragment.newInstance(FROM_TEMPRETURE));
+            } else if (position == MENU_SLEEP) {
+                title = " Sleep";
+//                startActivity(new Intent(getApplicationContext(), AlarmSettingActivity.class));
+                setFragment(AlarmSettingFragment.newInstance("",""));
             } else if (position == MENU_LOGOUT) {
                 logoutFromUser();
-
             } else if (position == MENU_DISCONNECT) {
                 onDeviceDisconnected();
             } else if (position == MENU_EXPORT) {
@@ -427,6 +433,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mTitle = mDrawerTitle = getTitle();
 
         // load slide menu items
+
         navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
         // nav drawer icons from resources

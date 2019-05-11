@@ -112,7 +112,6 @@
                 android:gravity="center"
                 android:minWidth="40dp"
                 android:text="INCH "
-                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp" />
 
@@ -125,7 +124,6 @@
                 android:checked="true"
                 android:buttonTint="@color/colorAccent"
                 android:minWidth="40dp"
-                android:buttonTint="@color/colorAccent"
                 android:text="CM"
                 android:textColor="@color/colorBlack"
                 android:textSize="12sp" />
@@ -256,7 +254,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:buttonTint="@color/colorAccent"
                 android:layout_marginEnd="8dp"
                 android:checked="true"
                 android:gravity="center"
@@ -366,7 +363,6 @@
                 android:gravity="center"
                 android:minWidth="40dp"
                 android:text="FEMALE "
-                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
 
             <RadioButton
@@ -379,7 +375,6 @@
                 android:checked="true"
                 android:minWidth="40dp"
                 android:text="MALE"
-                android:buttonTint="@color/colorAccent"
                 android:textColor="@color/colorBlack" />
 
         </RadioGroup>

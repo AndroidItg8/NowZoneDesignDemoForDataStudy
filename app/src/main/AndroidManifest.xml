@@ -107,9 +107,9 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".setting.AlarmReceiver"
+            android:name="itg8.com.nowzonedesigndemo.setting.AlarmReceiver"
             android:enabled="true"
-            android:exported="true">
+            >
             <intent-filter>
                 <action android:name="ACTION_ALARM_NOTIFICATION" />
             </intent-filter>

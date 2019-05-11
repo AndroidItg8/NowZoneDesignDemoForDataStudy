@@ -52,6 +52,7 @@ import static itg8.com.nowzonedesigndemo.common.CommonMethod.calculate;
 import static itg8.com.nowzonedesigndemo.home.HomeActivity.PI_MAX;
 import static itg8.com.nowzonedesigndemo.home.HomeActivity.PI_MIN;
 import static itg8.com.nowzonedesigndemo.utility.AlgoAsync.ONE_MINUTE;
+import static itg8.com.nowzonedesigndemo.utility.load_cell_algo.RDataManagerImpV2.df2;
 
 /**
  * This is responsible for calculation uploading and all.
@@ -413,7 +414,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         } else {
             //Log.d(TAG, "STDEV:" + rollingG.getStdev());
             Log.d(TAG, "calculateProportionBySTD: " + rollingG.getaverage() + "  --- " + rollingG.getStdev());
-            return (pressure - rollingG.getaverage()) / rollingG.getStdev();
+            if(rollingG.getStdev()!=0)
+                return (pressure - rollingG.getaverage()) / rollingG.getStdev();
+            else
+                return 1;
         }
     }
 
@@ -760,7 +764,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        tempPressure= calculateProportion(lowPassFilterValue,alpha);
 
         dataModel = copy(model);
-        dLastnew = a * calculateProportionBySTD(model.getPressure()) + ((1 - a) * dLastnew);
+        dLastnew = a * calculateProportionBySTD(model.getPressure()) + ((1 - a) * Double.parseDouble(df2.format(dLastnew)));
         Log.d(TAG, "processModelData: " + dataModel.getPressure() + " Processed Done: " + dLastnew);
 
 //        dLastnew = calculateProportionBySTD(model.getPressure());

@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OrmLiteBaseService;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -169,21 +170,37 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             } else if (action.equalsIgnoreCase(getResources().getString(R.string.action_device_sleep_start))) {
                 if (dataManager != null) {
                     dataManager.onSleepStarted(true);
-                    dataManager.onStartAlarmTime(intent.getLongExtra(CommonMethod.START_ALARM_TIME, 0));
-                    dataManager.onEndAalrmTime(intent.getLongExtra(CommonMethod.END_ALARM_TIME, 0));
+                    Calendar c=Calendar.getInstance();
+                    c.setTimeInMillis(intent.getLongExtra(CommonMethod.START_ALARM_TIME, 0));
+                    dataManager.onStartAlarmTime(c.getTimeInMillis());
                     TblSleep sleepForward = new TblSleep();
-                    sleepForward.setDate(Prefs.getString(CommonMethod.SAVEALARMTIME, ""));
+                    sleepForward.setDate(CommonMethod.getDateFromTMP(c.getTimeInMillis()));
                     sleepForward.setTimeStart(Prefs.getLong(CommonMethod.START_ALARM_TIME, 0));
-                    sleepForward.setTimestamp(Prefs.getLong(CommonMethod.START_ALARM_TIME, 0));
                     sleepForward.setSleepState(CommonMethod.SLEEP_STARTED);
                     try {
-                        sleepDao.create(sleepForward);
+                        Prefs.putInt(CommonMethod.LAST_SLEEP_ID,sleepDao.create(sleepForward));
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
             } else if (action.equals(getResources().getString(R.string.action_device_sleep_end))) {
                 if (dataManager != null) {
+                    Calendar c=Calendar.getInstance();
+                    c.setTimeInMillis(intent.getLongExtra(CommonMethod.ALARM_END,0));
+                    try {
+                        QueryBuilder<TblSleep, Integer> builder = sleepDao.queryBuilder();
+                        builder.limit(1L);
+                        builder.orderBy(TblSleep.FIELD_ID, false);  // true for ascending, false for descending
+                        TblSleep sleepForward = sleepDao.queryForFirst(builder.prepare());
+                        if(sleepForward!=null){
+                            sleepForward.setTimeEnd(c.getTimeInMillis());
+                            sleepForward.setTimestamp(Calendar.getInstance().getTimeInMillis());
+                            sleepForward.setSleepState(CommonMethod.SLEEP_ENDED);
+                            sleepDao.update(sleepForward);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     dataManager.onSleepStarted(false);
                 }
             } else if (action.equals(ACTION_SERFVER_IP_CHANGED)) {
@@ -623,7 +640,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
 
     @Override
     public void onDataProcessed(double dataModel) {
-       // Log.d(TAG, "Pressure Value after changes " + dataModel);
+        Log.d(TAG, "Pressure Value after changes " + dataModel);
         sendBroadcast(CommonMethod.ACTION_DATA_AVAILABLE, dataModel);
     }
 

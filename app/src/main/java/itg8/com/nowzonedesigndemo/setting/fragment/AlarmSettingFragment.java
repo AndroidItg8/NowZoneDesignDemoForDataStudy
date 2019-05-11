@@ -2,6 +2,7 @@ package itg8.com.nowzonedesigndemo.setting.fragment;
 
 
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -35,6 +36,9 @@ import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
  * create an instance of this fragment.
  */
 public class AlarmSettingFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = "AlarmSettingFragment";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -82,8 +86,8 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
     FrameLayout frameLayoutAnimation;
     @BindView(R.id.txt_alarm_status)
     CustomFontTextView txtAlarmStatus;
-    SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm", Locale.getDefault());
-    SimpleDateFormat formatDate2 = new SimpleDateFormat("a", Locale.getDefault());
+    SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm");
+    SimpleDateFormat formatDate2 = new SimpleDateFormat("a");
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -158,7 +162,9 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
     }
 
     private void stopAlarmBroadcast(boolean b) {
-        Intent intent = new Intent(CommonMethod.ACTION_ALARM_NOTIFICATION);
+        Intent intent = new Intent();
+        intent.setAction(CommonMethod.ACTION_ALARM_NOTIFICATION);
+        intent.setComponent(new ComponentName(getActivity().getPackageName(),"itg8.com.nowzonedesigndemo.setting.AlarmReceiver"));
         intent.putExtra(CommonMethod.ALARM_END,System.currentTimeMillis());
         getActivity().sendBroadcast(intent);
         showAlarmStartButton();
@@ -176,6 +182,7 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
 
     }
 
+
     private void OpenTimePickerDia() {
         // Get Current Time
         c = Calendar.getInstance();
@@ -188,15 +195,15 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
 
-                        String endtime = (hourOfDay + ":" + minute);
+                        String endtime;
                         Prefs.putString(CommonMethod.ALARM_AP, formatDate2.format(c.getTime()));
                         c = CommonMethod.ConvertTime(getActivity(), hourOfDay, minute);
                         cLast = CommonMethod.ConvertTime(getActivity(), hourOfDay, minute);
                         txtAm.setText(formatDate2.format(c.getTime()));
-                        txtAlarmTime.setText(endtime);
                         endtime = formatDate.format(c.getTime());
+                        Log.d(TAG, "onTimeSet: "+endtime);
                         txtAlarmTime.setText(endtime);
-                        cLast.add(Calendar.MINUTE, -30);
+//                        cLast.add(Calendar.MINUTE, -30);
                         String startTime = String.valueOf(cLast.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
                         String alarmStatusMessage = alarmStartLabel + " " + startTime + " to " + endtime;
                         txtAlarmStatus.setText(alarmStatusMessage);
@@ -218,10 +225,15 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
     }
 
     private void sendBroadCast(boolean b) {
-        Intent intent = new Intent(CommonMethod.ACTION_ALARM_NOTIFICATION);
+        Calendar newCal = Calendar.getInstance();
+        Prefs.putLong(CommonMethod.START_ALARM_TIME,  newCal.getTimeInMillis());
+        Intent intent = new Intent();
+        intent.setAction(CommonMethod.ACTION_ALARM_NOTIFICATION);
+        intent.setComponent(new ComponentName(getActivity().getPackageName(),"itg8.com.nowzonedesigndemo.setting.AlarmReceiver"));
         intent.putExtra(CommonMethod.ALARM_FROMTIMEPICKER, b);
         //  LocalBroadcastManager.getInstance(getApplicationContext()).
         getActivity().sendBroadcast(intent);
+        showFinishButton();
     }
 
     /**
@@ -238,11 +250,7 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
         txtAlarmTime.setOnClickListener(this);
         btnAlarmFinished.setOnClickListener(this);
         long startAlarmTime = Prefs.getLong(CommonMethod.START_ALARM_TIME, 0);
-        if(System.currentTimeMillis()-startAlarmTime>=ONE_COMPLETE_DAY) {
-            startAlarmTime = 0;
-            Prefs.remove(CommonMethod.START_ALARM_TIME);
-        }
-        // txtAlarmTime.setText(hour+":"+ minute);
+
         if (startAlarmTime > 0) {
             c = Calendar.getInstance();
             c.setTimeInMillis(Prefs.getLong(CommonMethod.START_ALARM_TIME, 0));
@@ -272,7 +280,7 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
     }
 
     private void checkAlarmStartedOrNot() {
-        if (Prefs.contains(CommonMethod.SLEEP_STARTED)) {
+        if (Prefs.contains(CommonMethod.START_ALARM_TIME)) {
             showFinishButton();
         }else {
             showAlarmStartButton();
