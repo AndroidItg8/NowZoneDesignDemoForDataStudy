@@ -414,7 +414,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         } else {
             //Log.d(TAG, "STDEV:" + rollingG.getStdev());
             Log.d(TAG, "calculateProportionBySTD: " + rollingG.getaverage() + "  --- " + rollingG.getStdev());
-            if(rollingG.getStdev()!=0)
+            if (rollingG.getStdev() != 0)
                 return (pressure - rollingG.getaverage()) / rollingG.getStdev();
             else
                 return 1;
@@ -544,68 +544,54 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             //Log.d(TAG, "onRawDataModel: " + model.toString());
             Log.d(TAG, "onRawDataModel: " + model.getBattery());
             if (loadCellImp != null) loadCellImp.onLoadCellDataAvail(model);
-            if(activityImp!=null) activityImp.isActivityStarted(model.getX(),model.getY(),model.getZ());
+            if (activityImp != null)
+                activityImp.isActivityStarted(model.getX(), model.getY(), model.getZ());
             sb.setLength(0);
-            if (!isSleepStarted) {
-                listener.onBatteryAvail(model.getBattery());
-                /**
-                 * Add now for Raw Process Data line chart
-                 */
-                listener.onRawData(model.getPressure());
-                listener.onAccelerometer(model);
+//            if (!isSleepStarted) {
+            listener.onBatteryAvail(model.getBattery());
+            /**
+             * Add now for Raw Process Data line chart
+             */
+            listener.onRawData(model.getPressure());
+            listener.onAccelerometer(model);
 
-                //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
-                processModelData(model, mContext);
-                return;
-            }
-//            if(countActualData>100)
+            //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
+            processModelData(model, mContext);
 
-//                gettingCooefficient(model.getPressure());
-
-            //            else {
-//                countActualData++;
-//                min=model.getPressure();
-//            }
-//            pressureque.add(model);
-//            //Log.d(TAG, sb.append("pressure max : ").append(model.getPressure()).toString());
-
-//            processForStepCounting(model);
-
-            //  //Log.d(RDataManagerImp.class.getSimpleName(), "data received:" + model.getPressure());
-            Observable.create(new ObservableOnSubscribe<String>() {
-                @Override
-                public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
-                    if (isSleepStarted) {
-                        pushToSleep(model, startAlarmTime,
-                                endAlarmTime);
-                        return;
-                    }
-
-                    processForStepCounting(model);
-//                    processModelData(model, context);
-                }
-            }).subscribeOn(Schedulers.computation())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+//            Observable.create(new ObservableOnSubscribe<String>() {
+//                @Override
+//                public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+//                    if (isSleepStarted) {
+//                        pushToSleep(model, startAlarmTime,
+//                                endAlarmTime);
+//                        return;
+//                    }
+//
+//                    processForStepCounting(model);
+////                    processModelData(model, context);
+//                }
+//            }).subscribeOn(Schedulers.computation())
+//                    .subscribe(new Observer<String>() {
+//                        @Override
+//                        public void onSubscribe(Disposable d) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onNext(String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//
+//                        }
+//                    });
             /**
              * Currently we are working on pressure
              */
@@ -1304,7 +1290,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         //We will do that after SAAS TODO SAAS
         passForFIleStorage(tempHolderRaw, context);
 
-        passForCalculation(tempHolder, tempLineChartRaw);
+        //passForCalculation(tempHolder, tempLineChartRaw);
     }
 
     private void passForFIleStorage(DataModelPressure[] dataStorage, Context context) {

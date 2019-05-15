@@ -18,6 +18,7 @@
         android:layout_alignParentEnd="true"
         app:srcCompat="@drawable/ic_right_arrow"/>
     <TextView
+        android:id="@+id/txtDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/imgArrowLeft"

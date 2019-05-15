@@ -11,6 +11,7 @@
     <dimen name="lbl_breath_value">16sp</dimen>
     <dimen name="lbl_breath_value_history">28sp</dimen>
 
+    <dimen name="mytextsize">24sp</dimen>
 
 
 

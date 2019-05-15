@@ -71,6 +71,7 @@ import itg8.com.nowzonedesigndemo.setting.AlarmSettingActivity;
 import itg8.com.nowzonedesigndemo.setting.SettingMainActivity;
 import itg8.com.nowzonedesigndemo.setting.fragment.AlarmSettingFragment;
 import itg8.com.nowzonedesigndemo.sleep.SleepActivity;
+import itg8.com.nowzonedesigndemo.sleep.SleepFragment;
 import itg8.com.nowzonedesigndemo.steps.StepsActivity;
 import itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView;
 import itg8.com.nowzonedesigndemo.utility.BreathState;
@@ -110,6 +111,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private static final int MENU_DISCONNECT = 10;
     private static final int MENU_EXPORT = 11;
     private static final int MENU_SLEEP = 12;
+    private static final int MENU_SLEEP_HISTORY = 13;
     private static final int MENU_PROCESS_RAW = 9;
     private static final int MENU_PROCESS_PRESSURE = 9;
 
@@ -169,6 +171,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     ImageView imageView;
     @BindView(R.id.textView)
     TextView textView;
+    @BindView(R.id.titleToolbar)
+    TextView titleToolbar;
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.toolbar)
@@ -320,10 +324,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             } else if (position == MENU_EXPORT) {
                 title = " Export CSV";
                 startExportWalaItem();
-
+            }else if(position == MENU_SLEEP_HISTORY){
+                title="Sleep History";
+                SleepFragment fragment=new SleepFragment();
+                setFragment(fragment);
             }
 
-
+            if(title!=null) {
+            titleToolbar.setText(title);
+            }
             openDrawer();
         }
     };
@@ -483,6 +492,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        titleToolbar.setText("Home");
         battery.setmCharging(false);
         //toolbar.setContentInsetsAbsolute(200, toolbar.getContentInsetRight());
 
@@ -495,7 +506,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
 
-        toolbar.setTitle(title);
+      //  getSupportActionBar().setTitle("Home");
 
 
     }
@@ -541,7 +552,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).commit();
     }
 
-    private void setFragment(Fragment fragment) {
+    public void setFragment(Fragment fragment) {
         fm = getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.main_FrameLayout, fragment).addToBackStack(fragment.getTag()).commitAllowingStateLoss();
     }

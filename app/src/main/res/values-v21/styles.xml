@@ -26,7 +26,13 @@
 
 
 
+
     </style>
+
+    <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
     <style name="AppTheme.NoActionBar2">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -48,12 +54,10 @@
 
     </style>
 
-    <style name="App_EditTextStyle"  parent="@android:style/Widget.EditText">
+    <style name="App_EditTextStyle" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textSize">@dimen/txt_edit_text_size</item>
     </style>
-
-
 
 
     <!-- for Bottom Bar-->
@@ -92,12 +96,12 @@
 
     <!--- for Breath History page TextView Style-->
 
- <style name="breath_textView">
-<item name="android:textColor">@color/colorWhite</item>
-<item name="android:textSize">@dimen/txt_hr</item>
-</style>
+    <style name="breath_textView">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/txt_hr</item>
+    </style>
 
-    <style name="TextLabel"  parent="Widget.Design.TextInputLayout">
+    <style name="TextLabel" parent="Widget.Design.TextInputLayout">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/color_composed_half</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->

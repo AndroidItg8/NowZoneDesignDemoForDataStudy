@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CircleProgressView/CircleProgressView.iml" filepath="$PROJECT_DIR$/CircleProgressView/CircleProgressView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NowZoneDesignDemoForDataStudy.iml" filepath="$PROJECT_DIR$/NowZoneDesignDemoForDataStudy.iml" />
       <module fileurl="file://$PROJECT_DIR$/NowZoneDesignDemoRebase2 2 peak count copy.iml" filepath="$PROJECT_DIR$/NowZoneDesignDemoRebase2 2 peak count copy.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

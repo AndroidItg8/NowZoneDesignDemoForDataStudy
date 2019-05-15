@@ -14,7 +14,7 @@ import itg8.com.nowzonedesigndemo.utility.Rolling;
 public class ActivityDetection {
 
     private static final double ACTIVITY_THRESHOLD = 0.7;
-    private Double[] vectorArr;
+    private double[] vectorArr;
     private int index = 0;
     private double zScore;
     private RDataManagerListener listener;
@@ -23,7 +23,7 @@ public class ActivityDetection {
 
     public ActivityDetection(RDataManagerListener listener) {
         this.listener = listener;
-        vectorArr = new Double[Const.SIZE_ACCEL_VECTOR];
+        vectorArr = new double[Const.SIZE_ACCEL_VECTOR];
     }
 
     private double accelVector;
@@ -46,8 +46,8 @@ public class ActivityDetection {
 
 
     public double getZScore(double loadCellVal1) {
-        WeakReference<Double> max = new WeakReference<>(max());
-        WeakReference<Double> min = new WeakReference<>(min());
+        WeakReference<Double> max = new WeakReference<>(max(Arrays.copyOf(vectorArr,vectorArr.length)));
+        WeakReference<Double> min = new WeakReference<>(min(Arrays.copyOf(vectorArr,vectorArr.length)));
 //        if ((max(arr) - min(arr)) > 0)
 //            return ((loadCellVal1 - min(arr)) / (max(arr) - min(arr)));
 //        else
@@ -59,13 +59,15 @@ public class ActivityDetection {
             return 0;
     }
 
-    public double min() {
-        return Collections.min(Arrays.asList(vectorArr));
-//        return arr[0];
+    public double min(double[] arr) {
+        Arrays.sort(arr);
+//        return Collections.min(Arrays.asList(vectorArr));
+        return arr[0];
     }
 
-    public double max() {
-        return Collections.max(Arrays.asList(vectorArr));
-//        return arr[arr.length-1];
+    public double max(double[] arr) {
+        Arrays.sort(arr);
+//        return Collections.max(Arrays.asList(vectorArr));
+        return arr[arr.length-1];
     }
 }

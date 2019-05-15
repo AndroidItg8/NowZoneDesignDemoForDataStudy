@@ -9,6 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
         android:fitsSystemWindows="true">
@@ -22,12 +23,18 @@
             android:background="@android:color/transparent"
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ToolbarColoredBackArrow"
             app:titleTextColor="@color/colorWhite" >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    style="@style/MyToolbarStyle"
+                    android:textSize="@dimen/mytextsize"
+                    android:id="@+id/titleToolbar"
+                    />
                 <itg8.com.nowzonedesigndemo.widget.BatteryView
                     android:layout_width="24dp"
                     android:layout_height="16dp"

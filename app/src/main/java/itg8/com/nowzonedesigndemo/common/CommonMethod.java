@@ -623,6 +623,10 @@ public class CommonMethod {
 
     }
 
+    public static double getVector(float x, float y, float z) {
+        return Math.sqrt((x*x)+(y*y)+(z*z));
+    }
+
 
     public interface alarmListener {
         void onAlarmListener(List<AlarmDaysModel> abc, String from);

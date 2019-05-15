@@ -17,6 +17,7 @@ import itg8.com.nowzonedesigndemo.db.tbl.TblPostureSedentary;
 import itg8.com.nowzonedesigndemo.db.tbl.TblSleep;
 import itg8.com.nowzonedesigndemo.db.tbl.TblState;
 import itg8.com.nowzonedesigndemo.db.tbl.TblStepCount;
+import itg8.com.nowzonedesigndemo.sleep.model.SleepActivityModel;
 
 
 public class DbHelper extends OrmLiteSqliteOpenHelper {
@@ -29,8 +30,10 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
     private Dao<TblAverage,Integer> avgDao=null;
     private Dao<TblStepCount,Integer> stepDao=null;
     private Dao<TblSleep,Integer> sleepDao=null;
+    private Dao<SleepActivityModel,Integer> sleepResultDao=null;
     private Dao<TblPostureSedentary,Integer> postureSedentaryDao=null;
     private Dao<DataModelPressure,Integer> DataModelPresureDao=null;
+
 
 
 
@@ -49,6 +52,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, TblSleep.class);
             TableUtils.createTable(connectionSource, TblPostureSedentary.class);
             TableUtils.createTable(connectionSource, DataModelPressure.class);
+            TableUtils.createTable(connectionSource, SleepActivityModel.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -65,6 +69,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TblSleep.class, true);
             TableUtils.dropTable(connectionSource, TblPostureSedentary.class, true);
             TableUtils.dropTable(connectionSource, DataModelPressure.class, true);
+            TableUtils.dropTable(connectionSource, SleepActivityModel.class, true);
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -107,6 +112,12 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             sleepDao=getDao(TblSleep.class);
 
         return sleepDao;
+    }
+
+    public Dao<SleepActivityModel, Integer> getSleepResultDao() throws SQLException {
+        if(sleepResultDao==null)
+            sleepResultDao=getDao(SleepActivityModel.class);
+        return sleepResultDao;
     }
 
     public Dao<TblPostureSedentary,Integer> getPostureSedentaryDao() throws SQLException{

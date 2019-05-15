@@ -261,13 +261,13 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
             Log.d(getClass().getSimpleName(), "ShareTime:" + hour + " " + minute);
             lblMessage.setVisibility(View.GONE);
             rlTimeStatus.setVisibility(View.VISIBLE);
-            btnAlarmStarted.setVisibility(View.VISIBLE);
+//            btnAlarmStarted.setVisibility(View.VISIBLE);
 //            btnAlarmStarted.setClickable(false);
             Calendar calendar = Calendar.getInstance();
             txtStartTime.setText(formatDate.format(calendar.getTimeInMillis()));
             txtRemainTime.setText(CommonMethod.calculateHours(calendar.getTimeInMillis(), startAlarmTime));
             txtEndTime.setText(Prefs.getString(CommonMethod.SAVEALARMTIME, ""));
-            btnAlarmStart.setVisibility(View.GONE);
+//            btnAlarmStart.setVisibility(View.GONE);
 
 
         } else {
@@ -288,6 +288,7 @@ public class AlarmSettingFragment extends Fragment implements View.OnClickListen
     }
 
     private void showFinishButton() {
+        txtAlarmStatus.setText("Click below to stop alarm");
         btnAlarmStarted.setVisibility(View.GONE);
         btnAlarmFinished.setVisibility(View.VISIBLE);
         btnAlarmStart.setVisibility(View.GONE);

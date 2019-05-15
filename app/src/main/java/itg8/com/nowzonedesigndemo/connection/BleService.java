@@ -62,6 +62,7 @@ import itg8.com.nowzonedesigndemo.db.tbl.TblSleep;
 import itg8.com.nowzonedesigndemo.db.tbl.TblState;
 import itg8.com.nowzonedesigndemo.db.tbl.TblStepCount;
 import itg8.com.nowzonedesigndemo.home.HomeActivity;
+import itg8.com.nowzonedesigndemo.sleep.model.SleepActivityModel;
 import itg8.com.nowzonedesigndemo.tosort.RDataManager;
 import itg8.com.nowzonedesigndemo.tosort.RDataManagerListener;
 import itg8.com.nowzonedesigndemo.utility.BleConnectionManager;
@@ -74,6 +75,7 @@ import itg8.com.nowzonedesigndemo.utility.OnStateAvailableListener;
 import itg8.com.nowzonedesigndemo.utility.RDataManagerImp;
 import itg8.com.nowzonedesigndemo.utility.StateCheckImp;
 import itg8.com.nowzonedesigndemo.utility.UserLog;
+import itg8.com.nowzonedesigndemo.utility.sleep_algo.SleepCalculationImp;
 
 import static itg8.com.nowzonedesigndemo.common.BaseActivity.TAG_CLASS_BASE;
 import static itg8.com.nowzonedesigndemo.common.CommonMethod.STEP_COUNT;
@@ -131,6 +133,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     private Dao<TblStepCount, Integer> stepDao = null;
     private Dao<TblSleep, Integer> sleepDao = null;
     private Dao<DataModelPressure, Integer> dataModelPressureDao = null;
+    private Dao<SleepActivityModel, Integer> sleepResultDao = null;
     private Dao<TblPostureSedentary, Integer> postureSedentaryDao;
 
     private BleConnectionManager manager;
@@ -139,6 +142,8 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     private WifiManager.WifiLock lock;
     private BluetoothManager mBluetoothManager;
     private RDataManager dataManager;
+
+
     /**
      * This receiver allow all details to be handle using breadcast. like
      * operations on bluetooth from another receiver
@@ -197,6 +202,8 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
                             sleepForward.setTimestamp(Calendar.getInstance().getTimeInMillis());
                             sleepForward.setSleepState(CommonMethod.SLEEP_ENDED);
                             sleepDao.update(sleepForward);
+                            SleepCalculationImp imp=new SleepCalculationImp(dataModelPressureDao,sleepForward.getId(),sleepResultDao);
+                            imp.calculateSleep(sleepForward.getTimeStart(),sleepForward.getTimeEnd(),null);
                         }
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -299,11 +306,16 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             stepDao = getHelper().getStepDao();
             sleepDao = getHelper().getSleepDao();
             dataModelPressureDao = getHelper().getDataPresureDao();
+            sleepResultDao=getHelper().getSleepResultDao();
             postureSedentaryDao = getHelper().getPostureSedentaryDao();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+
+
         String address = null, name = null;
         if (intent != null && intent.hasExtra(CommonMethod.DEVICE_ADDRESS)) {
             address = intent.getStringExtra(CommonMethod.DEVICE_ADDRESS);

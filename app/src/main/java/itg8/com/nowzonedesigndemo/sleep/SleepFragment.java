@@ -1,80 +1,71 @@
 package itg8.com.nowzonedesigndemo.sleep;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.R;
-import itg8.com.nowzonedesigndemo.custom_widget.AutoSizeTextView;
-import itg8.com.nowzonedesigndemo.sleep.widget_custom_progressbar.CustomProgressBar;
-import itg8.com.nowzonedesigndemo.sleep.widget_custom_progressbar.DonutProgress;
+import itg8.com.nowzonedesigndemo.db.DBManager;
+import itg8.com.nowzonedesigndemo.db.DbHelper;
+import itg8.com.nowzonedesigndemo.db.tbl.TblSleep;
+import itg8.com.nowzonedesigndemo.home.HomeActivity;
+import itg8.com.nowzonedesigndemo.sleep.adapter.SleepDataAdapter;
 import itg8.com.nowzonedesigndemo.sleep.widget_custom_progressbar.ProgressItem;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SleepFragment extends Fragment {
+public class SleepFragment extends Fragment implements View.OnClickListener, SleepDataAdapter.SleepItemClickListener {
+
+    private static final String TAG = "SleepFragment";
 
 
     Unbinder unbinder;
-    @BindView(R.id.txt_durations)
-    TextView txtDurations;
-    @BindView(R.id.ll_percent_durations)
-    LinearLayout llPercentDurations;
-    @BindView(R.id.txt_sleepValue)
-    TextView txtSleepValue;
-    @BindView(R.id.textView)
-    TextView textView;
-    @BindView(R.id.ll_percent)
-    LinearLayout llPercent;
-    @BindView(R.id.txt_wakeupValue)
-    TextView txtWakeupValue;
-    @BindView(R.id.txt_wakeup)
-    TextView txtWakeup;
-    @BindView(R.id.txt_goals)
-    TextView txtGoals;
-    @BindView(R.id.circularProgressGoal)
-    DonutProgress circularProgressGoal;
-    @BindView(R.id.rl_main)
-    PercentRelativeLayout rlMain;
-    @BindView(R.id.txt_break)
-    AutoSizeTextView txtBreak;
-    @BindView(R.id.custom_progressbar)
-    CustomProgressBar customProgressbar;
-    @BindView(R.id.txt_awake)
-    TextView txtAwake;
+    @BindView(R.id.imgArrowLeft)
+    ImageView imgArrowLeft;
+    @BindView(R.id.imgArrowRight)
+    ImageView imgArrowRight;
+    @BindView(R.id.rv_sleep_data)
+    RecyclerView rvSleepData;
+    @BindView(R.id.txtDate)
+    TextView txtDate;
 
-    @BindView(R.id.txt_deep)
-    TextView txtDeep;
 
-    @BindView(R.id.txt_deep_time)
-    TextView txtDeepTime;
-    @BindView(R.id.txt_light)
-    TextView txtLight;
-    @BindView(R.id.txt_light_time)
-    TextView txtLightTime;
-    @BindView(R.id.rl_overView)
-    RelativeLayout rlOverView;
     private ArrayList<ProgressItem> progressItemList;
     private ProgressItem mProgressItem;
     private Timer timer;
+    Dao<TblSleep, Integer> sleepDao;
 
+    private String[] totalDates;
+    private int index;
+    private SleepDataAdapter adapter;
+    private Disposable disposable;
 
     public SleepFragment() {
         // Required empty public constructor
@@ -87,54 +78,47 @@ public class SleepFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sleep, container, false);
         unbinder = ButterKnife.bind(this, view);
-        customProgressbar.getThumb().mutate().setAlpha(0);
-        initDataToSeekbar();
-        setCircularProgress();
+        DBManager.init(getActivity());
+        DbHelper helper = DBManager.getInstance().getHelper();
+        initRv();
+        try {
+            sleepDao = helper.getSleepDao();
+            getDistinctDateList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        setArrowListener();
         return view;
     }
 
-    private void setCircularProgress() {
-      //  circularProgressGoal.setTextColor(R.color.colorWhite);
-//        circularProgressGoal.setInnerBottomText("10");
-        //circularProgressGoal.setInnerBottomTextColor(R.color.colorWhite);
-        // circularProgressGoal.setInnerBottomTextColor(R.color.colorWhite);
-        // circularProgressGoal.setDonut_progress("80");
-        //circularProgressGoal.setPrefixText("10");
+    private void initRv() {
+        adapter = new SleepDataAdapter(this);
+        rvSleepData.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvSleepData.setAdapter(adapter);
+    }
 
-        circularProgressGoal.setProgress(60);
-        circularProgressGoal.setUnfinishedStrokeColor(R.color.color_green);
-        circularProgressGoal.setUnfinishedStrokeWidth(4.0f);
-        circularProgressGoal.setFinishedStrokeWidth(4.0f);
-
-
-
+    private void setArrowListener() {
+        imgArrowLeft.setOnClickListener(this);
     }
 
 
-    private void initDataToSeekbar() {
-        progressItemList = new ArrayList<ProgressItem>();
+    private void getDistinctDateList() throws SQLException {
+        QueryBuilder<TblSleep, Integer> queryBuilder = sleepDao.queryBuilder();
+        queryBuilder.distinct().selectColumns(TblSleep.FIELD_DATE);
+        List<TblSleep> list = sleepDao.query(queryBuilder.prepare());
+        totalDates = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            totalDates[i] = list.get(i).getDate();
+        }
+        index = list.size() - 1;
+        setText();
+        initDownload();
+    }
 
-        // green span
-        mProgressItem = new ProgressItem();
-        mProgressItem.progressItemPercentage = 20;
-        mProgressItem.color = R.color.color_skin;
-        progressItemList.add(mProgressItem);
-
-
-        // red span
-        mProgressItem = new ProgressItem();
-        mProgressItem.progressItemPercentage = 50;
-        Log.i("Mainactivity", mProgressItem.progressItemPercentage + "");
-        mProgressItem.color = R.color.color_sky;
-        progressItemList.add(mProgressItem);
-        // blue span
-        mProgressItem = new ProgressItem();
-        mProgressItem.progressItemPercentage = 30;
-        mProgressItem.color = R.color.color_green;
-        progressItemList.add(mProgressItem);
-
-        customProgressbar.initData(progressItemList);
-        customProgressbar.invalidate();
+    private void setText() {
+        if (totalDates.length > 0 && totalDates.length > index)
+            txtDate.setText(totalDates[index]);
     }
 
 
@@ -146,12 +130,80 @@ public class SleepFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()== android.R.id.home)
-        {
+        if (item.getItemId() == android.R.id.home) {
             getActivity().onBackPressed();
         }
 
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        if (v == imgArrowLeft) {
+            moveDateToLeft();
+        } else if (v == imgArrowRight) {
+            moveDateToRight();
+        }
+    }
+
+    private void moveDateToLeft() {
+        if (index > 0) {
+            --index;
+            setText();
+            initDownload();
+        }
+    }
+
+    private void initDownload() {
+        showProgress();
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        disposable = Observable.create(new ObservableOnSubscribe<List<TblSleep>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<TblSleep>> e) throws Exception {
+                QueryBuilder<TblSleep, Integer> queryBuilder = sleepDao.queryBuilder();
+                queryBuilder.where().eq(TblSleep.FIELD_DATE, totalDates[index]);
+                List<TblSleep> list = sleepDao.query(queryBuilder.prepare());
+                e.onNext(list);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<TblSleep>>() {
+                    @Override
+                    public void accept(List<TblSleep> tblSleeps) throws Exception {
+                        adapter.addSleep(tblSleeps);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    private void showProgress() {
+
+    }
+
+    private void moveDateToRight() {
+        if (index < totalDates.length) {
+            ++index;
+            setText();
+            initDownload();
+        }
+    }
+
+    @Override
+    public void onItemClicked(TblSleep sleep, int position) {
+        if (getActivity() != null) {
+            ((HomeActivity) getActivity()).setFragment(SleepDetailFragment.newInstance(sleep, ""));
+        }
     }
 }

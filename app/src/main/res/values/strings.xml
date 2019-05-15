@@ -217,6 +217,7 @@
         <item>Disconnect</item>
         <item>Export to csv</item>
         <item>Sleep</item>
+        <item>Sleep History</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -232,6 +233,7 @@
         <item>@drawable/ic_help_outline_black_24dp</item>
         <item>@drawable/ic_logout</item>
         <item>@drawable/ic_logout</item>
+        <item>@drawable/ic_sleeping</item>
         <item>@drawable/ic_sleeping</item>
         <item>@drawable/ic_sleeping</item>
         <item>@drawable/ic_sleeping</item>
