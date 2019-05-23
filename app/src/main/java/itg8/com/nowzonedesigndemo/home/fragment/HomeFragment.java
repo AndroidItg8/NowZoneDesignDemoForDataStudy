@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.StringTokenizer;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -96,6 +98,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     ImageView imgState;
     @BindView(R.id.txtConnectionstatus)
     TextView txtConnectionstatus;
+
+    StringBuilder stepCountSb;
+    StringBuilder breathCountSb;
 
 
     // TODO: Rename and change types of parameters
@@ -194,7 +199,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 //            mStepImage.stopSteps();
             breathview.setVisibility(View.GONE);
             mStepImage.setVisibility(View.VISIBLE);
-            txtCount.setVisibility(View.GONE);
+//            txtCount.setVisibility(View.GONE);
         }
     }
 
@@ -205,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
             mStepImage.stopSteps();
             breathview.setVisibility(View.VISIBLE);
             mStepImage.setVisibility(View.GONE);
-            txtCount.setVisibility(View.VISIBLE);
+//            txtCount.setVisibility(View.VISIBLE);
         }
     }
 
@@ -242,6 +247,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     }
 
     @Override
+    public void onStepCountAvail(int intExtra) {
+        if(isViewEnable){
+            if (txtConnectionstatus.getVisibility() != View.VISIBLE)
+                txtConnectionstatus.setVisibility(View.VISIBLE);
+            stepCountSb=new StringBuilder().append("Steps : ").append(intExtra);
+            txtConnectionstatus.setText(stepCountSb.toString());
+        }
+    }
+
+
+    @Override
     public void onBatteryCountAvail(int batteryCount) {
 
     }
@@ -266,8 +282,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     @Override
     public void onBreathingCountAvail(int count) {
         if(isViewEnable) {
-            countString = count + " BPM";
-            txtCount.setText(countString);
+            breathCountSb =new StringBuilder().append(count).append(" BPM");
+            txtCount.setText(breathCountSb.toString());
             if (Prefs.getInt(CommonMethod.USER_CURRENT_AVG) != 0) {
                 String average = "Average " + Prefs.getInt(CommonMethod.USER_CURRENT_AVG) + " bpm";
                 txtAverage.setText(average);

@@ -1005,9 +1005,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onStepCountReceived(int intExtra) {
-        if (txtConnectionStatus.getVisibility() != View.VISIBLE)
-            txtConnectionStatus.setVisibility(View.VISIBLE);
-        txtConnectionStatus.setText(String.valueOf(intExtra));
+        if(homeListener!=null)
+            homeListener.onStepCountAvail(intExtra);
+//        if (txtConnectionStatus.getVisibility() != View.VISIBLE)
+//            txtConnectionStatus.setVisibility(View.VISIBLE);
+//        txtConnectionStatus.setText(String.valueOf(intExtra));
 
         Log.d(TAG, "Step count: " + intExtra);
     }
@@ -1231,5 +1233,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         void onConnectionStateAvail(String name);
 
         void onBatteryCountAvail(int batteryCount);
+
+        void onStepCountAvail(int intExtra);
+
     }
 }

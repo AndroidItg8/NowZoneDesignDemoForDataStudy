@@ -1050,11 +1050,11 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             count.setSteps(previousSteps);
             count.setCalBurn(Helper.calculateCalBurnByStepCount(step, profileModel));
             count.setGoal(Prefs.getInt(CommonMethod.GOAL, 10000));
-            if (!fi) {
-                stepDao.create(count);
-            } else {
-                stepDao.update(count);
-            }
+//            if (!fi) {
+//                stepDao.create(count);
+//            } else {
+//                stepDao.update(count);
+//            }
             dataManager.arrangeStepsForServer(getString(R.string.url_steps), previousSteps, count, fi);
             e.onComplete();
 
@@ -1478,7 +1478,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     @Override
     public boolean onSensorDataAvailToStore(DataModelPressure pressure) {
         try {
-            return dataModelPressureDao.create(pressure) > 0;
+            return getHelper().getDataPresureDao().create(pressure) > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalStateException("bekar jhala");

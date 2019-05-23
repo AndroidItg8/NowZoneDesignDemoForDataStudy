@@ -92,7 +92,7 @@ public class BreathModelImp extends BaseModuleOrm implements BreathFragmentModel
 //            {
 //                listener.startShowingDevicesList();
 //            }
-            if(!Prefs.contains(CommonMethod.DEVICE_ADDRESS)){
+            if(!Prefs.contains(CommonMethod.DEVICE_ADDRESS) && listener!=null){
                 listener.startShowingDevicesList();
             }
         }
@@ -114,7 +114,8 @@ public class BreathModelImp extends BaseModuleOrm implements BreathFragmentModel
 
                     @Override
                     public void onNext(StateTimeModel stateTimeModel) {
-                         listener.onStateTimeReceived(stateTimeModel);
+                        if(listener!=null)
+                            listener.onStateTimeReceived(stateTimeModel);
                     }
 
                     @Override

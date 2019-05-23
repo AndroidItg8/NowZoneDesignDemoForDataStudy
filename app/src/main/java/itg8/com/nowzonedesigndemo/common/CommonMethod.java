@@ -219,6 +219,8 @@ public class CommonMethod {
             byte optCenValue2 = data[13];
             byte tempValue1 = data[14];
             byte tempValue2 = data[15];
+            byte tempUnused1=data[16];
+            byte tempUnused2=data[17];
 
 
             byte xAccHValue = acc[0];
@@ -277,6 +279,7 @@ public class CommonMethod {
                 model.setOptical(bytesToHex(new byte[]{optCenValue1, optCenValue2}));
                 //temprature
                 model.setTemprature((bytesToHexSign(new byte[]{tempValue1, tempValue2}) / 16) + 24);
+                model.setUnused(String.valueOf(bytesToHex(new byte[]{tempUnused1,tempUnused2})));
 //                Log.d(TAG, "getArragedData: "+bytesToHex(new byte[]{tempValue1,tempValue2}));
                 Log.d(TAG, "getArragedData: " + model.getTemprature());
 //                model.setTemprature(getTempreture(model.getTemprature()));
@@ -677,29 +680,6 @@ public class CommonMethod {
     }
 
 
-    public static double getZScore(double loadCellVal1, Double[] arr) {
-        WeakReference<Double> max = new WeakReference<>(max(arr));
-        WeakReference<Double> min = new WeakReference<>(min(arr));
-//        if ((max(arr) - min(arr)) > 0)
-//            return ((loadCellVal1 - min(arr)) / (max(arr) - min(arr)));
-//        else
-//            return 0;
-        Log.d(TAG, "isActivityStarted: max: " + max.get() + " min: " + min.get() + " value:" + loadCellVal1);
-        if ((max.get() - min.get()) > 0)
-            return ((loadCellVal1 - min.get()) / (max.get() - min.get()));
-        else
-            return 0;
-    }
-
-    public static double min(Double[] arr) {
-        return Collections.min(Arrays.asList(arr));
-//        return arr[0];
-    }
-
-    public static double max(Double[] arr) {
-        return Collections.max(Arrays.asList(arr));
-//        return arr[arr.length-1];
-    }
 
 
     public interface OnFragmentSendToActivityListener {

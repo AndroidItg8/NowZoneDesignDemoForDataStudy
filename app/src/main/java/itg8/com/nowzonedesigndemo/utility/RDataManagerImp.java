@@ -718,6 +718,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         modelTemp.setMic(model.getMic());
         modelTemp.setOptical(model.getOptical());
         modelTemp.setSerialNo(model.getSerialNo());
+        modelTemp.setUnused(model.getUnused());
         return modelTemp;
     }
 
@@ -1330,7 +1331,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                throw new IllegalStateException("Kuch to bhi error: " + e.getMessage());
+                Log.e(TAG, "onError: ",e );
             }
 
             @Override

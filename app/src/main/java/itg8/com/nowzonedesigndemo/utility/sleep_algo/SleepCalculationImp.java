@@ -5,9 +5,12 @@ import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import java.lang.ref.WeakReference;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -82,7 +85,7 @@ public class SleepCalculationImp {
 
                 for (SleepVectorModel v :
                         modelVectorList) {
-                    v.setzScore(CommonMethod.getZScore(v.getVector(), d));
+                    v.setzScore(getZScore(v.getVector(), d));
                     Log.d(TAG, "subscribe: "+v.getzScore());
                     if (v.getzScore() > 0.70) {
                         line = v.getTimestamp();
@@ -153,6 +156,33 @@ public class SleepCalculationImp {
                 Log.e(TAG, "subscribe: ",e);
             }
         }
+    }
+
+
+    public  double getZScore(double loadCellVal1, Double[] arr) {
+        WeakReference<Double> max = new WeakReference<>(max(arr));
+        WeakReference<Double> min = new WeakReference<>(min(arr));
+//        if ((max(arr) - min(arr)) > 0)
+//            return ((loadCellVal1 - min(arr)) / (max(arr) - min(arr)));
+//        else
+//            return 0;
+        Log.d(TAG, "isActivityStarted: max: " + max.get() + " min: " + min.get() + " value:" + loadCellVal1);
+        if ((max.get() - min.get()) > 0)
+            return ((loadCellVal1 - min.get()) / (max.get() - min.get()));
+        else
+            return 0;
+    }
+
+    public  double min(Double[] arr) {
+//        return min;
+        return Collections.min(Arrays.asList(arr));
+//        return arr[0];
+    }
+
+    public  double max(Double[] arr) {
+//        return max;
+        return Collections.max(Arrays.asList(arr));
+//        return arr[arr.length-1];
     }
 
     public interface OnSleepDetailListner {

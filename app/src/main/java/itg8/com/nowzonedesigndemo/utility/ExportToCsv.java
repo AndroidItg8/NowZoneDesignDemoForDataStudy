@@ -42,7 +42,7 @@ public class ExportToCsv {
 
 
     public static String getTitle() {
-        return "datetime,pressure,acc_x,acc_y,acc_z,gyr_x,gyr_y,gyr_z,mag_x,mag_y,mag_z,temperature,battery,pressure_processed,load_cell1,load_cell2,mic,charging,optical\n";
+        return "datetime,pressure,acc_x,acc_y,acc_z,gyr_x,gyr_y,gyr_z,mag_x,mag_y,mag_z,temperature,battery,pressure_processed,load_cell1,load_cell2,mic,charging,optical,unused\n";
     }
 
 
