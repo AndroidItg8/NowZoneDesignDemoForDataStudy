@@ -52,6 +52,7 @@ import static itg8.com.nowzonedesigndemo.common.CommonMethod.calculate;
 import static itg8.com.nowzonedesigndemo.home.HomeActivity.PI_MAX;
 import static itg8.com.nowzonedesigndemo.home.HomeActivity.PI_MIN;
 import static itg8.com.nowzonedesigndemo.utility.AlgoAsync.ONE_MINUTE;
+import static itg8.com.nowzonedesigndemo.utility.load_cell_algo.RDataManagerImpV2.df2;
 
 /**
  * This is responsible for calculation uploading and all.
@@ -413,7 +414,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         } else {
             //Log.d(TAG, "STDEV:" + rollingG.getStdev());
             Log.d(TAG, "calculateProportionBySTD: " + rollingG.getaverage() + "  --- " + rollingG.getStdev());
-            return (pressure - rollingG.getaverage()) / rollingG.getStdev();
+            if (rollingG.getStdev() != 0)
+                return (pressure - rollingG.getaverage()) / rollingG.getStdev();
+            else
+                return 1;
         }
     }
 
@@ -541,67 +545,55 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             Log.d(TAG, "onRawDataModel: " + model.getBattery());
             if (loadCellImp != null) loadCellImp.onLoadCellDataAvail(model);
 
-            if(activityImp!=null) activityImp.isActivityStarted(model.getX(),model.getY(),model.getZ());
+            if (activityImp != null)
+                activityImp.isActivityStarted(model.getX(), model.getY(), model.getZ());
+
             sb.setLength(0);
-            if (!isSleepStarted) {
-                listener.onBatteryAvail(model.getBattery());
-                /**
-                 * Add now for Raw Process Data line chart
-                 */
-                listener.onRawData(model.getPressure());
-                listener.onAccelerometer(model);
+//            if (!isSleepStarted) {
+            listener.onBatteryAvail(model.getBattery());
+            /**
+             * Add now for Raw Process Data line chart
+             */
+            listener.onRawData(model.getPressure());
+            listener.onAccelerometer(model);
 
-                //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
-                processModelData(model, mContext);
-            }
-//            if(countActualData>100)
+            //Log.d(TAG, "onRawDataModel: "+new Gson().toJson(model));
+            processModelData(model, mContext);
 
-//                gettingCooefficient(model.getPressure());
-
-            //            else {
-//                countActualData++;
-//                min=model.getPressure();
-//            }
-//            pressureque.add(model);
-//            //Log.d(TAG, sb.append("pressure max : ").append(model.getPressure()).toString());
-
-//            processForStepCounting(model);
-
-            //  //Log.d(RDataManagerImp.class.getSimpleName(), "data received:" + model.getPressure());
-            Observable.create(new ObservableOnSubscribe<String>() {
-                @Override
-                public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
-                    if (isSleepStarted) {
-                        pushToSleep(model, startAlarmTime,
-                                endAlarmTime);
-                        return;
-                    }
-
-                    processForStepCounting(model);
-//                    processModelData(model, context);
-                }
-            }).subscribeOn(Schedulers.computation())
-                    .subscribe(new Observer<String>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(String s) {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
+//            Observable.create(new ObservableOnSubscribe<String>() {
+//                @Override
+//                public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+//                    if (isSleepStarted) {
+//                        pushToSleep(model, startAlarmTime,
+//                                endAlarmTime);
+//                        return;
+//                    }
+//
+//                    processForStepCounting(model);
+////                    processModelData(model, context);
+//                }
+//            }).subscribeOn(Schedulers.computation())
+//                    .subscribe(new Observer<String>() {
+//                        @Override
+//                        public void onSubscribe(Disposable d) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onNext(String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//
+//                        }
+//                    });
             /**
              * Currently we are working on pressure
              */
@@ -728,6 +720,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         modelTemp.setMic(model.getMic());
         modelTemp.setOptical(model.getOptical());
         modelTemp.setSerialNo(model.getSerialNo());
+        modelTemp.setUnused(model.getUnused());
         return modelTemp;
     }
 
@@ -760,7 +753,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
 //        tempPressure= calculateProportion(lowPassFilterValue,alpha);
 
         dataModel = copy(model);
-        dLastnew = a * calculateProportionBySTD(model.getPressure()) + ((1 - a) * dLastnew);
+        dLastnew = a * calculateProportionBySTD(model.getPressure()) + ((1 - a) * Double.parseDouble(df2.format(dLastnew)));
         Log.d(TAG, "processModelData: " + dataModel.getPressure() + " Processed Done: " + dLastnew);
 
 //        dLastnew = calculateProportionBySTD(model.getPressure());
@@ -1300,7 +1293,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
         //We will do that after SAAS TODO SAAS
         passForFIleStorage(tempHolderRaw, context);
 
-        passForCalculation(tempHolder, tempLineChartRaw);
+        //passForCalculation(tempHolder, tempLineChartRaw);
     }
 
     private void passForFIleStorage(DataModelPressure[] dataStorage, Context context) {
@@ -1340,7 +1333,7 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                throw new IllegalStateException("Kuch to bhi error: " + e.getMessage());
+                Log.e(TAG, "onError: ",e );
             }
 
             @Override

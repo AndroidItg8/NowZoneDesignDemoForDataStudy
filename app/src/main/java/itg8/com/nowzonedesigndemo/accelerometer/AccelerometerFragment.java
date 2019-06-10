@@ -396,6 +396,7 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
                 zVisible = isChecked;
                 break;
         }
+    }
 
     }
 

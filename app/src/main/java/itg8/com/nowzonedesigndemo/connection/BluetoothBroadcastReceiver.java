@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 
 import itg8.com.nowzonedesigndemo.R;
@@ -30,7 +31,11 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver{
                 FileLogUtility.newInstance().addLogToFile(UserLog.BLUETOOTH_STOP.name());
             } else {
                 FileLogUtility.newInstance().addLogToFile(UserLog.BLUETOOTH_START.name());
-                context.startService(new Intent(context, BleService.class));
+//                context.startService(new Intent(context, BleService.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(new Intent(context,BleService.class));
+                }else
+                    context.startService(new Intent(context,BleService.class));
             }
             // Bluetooth is disconnected, do handling here
         }

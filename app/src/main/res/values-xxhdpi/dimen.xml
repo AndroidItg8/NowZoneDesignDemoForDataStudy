@@ -10,6 +10,7 @@
     <dimen name="text_sleep_normal">17sp</dimen>
     <dimen name="lbl_breath_value">18sp</dimen>
     <dimen name="lbl_breath_value_history">32sp</dimen>
+    <dimen name="mytextsize">20sp</dimen>
 
 
 

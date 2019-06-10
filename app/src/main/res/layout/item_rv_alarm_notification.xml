@@ -15,7 +15,8 @@
         android:src="@mipmap/ic_launcher"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_alignBottom="@+id/txt_hours_diff"
+        android:visibility="visible"
+
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -68,7 +69,10 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
         android:textStyle="bold"
+        android:layout_alignTop="@+id/img_app"
+        android:layout_alignBottom="@+id/img_app"
         android:id="@+id/txt_times"
+        android:gravity="center_vertical"
         android:text="8:00 am" />
 
     <TextView
@@ -81,8 +85,11 @@
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@+id/img_app"
         android:layout_marginBottom="10dp"
+        android:layout_alignTop="@+id/img_app"
+        android:layout_alignBottom="@+id/img_app"
+        android:gravity="center_vertical"
         android:id="@+id/txt_alarm_setTime"
-        android:text="Alarm  Time" />
+        android:text="Sleep Monitor started" />
 
 
     <TextView
@@ -93,7 +100,7 @@
         android:layout_below="@+id/txt_alarm_setTime"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:visibility="visible"
+        android:visibility="gone"
          android:layout_alignParentEnd="true"
         android:layout_marginBottom="10dp"
         android:id="@+id/txt_hours"
@@ -108,7 +115,7 @@
         android:layout_below="@+id/txt_alarm_setTime"
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_toEndOf="@+id/img_app"
         android:layout_marginBottom="10dp"
         android:id="@+id/txt_hours_diff"
@@ -124,7 +131,6 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/txt_value"
         android:layout_marginBottom="10dp"
-
-        android:text="Close" />
+        android:text="STOP" />
     </RelativeLayout>
 

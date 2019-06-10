@@ -99,6 +99,7 @@ public class CsvController {
                 builder.append(d.getLoadCell2()).append(",");
                 builder.append(d.getMic()).append(",");
                 builder.append(d.getCharging()).append(",");
+                builder.append(d.getUnused()).append(",");
                 builder.append(d.getOptical()).append("\n");
                 return Observable.just(builder.toString());
             }

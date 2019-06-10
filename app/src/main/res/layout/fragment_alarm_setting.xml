@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:visibility="gone"
             android:layout_marginTop="60dp">
 
             <itg8.com.nowzonedesigndemo.steps.widget.CustomFontTextView
@@ -101,7 +102,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:lines="4"
@@ -113,6 +113,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="true">
 
@@ -216,9 +217,8 @@
             android:id="@+id/txt_alarm_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/frameLayout_setting"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:text="alarm yet not start...!!"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/txt_value"
@@ -229,7 +229,7 @@
             android:id="@+id/frameLayout_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/txt_alarm_status"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp">

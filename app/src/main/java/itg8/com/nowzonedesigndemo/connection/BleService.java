@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OrmLiteBaseService;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -61,6 +62,7 @@ import itg8.com.nowzonedesigndemo.db.tbl.TblSleep;
 import itg8.com.nowzonedesigndemo.db.tbl.TblState;
 import itg8.com.nowzonedesigndemo.db.tbl.TblStepCount;
 import itg8.com.nowzonedesigndemo.home.HomeActivity;
+import itg8.com.nowzonedesigndemo.sleep.model.SleepActivityModel;
 import itg8.com.nowzonedesigndemo.tosort.RDataManager;
 import itg8.com.nowzonedesigndemo.tosort.RDataManagerListener;
 import itg8.com.nowzonedesigndemo.utility.BleConnectionManager;
@@ -73,6 +75,7 @@ import itg8.com.nowzonedesigndemo.utility.OnStateAvailableListener;
 import itg8.com.nowzonedesigndemo.utility.RDataManagerImp;
 import itg8.com.nowzonedesigndemo.utility.StateCheckImp;
 import itg8.com.nowzonedesigndemo.utility.UserLog;
+import itg8.com.nowzonedesigndemo.utility.sleep_algo.SleepCalculationImp;
 
 import static itg8.com.nowzonedesigndemo.common.BaseActivity.TAG_CLASS_BASE;
 import static itg8.com.nowzonedesigndemo.common.CommonMethod.STEP_COUNT;
@@ -130,6 +133,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     private Dao<TblStepCount, Integer> stepDao = null;
     private Dao<TblSleep, Integer> sleepDao = null;
     private Dao<DataModelPressure, Integer> dataModelPressureDao = null;
+    private Dao<SleepActivityModel, Integer> sleepResultDao = null;
     private Dao<TblPostureSedentary, Integer> postureSedentaryDao;
 
     private BleConnectionManager manager;
@@ -138,6 +142,8 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     private WifiManager.WifiLock lock;
     private BluetoothManager mBluetoothManager;
     private RDataManager dataManager;
+
+
     /**
      * This receiver allow all details to be handle using breadcast. like
      * operations on bluetooth from another receiver
@@ -169,21 +175,39 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             } else if (action.equalsIgnoreCase(getResources().getString(R.string.action_device_sleep_start))) {
                 if (dataManager != null) {
                     dataManager.onSleepStarted(true);
-                    dataManager.onStartAlarmTime(intent.getLongExtra(CommonMethod.START_ALARM_TIME, 0));
-                    dataManager.onEndAalrmTime(intent.getLongExtra(CommonMethod.END_ALARM_TIME, 0));
+                    Calendar c=Calendar.getInstance();
+                    c.setTimeInMillis(intent.getLongExtra(CommonMethod.START_ALARM_TIME, 0));
+                    dataManager.onStartAlarmTime(c.getTimeInMillis());
                     TblSleep sleepForward = new TblSleep();
-                    sleepForward.setDate(Prefs.getString(CommonMethod.SAVEALARMTIME, ""));
+                    sleepForward.setDate(CommonMethod.getDateFromTMP(c.getTimeInMillis()));
                     sleepForward.setTimeStart(Prefs.getLong(CommonMethod.START_ALARM_TIME, 0));
-                    sleepForward.setTimestamp(Prefs.getLong(CommonMethod.START_ALARM_TIME, 0));
                     sleepForward.setSleepState(CommonMethod.SLEEP_STARTED);
                     try {
-                        sleepDao.create(sleepForward);
+                        Prefs.putInt(CommonMethod.LAST_SLEEP_ID,sleepDao.create(sleepForward));
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
             } else if (action.equals(getResources().getString(R.string.action_device_sleep_end))) {
                 if (dataManager != null) {
+                    Calendar c=Calendar.getInstance();
+                    c.setTimeInMillis(intent.getLongExtra(CommonMethod.ALARM_END,0));
+                    try {
+                        QueryBuilder<TblSleep, Integer> builder = sleepDao.queryBuilder();
+                        builder.limit(1L);
+                        builder.orderBy(TblSleep.FIELD_ID, false);  // true for ascending, false for descending
+                        TblSleep sleepForward = sleepDao.queryForFirst(builder.prepare());
+                        if(sleepForward!=null){
+                            sleepForward.setTimeEnd(c.getTimeInMillis());
+                            sleepForward.setTimestamp(Calendar.getInstance().getTimeInMillis());
+                            sleepForward.setSleepState(CommonMethod.SLEEP_ENDED);
+                            sleepDao.update(sleepForward);
+                            SleepCalculationImp imp=new SleepCalculationImp(dataModelPressureDao,sleepForward.getId(),sleepResultDao);
+                            imp.calculateSleep(sleepForward.getTimeStart(),sleepForward.getTimeEnd(),null);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     dataManager.onSleepStarted(false);
                 }
             } else if (action.equals(ACTION_SERFVER_IP_CHANGED)) {
@@ -282,11 +306,16 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             stepDao = getHelper().getStepDao();
             sleepDao = getHelper().getSleepDao();
             dataModelPressureDao = getHelper().getDataPresureDao();
+            sleepResultDao=getHelper().getSleepResultDao();
             postureSedentaryDao = getHelper().getPostureSedentaryDao();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+
+
         String address = null, name = null;
         if (intent != null && intent.hasExtra(CommonMethod.DEVICE_ADDRESS)) {
             address = intent.getStringExtra(CommonMethod.DEVICE_ADDRESS);
@@ -623,7 +652,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
 
     @Override
     public void onDataProcessed(double dataModel) {
-       // Log.d(TAG, "Pressure Value after changes " + dataModel);
+        Log.d(TAG, "Pressure Value after changes " + dataModel);
         sendBroadcast(CommonMethod.ACTION_DATA_AVAILABLE, dataModel);
     }
 
@@ -1021,11 +1050,11 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
             count.setSteps(previousSteps);
             count.setCalBurn(Helper.calculateCalBurnByStepCount(step, profileModel));
             count.setGoal(Prefs.getInt(CommonMethod.GOAL, 10000));
-            if (!fi) {
-                stepDao.create(count);
-            } else {
-                stepDao.update(count);
-            }
+//            if (!fi) {
+//                stepDao.create(count);
+//            } else {
+//                stepDao.update(count);
+//            }
             dataManager.arrangeStepsForServer(getString(R.string.url_steps), previousSteps, count, fi);
             e.onComplete();
 
@@ -1449,7 +1478,7 @@ public class BleService extends OrmLiteBaseService<DbHelper> implements Connecti
     @Override
     public boolean onSensorDataAvailToStore(DataModelPressure pressure) {
         try {
-            return dataModelPressureDao.create(pressure) > 0;
+            return getHelper().getDataPresureDao().create(pressure) > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalStateException("bekar jhala");

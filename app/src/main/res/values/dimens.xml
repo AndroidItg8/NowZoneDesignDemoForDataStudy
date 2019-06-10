@@ -5,6 +5,7 @@
     <dimen name="default_divider_padding">4dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="mytextsize">18sp</dimen>
 
     <dimen name="bb_height">56dp</dimen>
     <dimen name="bb_default_elevation">8dp</dimen>

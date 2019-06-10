@@ -93,12 +93,11 @@ public class AlarmSettingActivity extends AppCompatActivity implements View.OnCl
             int minute = c.get(Calendar.MINUTE);
             Log.d(getClass().getSimpleName(), "ShareTime:" + hour + " " + minute);
             // txtAlarmTime.setText(hour+":"+ minute);
-
         }
     }
 
     private void checkAlarmStartedOrNot() {
-        if (Prefs.contains(CommonMethod.SLEEP_STARTED)) {
+        if (Prefs.contains(CommonMethod.START_ALARM_TIME)) {
             showFinishButton();
         }else {
             showAlarmStartButton();
@@ -106,12 +105,12 @@ public class AlarmSettingActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showFinishButton() {
-        btnAlarmStarted.setVisibility(View.GONE);
+        btnAlarmSetting.setVisibility(View.GONE);
         btnAlarmFinished.setVisibility(View.VISIBLE);
     }
 
     private void showAlarmStartButton() {
-        btnAlarmStarted.setVisibility(View.VISIBLE);
+        btnAlarmSetting.setVisibility(View.VISIBLE);
         btnAlarmFinished.setVisibility(View.GONE);
     }
 

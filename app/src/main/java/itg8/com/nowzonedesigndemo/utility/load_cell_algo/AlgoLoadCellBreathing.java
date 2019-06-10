@@ -2,10 +2,17 @@ package itg8.com.nowzonedesigndemo.utility.load_cell_algo;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class AlgoLoadCellBreathing {
 
     private static final String TAG = "AlgoLoadCellBreathing";
     public static final String LINE_BREAK = "\n";
+    private static final int FRAME_COUNT = 1200;
+    private static final int MAX_COUNT = 1200;
+    private static final int LIMIT_DATA_POINT = 10;
 
     private int pCount = 0;
     private int tCount = 0;
@@ -15,10 +22,14 @@ public class AlgoLoadCellBreathing {
     private boolean isPeakFound;
     private double lastValue;
 
+    private Calendar calendar;
+
     private StringBuilder stringBuilder;
+    private int checkSecond;
 
     public AlgoLoadCellBreathing() {
         stringBuilder=new StringBuilder();
+        calendar=Calendar.getInstance();
     }
 
     public String getLog(){
@@ -107,8 +118,36 @@ public class AlgoLoadCellBreathing {
     }
 
     private boolean checkIfSatisfied() {
-        return pCount > 20 && tCount > 20;
+        return pCount > LIMIT_DATA_POINT && tCount > LIMIT_DATA_POINT;
     }
 
+    private List<Long> peakTiming=new ArrayList<>();
 
+    public int addPeakTime(long timestamp) {
+        peakTiming.add(timestamp);
+
+        calendar.setTimeInMillis(timestamp);
+        calendar.add(Calendar.MINUTE,-1);
+        Long[] arr = new Long[peakTiming.size()];
+        arr=peakTiming.toArray(arr);
+        return checkPeak(calendar.getTimeInMillis(), arr);
+//        checkSecond=calendar.get(Calendar.SECOND);
+    }
+
+    private int checkPeak(long timeInMillis, Long[] objects) {
+        int minutePeakCount=0;
+        for (Long o :
+                objects) {
+            if(o>timeInMillis){
+                minutePeakCount+=1;
+            }else {
+                peakTiming.remove(o);
+            }
+        }
+        Log.d(TAG, "checkPeak: "+minutePeakCount);
+
+        return minutePeakCount;
+
+    }
 }
+ 
