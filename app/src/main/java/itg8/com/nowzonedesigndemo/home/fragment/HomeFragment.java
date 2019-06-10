@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 //            mStepImage.stopSteps();
             breathview.setVisibility(View.GONE);
             mStepImage.setVisibility(View.VISIBLE);
-//            txtCount.setVisibility(View.GONE);
+
         }
     }
 

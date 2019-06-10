@@ -544,8 +544,10 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
             //Log.d(TAG, "onRawDataModel: " + model.toString());
             Log.d(TAG, "onRawDataModel: " + model.getBattery());
             if (loadCellImp != null) loadCellImp.onLoadCellDataAvail(model);
+
             if (activityImp != null)
                 activityImp.isActivityStarted(model.getX(), model.getY(), model.getZ());
+
             sb.setLength(0);
 //            if (!isSleepStarted) {
             listener.onBatteryAvail(model.getBattery());

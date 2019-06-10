@@ -46,8 +46,8 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
                 if (intent.hasExtra(CommonMethod.BPM_COUNT)) {
                     onCountReceived(intent.getIntExtra(CommonMethod.BPM_COUNT, 0));
                 }
-                if(intent.hasExtra(CommonMethod.BATTERY_VALUE)){
-                    onBatteryReceived(intent.getIntExtra(CommonMethod.BATTERY_VALUE,100));
+                if (intent.hasExtra(CommonMethod.BATTERY_VALUE)) {
+                    onBatteryReceived(intent.getIntExtra(CommonMethod.BATTERY_VALUE, 100));
                 }
                 if (intent.hasExtra(ACTION_STEP_COUNT)) {
                     onStepReceived(intent.getIntExtra(ACTION_STEP_COUNT, 0));
@@ -68,6 +68,7 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
                         view.onDeviceStateAvail((DeviceState) intent.getSerializableExtra(CommonMethod.DEVICE_STATE));
                 }
                 if (intent.hasExtra(CommonMethod.ACTION_MOVEMENT)) {
+
                     if (view != null)
                         view.onMovementStarted();
                 }
@@ -76,7 +77,7 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
                         view.onMovementStopped();
                 }
                 if (intent.hasExtra(ACTION_DEVICE_NOT_ATTACHED_TO_BODY)) {
-                    boolean isNotAttached = intent.getBooleanExtra(ACTION_DEVICE_NOT_ATTACHED_TO_BODY, false);
+                 boolean   isNotAttached = intent.getBooleanExtra(ACTION_DEVICE_NOT_ATTACHED_TO_BODY, false);
 
                     if (view != null) {
                         if (isNotAttached)
@@ -90,7 +91,7 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
     };
 
     private void onBatteryReceived(int intExtra) {
-        if(view!=null){
+        if (view != null) {
             view.onBatteryCountAvail(intExtra);
         }
     }
@@ -138,7 +139,6 @@ public class BreathPresenterImp implements BreathPresenter, BreathPresenter.Brea
     public void onCreate() {
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter(context.getResources().getString(R.string.action_data_avail)));
         model.onInitStateTime();
-
 
 
     }
