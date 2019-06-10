@@ -18,17 +18,23 @@ import itg8.com.nowzonedesigndemo.utility.step_algo.StepDetection;
 public class ActivityDetection {
 
     private static final double ACTIVITY_THRESHOLD = 0.7;
+    private static final double CONST_LIMIT_DIFF_THRESHOLD = 30000;
     private double[] vectorArr;
 
     private int index = 0;
     private double zScore;
     private RDataManagerListener listener;
 
-    private static final String TAG = "ActivityDetection";
+    private static final String TAG = "ActivityDetection ";
 
     private StepDetection stepDetection;
     private double min=0;
     private double max=0;
+    private float x2;
+    private float y2;
+    private float z2;
+    private double valNew;
+    private double valOld;
 
     public ActivityDetection(RDataManagerListener listener) {
         this.listener = listener;
@@ -43,6 +49,18 @@ public class ActivityDetection {
 
         checkSteps(x);
 
+//        checkMovement(x, y, z);
+        //  01 June 2019 by Akshay Zadgaokar
+        checkMovementV2(x, y, z);
+    }
+
+    /**
+     * This algo having issue about if device is located on table in still position, this providing movement on that also
+     * @param x
+     * @param y
+     * @param z
+     */
+    private void checkMovement(float x, float y, float z) {
         accelVector =Math.sqrt(((x * x) + (y * y) + (z * z)));
         vectorArr[index] = accelVector;
         index++;
@@ -63,12 +81,58 @@ public class ActivityDetection {
     }
 
 
+    /**
+     * Date : 01 June 2019 by Akshay Zadgaokar
+     *
+     * this algorithm uses as below
+     *
+     *     valNew=SQRT((X2-X1)^2 +(Y2-Y1)^2 + (Z2-Z1)^2
+     *
+     *     IF
+     *           |valNew-ValOld|>=30000
+     *      THEN
+     *            movement
+     *       ELSE
+     *            no_movement
+     *
+     * @param x
+     * @param y
+     * @param z
+     */
+    private void checkMovementV2(float x, float y, float z) {
+
+        if(x2<=0 && y2<=0 && z2<=0)
+        {
+            x2=x;
+            y2=y;
+            z2=z;
+            return;
+        }
+
+        valNew=Math
+                .sqrt(
+                        (Math.pow(x2-x,2)+Math.pow(y2-y,2)+Math.pow(z2-z,2))
+                );
+
+        if(valOld==0){
+            valOld=valNew;
+            return;
+        }
+
+        zScore=Math.abs(valNew-valOld);
+        if (zScore>CONST_LIMIT_DIFF_THRESHOLD) {
+            listener.onMovement((float) zScore);
+        }else
+            listener.onNoMovement((float) zScore);
+    }
+
+
     private void checkSteps(float x) {
         Observable.just(x).map(new Function<Float, Object>() {
             @Override
             public Object apply(Float x) throws Exception {
                 Log.d(TAG, "apply() called with: x = [" + x + "]");
-                 stepDetection.checkSteps(x);
+                stepDetection.checkSteps(x);
                 return x;
             }
         }).subscribeOn(Schedulers.computation()).subscribe();
