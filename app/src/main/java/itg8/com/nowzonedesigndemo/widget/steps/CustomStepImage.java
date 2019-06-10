@@ -47,7 +47,8 @@ public class CustomStepImage extends View {
 //            invalidate(); //will trigger the onDraw
             if(!toStop) {
                 addStep();
-                handler.postDelayed(this, stepSpeed); //in 0.5 sec player0 will move again
+//                handler.postDelayed(this, stepSpeed); //in 0.5 sec player0 will move again
+                handler.postDelayed(this, 500); //in 0.5 sec player0 will move again
             }
         }
     };
