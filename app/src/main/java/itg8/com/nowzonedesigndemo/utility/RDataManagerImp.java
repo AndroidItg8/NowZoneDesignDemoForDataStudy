@@ -1577,4 +1577,5 @@ public class RDataManagerImp implements RDataManager, PAlgoCallback, AccelVerify
     public void onConnected() {
         disconnected = false;
     }
+
 }

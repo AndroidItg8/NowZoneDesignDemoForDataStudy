@@ -10,15 +10,17 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import itg8.com.nowzonedesigndemo.common.CommonMethod;
+import itg8.com.nowzonedesigndemo.common.Prefs;
 import itg8.com.nowzonedesigndemo.tosort.RDataManagerListener;
 import itg8.com.nowzonedesigndemo.utility.Const;
 import itg8.com.nowzonedesigndemo.utility.Rolling;
+import itg8.com.nowzonedesigndemo.utility.posture_algo.PostureDetectionAlgo;
 import itg8.com.nowzonedesigndemo.utility.step_algo.StepDetection;
 
 public class ActivityDetection {
 
     private static final double ACTIVITY_THRESHOLD = 0.7;
-    private static final double CONST_LIMIT_DIFF_THRESHOLD = 30000;
+    private static final int CONST_LIMIT_DIFF_THRESHOLD = 30000;
     private double[] vectorArr;
 
     private int index = 0;
@@ -36,22 +38,29 @@ public class ActivityDetection {
     private double valNew;
     private double valOld;
 
+    private PostureDetectionAlgo postureDetection;
+
     public ActivityDetection(RDataManagerListener listener) {
         this.listener = listener;
         vectorArr = new double[Const.SIZE_ACCEL_VECTOR];
         stepDetection=new StepDetection(listener);
+        postureDetection=new PostureDetectionAlgo();
     }
-
-    private double accelVector;
 
 
     public void isActivityStarted(float x, float y, float z) {
 
         checkSteps(x);
 
+        checkPosture(z);
+
 //        checkMovement(x, y, z);
         //  01 June 2019 by Akshay Zadgaokar
         checkMovementV2(x, y, z);
+    }
+
+    private void checkPosture(float z) {
+        postureDetection.detectPosture(z);
     }
 
     /**
@@ -61,16 +70,16 @@ public class ActivityDetection {
      * @param z
      */
     private void checkMovement(float x, float y, float z) {
-        accelVector =Math.sqrt(((x * x) + (y * y) + (z * z)));
+        double accelVector = Math.sqrt(((x * x) + (y * y) + (z * z)));
         vectorArr[index] = accelVector;
         index++;
         if (index == Const.SIZE_ACCEL_VECTOR) {
             index = 0;
         }
-        if(min>accelVector || min==0)
-            min=accelVector;
-        if(max<accelVector || max==0)
-            max=accelVector;
+        if(min> accelVector || min==0)
+            min= accelVector;
+        if(max< accelVector || max==0)
+            max= accelVector;
 
         zScore = getZScore(accelVector);
         Log.d(TAG, "isActivityStarted: "+ zScore);
@@ -120,10 +129,11 @@ public class ActivityDetection {
         }
 
         zScore=Math.abs(valNew-valOld);
-        if (zScore>CONST_LIMIT_DIFF_THRESHOLD) {
+        if (zScore> Prefs.getInt(CommonMethod.STEP_THRESHOLD,CONST_LIMIT_DIFF_THRESHOLD)) {
             listener.onMovement((float) zScore);
         }else
             listener.onNoMovement((float) zScore);
+
     }
 
 

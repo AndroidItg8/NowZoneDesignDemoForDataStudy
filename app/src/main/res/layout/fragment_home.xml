@@ -122,6 +122,23 @@
                     android:padding="10dp"/>
 
 
+                <TextView
+                    android:id="@+id/txtStepCountThreshold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_gravity="bottom|end"
+                    android:textSize="24sp"
+                    android:layout_marginEnd="40dp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:drawableEnd="@drawable/baseline_edit_24"
+                    android:layout_marginBottom="100dp"
+                    android:padding="10dp"/>
+
+
+
+
 
             </FrameLayout>
             <!--this layout is for wave  which working in background.-->

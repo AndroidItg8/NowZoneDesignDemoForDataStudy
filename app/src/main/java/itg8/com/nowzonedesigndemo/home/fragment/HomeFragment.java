@@ -2,17 +2,20 @@ package itg8.com.nowzonedesigndemo.home.fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -76,6 +79,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     TextView txtCalm;
     @BindView(R.id.txt_calm_value)
     TextView txtCalmValue;
+    @BindView(R.id.txtStepCountThreshold)
+    TextView txtStepCountThreshold;
     @BindView(R.id.txt_focus)
     CustomFontTextView txtFocus;
     @BindView(R.id.txt_focus_value)
@@ -109,7 +114,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     private FragmentManager fm;
     private Unbinder unbinder;
     private String countString;
-    private boolean isViewEnable=false;
+    private boolean isViewEnable = false;
 
 
     public HomeFragment() {
@@ -150,20 +155,61 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
-        isViewEnable=true;
+        isViewEnable = true;
         breathview.setOnClickListener(this);
 
+        setThresholdText();
+        txtStepCountThreshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialogToChangeThreshold();
+            }
+        });
 
         return view;
+    }
+
+    private void setThresholdText() {
+        txtStepCountThreshold.setText(String.valueOf(Prefs.getInt(CommonMethod.STEP_THRESHOLD, 30000)));
+    }
+
+    private void openDialogToChangeThreshold() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+        edt.setHint(txtStepCountThreshold.getText().toString());
+        dialogBuilder.setTitle("Step Threshold");
+        dialogBuilder.setMessage("Change threshold");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+                if (!TextUtils.isEmpty(edt.getText().toString())) {
+                    if (TextUtils.isDigitsOnly(edt.getText().toString())) {
+                        Prefs.putInt(CommonMethod.STEP_THRESHOLD, Integer.parseInt(edt.getText().toString()));
+                        setThresholdText();
+                    }
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        isViewEnable=false;
-        if((HomeActivity)getActivity()!=null)
-            ((HomeActivity)getActivity()).destroyHomeListener();
+        isViewEnable = false;
+        if ((HomeActivity) getActivity() != null)
+            ((HomeActivity) getActivity()).destroyHomeListener();
         unbinder.unbind();
     }
 
@@ -178,35 +224,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 //        if(v.getId()==R.id.breathview)
 //            //callShareWhatsapp();
 //        else
+        if (getActivity() != null)
             fm = getActivity().getSupportFragmentManager();
     }
 
 
-
     @Override
     public void onBreathingWaveValueAvail(double value) {
-        Log.d(TAG, "onBreathingWaveValueAvail: "+value);
-        if(breathview!=null && !TextUtils.isEmpty(String.valueOf(value)))
+        Log.d(TAG, "onBreathingWaveValueAvail: " + value);
+        if (breathview != null && !TextUtils.isEmpty(String.valueOf(value)))
             breathview.addSample(SystemClock.elapsedRealtime(), value);
-
     }
 
 
     @Override
     public void onMovementStarted() {
-        if(isViewEnable) {
+        if (isViewEnable) {
             mStepImage.startSteps();
-//            mStepImage.stopSteps();
             breathview.setVisibility(View.GONE);
             mStepImage.setVisibility(View.VISIBLE);
-
         }
     }
 
 
     @Override
     public void onMovementStopped() {
-        if(isViewEnable) {
+        if (isViewEnable) {
             mStepImage.stopSteps();
             breathview.setVisibility(View.VISIBLE);
             mStepImage.setVisibility(View.GONE);
@@ -217,7 +260,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onDeviceNotAttachedToBody() {
-        if(isViewEnable) {
+        if (isViewEnable) {
             txtDeviceNotAttached.setVisibility(View.VISIBLE);
             txtConnectionstatus.setText("");
         }
@@ -225,7 +268,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void ondeviceAttached() {
-        if(isViewEnable) {
+        if (isViewEnable) {
             txtDeviceNotAttached.setVisibility(View.GONE);
             txtConnectionstatus.setText("");
         }
@@ -240,7 +283,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onConnectionStateAvail(String name) {
-        if(isViewEnable) {
+        if (isViewEnable) {
             if (txtConnectionstatus != null)
                 txtConnectionstatus.setText(name);
         }
@@ -248,10 +291,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onStepCountAvail(int intExtra) {
-        if(isViewEnable){
+        if (isViewEnable) {
             if (txtConnectionstatus.getVisibility() != View.VISIBLE)
                 txtConnectionstatus.setVisibility(View.VISIBLE);
-            stepCountSb=new StringBuilder().append("Steps : ").append(intExtra);
+            stepCountSb = new StringBuilder().append("Steps : ").append(intExtra);
             txtConnectionstatus.setText(stepCountSb.toString());
         }
     }
@@ -264,13 +307,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onBreathingStateAvail(String state, int icon) {
-        if(isViewEnable) {
+        if (isViewEnable) {
             if (icon != 0) {
                 imgState.setImageResource(icon);
                 imgState.setVisibility(View.VISIBLE);
             } else {
                 imgState.setVisibility(View.GONE);
-            }if (state != null) {
+            }
+            if (state != null) {
                 txtStateValue.setText(state);
                 txtStateValue.setVisibility(View.VISIBLE);
             } else {
@@ -281,8 +325,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
 
     @Override
     public void onBreathingCountAvail(int count) {
-        if(isViewEnable) {
-            breathCountSb =new StringBuilder().append(count).append(" BPM");
+        if (isViewEnable) {
+            breathCountSb = new StringBuilder().append(count).append(" BPM");
             txtCount.setText(breathCountSb.toString());
             if (Prefs.getInt(CommonMethod.USER_CURRENT_AVG) != 0) {
                 String average = "Average " + Prefs.getInt(CommonMethod.USER_CURRENT_AVG) + " bpm";
@@ -299,7 +343,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Home
     @Override
     public void onPause() {
         if (breathview != null)
-                breathview.reset();
+            breathview.reset();
 
         super.onPause();
     }
