@@ -41,6 +41,8 @@ import static java.lang.Long.parseLong;
 public class CommonMethod {
 
     public static final String LAST_SLEEP_ID = "LAST_SLEEP_ID";
+    public static final String STEP_THRESHOLD = "ThresholdSteps";
+    public static final String POSTURE_CALIBRATION_STARTED = "postureCalibrationStarted";
     private static final String TAG = "CommonMethod";
 
     static final String TEMPTOKEN = "HcENDQvJAk3UG2qIWyXKTS6UYbxg4SxBE98He6Cr29hAA4GaI7ZZ1sf_FPCqfRL3Yvjie8J6Q6370IQm0z628xmcI7Gm_HjdAFinQktoLpDSl_ANma3kA_KNUZT5WJJD-2AQB-wltgbgHVXlOBQRIPVpHZr8ejdRq7QNlDTIY0iwnz10a9Gjkqpu5l0SMWbspcWl1p3w39kZ_6heDMP_0y5rMZ-fI6hd-VrbSiDI_8bMl3JDm7sA2wn9JyMksGkCGrMfzMfqdnIjN_E-I0SFyydsn1_8FBeHXEy87LQnsBFayuytZUNZmjSg_w7N5Xxkn3cp_x_5j2bV0WFGkj23T1nEZHmqaY2Amj7W9OaXeD_0Le3_uCsgR3-L20Lm5WbpjSW9ZEMTOhCFcy3awwEDWrGZWjMw-Doy2WS7mzz-R0pQOxmWYd7wmV9k-I--QRi9liJ3Dd5J3mSrM7As4y0AC2BfmyPUp0EkYQuEKuhpCcI";

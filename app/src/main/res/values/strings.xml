@@ -218,6 +218,7 @@
         <item>Export to csv</item>
         <item>Sleep</item>
         <item>Sleep History</item>
+        <item>Posture</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -237,6 +238,7 @@
         <item>@drawable/ic_sleeping</item>
         <item>@drawable/ic_sleeping</item>
         <item>@drawable/ic_sleeping</item>
+        <item>@drawable/ic_posture</item>
     </array>
     <string name="title_activity_main">MainActivity</string>
     <string name="name">Name</string>

@@ -398,7 +398,6 @@ public class AccelerometerFragment extends BaseFragment<BaseController> implemen
         }
     }
 
-    }
 
 
     @Override

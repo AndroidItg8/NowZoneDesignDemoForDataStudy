@@ -53,14 +53,14 @@ public class RDataManagerImpV2 {
         mMA1 = new Rolling(ROLLING_AVG_SIZE);
         mMA2 = new Rolling(ROLLING_AVG_SIZE);
         mMA3 = new Rolling(ROLLING_AVG_SIZE);
-        loadCellRaw = new Double[5];
-        loadCellProcessed = new double[DATA_GATHER_LIMIT];
+        loadCellRaw = new Double[DATA_GATHER_LIMIT];
+//        loadCellProcessed = new double[DATA_GATHER_LIMIT];
         algo = new AlgoLoadCellBreathing();
     }
 
     public void onLoadCellDataAvail(DataModelPressure model) {
         WeakReference<Double> loadCellVal1 = new WeakReference<Double>((double) model.getLoadCell1());
-        if (isGatheringLimit < 5) {
+        if (isGatheringLimit < DATA_GATHER_LIMIT) {
             loadCellRaw[isGatheringLimit] = loadCellVal1.get();
             isGatheringLimit++;
             return;
@@ -141,7 +141,7 @@ public class RDataManagerImpV2 {
 
 
 
-    private Double[] shiftLeft(Double[] values) {
+    private void shiftLeft(Double[] values) {
         //n stores the length of array
         WeakReference<Double> temp = new WeakReference<Double>(values[0]);
 
@@ -151,7 +151,6 @@ public class RDataManagerImpV2 {
                 tempMin = values[i];
         }
         values[values.length - 1] = temp.get();
-        return values;
     }
 
 

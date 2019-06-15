@@ -64,6 +64,7 @@ import itg8.com.nowzonedesigndemo.home.mvp.BreathPresenterImp;
 import itg8.com.nowzonedesigndemo.home.mvp.BreathView;
 import itg8.com.nowzonedesigndemo.home.mvp.StateTimeModel;
 import itg8.com.nowzonedesigndemo.login.LoginActivity;
+import itg8.com.nowzonedesigndemo.posture.PostureCalibrateSettingActivity;
 import itg8.com.nowzonedesigndemo.pressure.PressureRawFragment;
 import itg8.com.nowzonedesigndemo.registration.RegistrationNewActivity;
 import itg8.com.nowzonedesigndemo.sanning.ScanDeviceActivity;
@@ -152,6 +153,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     public static final int FROM_OPTICAL = 6;
     public static final int FROM_MIC = 5;
     public static final int FROM_TEMPRETURE = 7;
+    private static final int MENU_POSTURE_SETTING = 14;
     private final String TAG = this.getClass().getSimpleName();
     long n = 0;
     double mu = 0.0;
@@ -328,8 +330,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 title="Sleep History";
                 SleepFragment fragment=new SleepFragment();
                 setFragment(fragment);
+            }else if (position == MENU_POSTURE_SETTING) {
+                title="Posture";
+                startActivity(new Intent(getApplicationContext(),PostureCalibrateSettingActivity.class));
             }
-
             if(title!=null) {
             titleToolbar.setText(title);
             }
@@ -978,12 +982,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     homeListener.onConnectionStateAvail("");
                 } else if (deviceState == DeviceState.DISCONNECTED) {
                     checkDeviceConnection(coordinator);
-                }
-                if (deviceState == DeviceState.CHARACTERISTICS_WRITE
+                }if (deviceState == DeviceState.CHARACTERISTICS_WRITE
                         || deviceState == DeviceState.WRITE) {
                     homeListener.onConnectionStateAvail("");
                 }
-
             }
         }
     }
